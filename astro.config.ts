@@ -4,7 +4,8 @@ import AstroPureIntegration from 'astro-pure'
 import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-import node from '@astrojs/node';
+import node from '@astrojs/node'
+import zeabur from '@zeabur/astro-adapter/serverless'
 
 // Others
 // import { visualizer } from 'rollup-plugin-visualizer'
@@ -39,8 +40,9 @@ export default defineConfig({
   // 2. Vercel (static)
   // adapter: vercelStatic(),
   // 3. Local (standalone)
-  adapter: node({ mode: 'standalone' }),
+  // adapter: node({ mode: 'standalone' }),
   output: 'server',
+  adapter: zeabur(),
   // ---
 
   image: {
