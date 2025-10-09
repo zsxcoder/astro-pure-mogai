@@ -15,6 +15,30 @@
           "intro": "求知若愚，虚怀若谷",
           "link": "https://cworld0.com/",
           "avatar": "https://cravatar.cn/avatar/1ffe42aa45a6b1444a786b1f32dfa8aa?s=200"
+        },
+        {
+          "name": "温锦瑜的博客",
+          "intro": "先想想为什么，再考虑怎么做",
+          "link": "https://www.wenjinyu.me/",
+          "avatar": "https://sso.wenjinyu.me/public/favicon.png"
+        },
+        {
+          "name": "Chancel's blog",
+          "intro": "有善始者实繁，能克终者盖寡",
+          "link": "https://www.chancel.me",
+          "avatar": "https://agent.chancel.me/secure.gravatar.com/avatar/d45071b54cf3339bd3d16bb35f750f35?s=48&d=404"
+        },
+        {
+          "name": "FKUN",
+          "intro": "F君のBLOGへようこそ！",
+          "link": "https://blog.fkun.tech/",
+          "avatar": "https://fkun.tech/images/avatar.png"
+        },
+        {
+          "name": "Zeruns's Blog",
+          "intro": "爱折腾软件和硬件的技术宅",
+          "link": "https://blog.zeruns.com/",
+          "avatar": "https://blog.zeruns.com/tx.jpg"
         }
       ]
     },
