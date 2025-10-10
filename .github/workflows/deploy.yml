@@ -1,0 +1,75 @@
+name: Build and Deploy (Astro + CNB)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 检出源码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ 设置 Node 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3️⃣ 安装依赖
+      - name: Install dependencies
+        run: npm ci
+
+      # 4️⃣ 清理旧构建产物
+      - name: Clean old build
+        run: rm -rf ./dist
+
+      # 5️⃣ 构建 Astro 静态站
+      - name: Build project
+        run: npm run build
+
+      # 6️⃣ 部署到 GitHub page 分支 + 推送 CNB 仓库
+      - name: Deploy to GitHub Pages & CNB
+        env:
+          GH_ACTOR: ${{ github.actor }}
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CNB_USERNAME: ${{ secrets.CNB_USERNAME }}
+          CNB_TOKEN: ${{ secrets.CNB_TOKEN }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          COMMIT_HASH: ${{ github.sha }}
+        run: |
+          cd ./dist
+          git init
+
+          # 配置 Git 身份
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
+          # 构建提交信息（包含源码信息）
+          BUILD_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+          SHORT_HASH=$(echo "$COMMIT_HASH" | cut -c1-7)
+          COMMIT_URL="https://github.com/${GH_REPO}/commit/${COMMIT_HASH}"
+          MESSAGE="Deploy from GitHub: \"${COMMIT_MESSAGE}\"
+Source commit: ${SHORT_HASH} (${COMMIT_URL})
+Built at: ${BUILD_TIME}"
+
+          # 提交所有文件
+          git add .
+          git commit -m "$MESSAGE"
+
+          echo "🚀 推送到 GitHub Pages 分支(page)"
+          git push --force --quiet "https://${GH_ACTOR}:${GH_TOKEN}@github.com/${GH_REPO}.git" master:page
+
+          echo "🌐 同步到 CNB 仓库"
+          git branch -M main
+          git remote add origin "https://${CNB_USERNAME}:${CNB_TOKEN}@cnb.cool/Liiiu/Blog.git"
+          git push --force --quiet origin main
