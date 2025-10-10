@@ -6,13 +6,13 @@
   font-display: swap;
 }
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-VariableItalic.ttf') format('truetype');
+  font-family: 'LXGWWenKai';
+  src: url('/fonts/LXGWWenKaiGBLite-Light.ttf') format('truetype');
   font-style: italic;
   font-display: swap;
 }
 html {
-  font-family:'LXGWWenKai','Satoshi',sans-serif;
+  font-family:'LXGWWenKai',sans-serif;
 }
 
 /* Theme */

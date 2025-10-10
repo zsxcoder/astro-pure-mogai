@@ -48,7 +48,7 @@ export const theme: ThemeUserConfig = {
   header: {
     menu: [
       { title: '博文', link: '/blog' },
-      { title: '文档', link: '/docs' },
+    //  { title: '文档', link: '/docs' },
       { title: '项目', link: '/projects' },
       { title: '友链', link: '/links' },
       { title: '关于', link: '/about' }
@@ -126,8 +126,8 @@ export const integ: IntegrationUserConfig = {
     // server: 'https://v1.hitokoto.cn/?c=i',
     // target: (data) => (data as { hitokoto: string }).hitokoto || 'Error'
     // https://github.com/lukePeavey/quotable
-    server: 'https://api.quotable.io/quotes/random?maxLength=60',
-    target: `(data) => data[0].content || 'Error'`
+    server: 'https://v1.hitokoto.cn/?c=i', 
+    target: `(data) => data.hitokoto || 'Error'`
   },
   // UnoCSS typography
   // See: https://unocss.dev/presets/typography
