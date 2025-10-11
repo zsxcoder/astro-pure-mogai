@@ -1,4 +1,4 @@
-import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } from 'astro-pure/types'
+import type { CardListData, Config, IntegrationUserConfig,ThemeUserConfig } from 'astro-pure/types'
 
 export const theme: ThemeUserConfig = {
   // === Basic configuration ===
@@ -65,7 +65,12 @@ export const theme: ThemeUserConfig = {
       {
         title: '鄂ICP备2025150801号-1',
         link: 'https://beian.miit.gov.cn/',
-        style: 'text-sm' // Uno/TW CSS class
+        style: 'text-sm', // Uno/TW CSS class
+      },
+      {
+        title: '川公网安备51170302000216号',
+        link: 'https://beian.mps.gov.cn/#/query/webSearch?code=51170302000216',
+        style: 'text-sm',
       },
       {
         title: 'Travelling',
