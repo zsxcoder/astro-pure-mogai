@@ -1,6 +1,5 @@
 ---
-import { Button, Spoiler, Timeline, } from 'astro-pure/user'
-// import { Collapse } from 'astro-pure/user'
+import { Button, Spoiler, Timeline, Collapse } from 'astro-pure/user'
 import PageLayout from '@/layouts/CommonPage.astro'
 import Substats from '@/components/about/Substats.astro'
 import ToolSection from '@/components/about/ToolSection.astro'
@@ -152,15 +151,27 @@ const headings = [
     tools={[
       {
         name: 'Aliyun',
-        description: 'Domain,DNS,Servers | 240.9￥/year',
+        description: 'Domain,DNS,Servers | 240.9￥/Year',
         href: 'https://www.aliyun.com/minisite/goods?userCode=sna6zh3p',
         icon: import('@/assets/tools/alibabacloud.svg?raw')
       },
       {
         name: 'Zeabur',
-        description: 'Serverless Platform | 5$/month',
+        description: 'Serverless Platform | 5$/Month',
         href: 'https://zeabur.com/referral?referralCode=xlinkexe',
         icon: import('@/assets/tools/zeabur.svg?raw')
+      },
+      {
+        name: 'Qiniu',
+        description: 'CDN | Free',
+        href: 'https://s.qiniu.com/bEnEJn',
+        icon: import('@/assets/tools/qiniu.svg?raw')
+      },
+      {
+        name: 'Tencent Cloud',
+        description: 'CDN | Overbilling',
+        href: 'https://cloud.tencent.com/',
+        icon: import('@/assets/tools/tencentcloud.svg?raw')
       }
     ]}
   />
@@ -242,9 +253,8 @@ const headings = [
     <li>
       国外分流 & CI/CD: <a href='https://www.cloudflare.com/' target='_blank'>Cloudflare</a>
     </li>
-    <!-- <li>Resources speedup: <a href='https://cdn.cbd.int/' target='_blank'>CBD CDN</a></li> -->
     <li>
-      CDN: <a href='https://www.dogecloud.com/' target='_blank'>多吉云</a> + <a href='https://www.qiniu.com/' target='_blank'>七牛云</a> + <a href='https://www.bitiful.com/' target='_blank'>缤纷云</a>
+      CDN: <a href='https://www.dogecloud.com/' target='_blank'>多吉云</a> + <a href='https://www.qiniu.com/' target='_blank'>七牛云</a> + <a href='https://cloud.tencent.com/' target='_blank'>腾讯云</a>
     </li>
     <li>
       资源加速 & 存储: <a href='https://cdn.jsdmirror.com/' target='_blank'>JSDMirror</a> + <a href='https://www.bitiful.com/' target='_blank'>缤纷云</a>
@@ -259,5 +269,16 @@ const headings = [
     </li>
     <li>网站字体: <a href='https://github.com/lxgw/LxgwWenKaiGB-Lite' target='_blank'>霞鹜文楷GB轻便版</a></li>
   </ul>
+  <Collapse title='网站优化结果'>
+    <figure class="mt-4">
+      <img
+        src=""
+        alt="还在优化中🥲"
+        loading="lazy"
+        class="rounded shadow max-w-sm md:max-w-md mx-auto my-0"
+      />
+      <figcaption class="mt-2 text-sm text-gray-600 text-center">全球优化展示（详细结果查看，<a href="https://www.webpagetest.org/" target="_blank">WebPageTest</a>）</figcaption>
+    </figure>
+  </Collapse>
 <Signature mode="once-on-view" threshold={0.8} />
 </PageLayout>
