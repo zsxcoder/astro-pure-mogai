@@ -1,4 +1,5 @@
 /* Font */
+/* 改用CDN的方式加载字体，提升网站加载速度
 @font-face {
   font-family: 'LXGWWenKai';
   src: url('/fonts/LXGWWenKaiGBLite-Light.ttf') format('truetype');
@@ -11,8 +12,9 @@
   font-style: italic;
   font-display: swap;
 }
+*/
 html {
-  font-family:'LXGWWenKai';
+  font-family:'LXGW Bright Medium';
 }
 
 /* Theme */
