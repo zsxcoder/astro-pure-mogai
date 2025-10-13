@@ -119,8 +119,8 @@ export const integ: IntegrationUserConfig = {
     applyTip: [
       { name: 'Name', val: "梨尽兴" },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://ljx.icu' },
-      { name: 'Avatar', val: 'https://ljx.icu/favicon/avatar.png' }
+      { name: 'Link', val: 'https://blog.ljx.icu' },
+      { name: 'Avatar', val: 'https://blog.ljx.icu/favicon/avatar.png' }
     ]
   },
   // Enable page search function
