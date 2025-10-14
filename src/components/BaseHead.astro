@@ -2,6 +2,9 @@
 import { prod } from 'astro-pure/server'
 import type { SiteMeta } from 'astro-pure/types'
 import config from '@/site-config'
+import gptJs from '../plugins/gpt.js?url';
+import customJs from '../plugins/custom.js?url';
+import gptCss from '../assets/styles/gpt.css?url';
 
 type Props = SiteMeta
 
@@ -99,9 +102,9 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card.png', As
 
 
 {/* SparkLite AI 摘要工具 - 仅在博客页面显示 */}
-<script src="/src/plugins/custom.js" is:inline></script>
+<script src={customJs} is:inline></script>
 {Astro.url.pathname.includes('/blog/') && (
-  <script src="/src/plugins/gpt.js" is:inline></script>
+  <script src={gptJs} is:inline></script>
 )}
 {/* SparkLite AI 摘要工具样式 */}
-<link rel='stylesheet' href='/src/assets/styles/gpt.css' />
+<link rel='stylesheet' href={gptCss} />
