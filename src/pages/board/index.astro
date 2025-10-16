@@ -1,7 +1,7 @@
 ---
 import PageLayout from '@/layouts/CommonPage.astro'
 import Signature from 'preset/components/signature/Signature.astro'
-
+import shuoshuo from '../../plugins/shuoshuo.js?url';
 ---
 
 <PageLayout title='留言板' comment>
@@ -12,6 +12,9 @@ import Signature from 'preset/components/signature/Signature.astro'
   <p style="font-size:16px; color:#444;">您的每条留言都是我成长的动力 💪</p>
 </div>
 
+<div id="talk"></div>
+<div class="limit">- 只展示最近30条说说 -</div>
+<script src={shuoshuo} no-pjax is:inline></script>
 
 <Signature mode="once-on-view" threshold={0.8} />
 
