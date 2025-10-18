@@ -29,7 +29,7 @@ export const theme: ThemeUserConfig = {
   },
 
   // === Global configuration ===
-  titleDelimiter: '|',
+  titleDelimiter: '·',
   prerender: true,
   npmCDN: 'https://cdn.jsdmirror.com/npm',
 
@@ -88,7 +88,11 @@ export const theme: ThemeUserConfig = {
     /** Enable displaying a “Astro & Pure theme powered” link in your site’s footer. */
     credits: true,
     /** Optional details about the social media accounts for this site. */
-    social: { github: 'https://github.com/ljxme' }
+    social: { 
+      email: 'mailto:artemisia666@foxmail.com', 
+      github: 'https://github.com/ljxme',
+      telegram: 'https://t.me/ljxme'
+    }
   },
 
   content: {
