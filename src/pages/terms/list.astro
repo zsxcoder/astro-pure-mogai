@@ -3,7 +3,6 @@ import { Button, CardList, Collapse } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import { integ, terms } from '@/site-config'
-import Signature from 'preset/components/signature/Signature.astro'
 
 const meta = {
   title: '网站政策',
@@ -54,5 +53,4 @@ const meta = {
       </Collapse>
     </div>
   </main>
-<Signature mode="once-on-view" threshold={0.8} />
 </PageLayout>

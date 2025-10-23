@@ -3,7 +3,6 @@ import { Button, Spoiler, Timeline, Collapse } from 'astro-pure/user'
 import PageLayout from '@/layouts/CommonPage.astro'
 import Substats from '@/components/about/Substats.astro'
 import ToolSection from '@/components/about/ToolSection.astro'
-import Signature from 'preset/components/signature/Signature.astro'
 
 
 
@@ -252,21 +251,10 @@ const headings = [
   <Collapse title='本网站更新日志'>
     <Timeline
       events={[
-        {
-          date: '2025-10-14',
-          content:
-            '实现文章AI摘要功能'
-        },
-        {
-          date: '2025-10-13',
-          content:
-            '接入CDN服务，对字体进行分割并使用CDN加速'
-        },
-        {
-          date: '2025-10-11',
-          content:
-            '网站所有备案完成'
-        }
+        {date: '2025-10-23',content:'完善评论及相关通知类功能，改善签名布局位置'},
+        {date: '2025-10-14',content:'实现文章AI摘要功能'},
+        {date: '2025-10-13',content:'接入CDN服务，对字体进行分割并使用CDN加速'},
+        {date: '2025-10-11',content:'网站所有备案完成'}
       ]}
     />
   </Collapse>
@@ -317,5 +305,4 @@ const headings = [
       <figcaption class="mt-2 text-sm text-gray-600 text-center"> <a href='/images/youhua.png' target='_blank'>点击查看详细大图</a> </figcaption>
     </figure>
   </Collapse>
-<Signature mode="once-on-view" threshold={0.8} />
 </PageLayout>

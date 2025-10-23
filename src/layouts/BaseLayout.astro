@@ -7,6 +7,7 @@ import config from '@/site-config'
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseLayout /> component.
 import '@/assets/styles/app.css'
+import Signature from 'preset/components/signature/Signature.astro'
 
 interface Props {
   meta: SiteMeta
@@ -40,6 +41,7 @@ const {
       <Header />
       <div class='flex-1 w-full'>
         <slot />
+        <Signature mode="once-on-view" threshold={0.8} />
       </div>
       <Footer />
     </div>

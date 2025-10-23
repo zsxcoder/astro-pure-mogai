@@ -1,6 +1,5 @@
 ---
 import BoardLayout from '@/layouts/BoardLayout.astro'
-import Signature from 'preset/components/signature/Signature.astro'
 import shuoshuo from '../../plugins/shuoshuo.js?url';
 ---
 
@@ -15,7 +14,5 @@ import shuoshuo from '../../plugins/shuoshuo.js?url';
 <div id="talk"></div>
 <div class="limit">- 只展示最近30条说说 -</div>
 <script src={shuoshuo} no-pjax is:inline></script>
-
-<Signature mode="once-on-view" threshold={0.8} />
 
 </BoardLayout>
