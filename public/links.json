@@ -41,12 +41,6 @@
           "avatar": "https://blog.zeruns.com/tx.jpg"
         },
         {
-          "name": "Shuoer's blog",
-          "intro": "Everyday is a new beginning",
-          "link": "https://shuoer.top/",
-          "avatar": "https://shuoer.top/favicon/favicon.ico"
-        },
-        {
           "name": "清羽飞扬",
           "intro": "柳影曳曳，清酒孤灯，扬笔撒墨，心境如霜",
           "link": "https://blog.liushen.fun/",
@@ -57,13 +51,26 @@
           "intro": "青序成栈·向简而生",
           "link": "https://qxzhan.cn/",
           "avatar": "https://qxzhan.cn/favicon.png"
+        },
+        {
+          "name": "AirTouchの小站",
+          "intro": "岩间琉璃云间月",
+          "link": "https://www.xsl.im/",
+          "avatar": "https://www.xsl.im/avatar.webp"
         }
       ]
     },
     {
       "id_name": "inactive-links",
       "desc": "Inactive or rule-breaking friends",
-      "link_list": []
+      "link_list": [
+        {
+          "name": "Shuoer's blog",
+          "intro": "Everyday is a new beginning",
+          "link": "https://shuoer.top/",
+          "avatar": "https://shuoer.top/favicon/favicon.ico"
+        }
+      ]
     },
     {
       "id_name": "special-links",
