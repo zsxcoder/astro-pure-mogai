@@ -107,7 +107,7 @@ export const theme: ThemeUserConfig = {
     /** Blog page size for pagination (optional) */
     blogPageSize: 8,
     // Currently support weibo, x, bluesky
-    // share: ['weibo', 'x', 'bluesky']
+    share: ['weibo', 'x', 'bluesky']
   }
 }
 
@@ -166,7 +166,7 @@ export const integ: IntegrationUserConfig = {
     // Server service link
     server: 'https://waline.ljx.icu',
     // Refer https://waline.js.org/en/guide/features/emoji.html
-    emoji: ['bmoji', 'weibo'],
+    emoji: ['bmoji',"heybox_cube","heybox_heniang","linedog"],
     // Refer https://waline.js.org/en/reference/client/props.html
     additionalConfigs: {
       // search: false,
@@ -176,7 +176,7 @@ export const integ: IntegrationUserConfig = {
         reaction0: 'Like',
         placeholder: '欢迎留下评论~（邮箱用于接收回复，无需登录，评论经审核后可见）'
       },
-      imageUploader: false
+      // imageUploader: false
     }
   }
 }
