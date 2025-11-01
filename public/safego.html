@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外链跳转提示 - 梨尽兴博客</title>
+    <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --background: 210 33% 99%;
+            --foreground: 240 10% 3.9%;
+            --primary: 48 45% 45%;
+            --primary-foreground: 0 0% 92.5%;
+            --muted: 240 4.8% 95%;
+            --muted-foreground: 240 3.8% 28.1%;
+            --border: 240 5.9% 88%;
+        }
+        .dark {
+            --background: 240 20.54% 5.2%;
+            --foreground: 0 0% 98%;
+            --primary: 195 95% 85%;
+            --primary-foreground: 240 3.7% 15.9%;
+            --muted: 240 5.9% 12%;
+            --muted-foreground: 240 5% 74.9%;
+            --border: 240 3.7% 19.9%;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'LXGW Bright Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card {
+            background-color: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: hsl(var(--foreground));
+            text-align: center;
+        }
+        .url-display {
+            background-color: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid hsl(var(--border));
+        }
+        .warning {
+            margin: 1.5rem 0;
+            color: hsl(var(--muted-foreground));
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, transform 0.2s;
+            font-size: 1rem;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+        .btn-secondary {
+            background-color: hsl(var(--muted));
+            color: hsl(var(--foreground));
+            border: 1px solid hsl(var(--border));
+        }
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: hsl(var(--muted-foreground));
+            font-size: 0.85rem;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">🌓</button>
+    
+    <div class="container">
+        <div class="card">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            
+            <h1>您即将离开梨尽兴博客</h1>
+            
+            <p class="warning">
+                您点击了一个外部链接，即将前往其他网站。
+                请注意，我们无法保证外部网站的安全性和内容的准确性。   
+                请确保您了解可能的风险，并在浏览外部网站时保持警惕。
+            </p>
+            
+            <div class="url-display" id="external-url">
+                正在加载目标网址...
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-secondary" id="back-btn">返回上一页</button>
+                <button class="btn btn-primary" id="continue-btn">继续访问</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <p>© 2025 梨尽兴 | 安全跳转提示页</p>
+    </footer>
+
+    <script>
+        // 获取URL参数
+        function getUrlParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+        
+        // 设置外部URL
+        const targetUrl = getUrlParam('url');
+        const urlDisplay = document.getElementById('external-url');
+        
+        if (targetUrl) {
+            urlDisplay.textContent = decodeURIComponent(targetUrl);
+            
+            // 继续按钮点击事件
+            document.getElementById('continue-btn').addEventListener('click', function() {
+                window.location.href = targetUrl;
+            });
+        } else {
+            urlDisplay.textContent = '未提供有效的目标网址';
+            document.getElementById('continue-btn').disabled = true;
+        }
+        
+        // 返回按钮点击事件
+        document.getElementById('back-btn').addEventListener('click', function() {
+            window.history.back();
+        });
+        
+        // 主题切换
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // 检查本地存储中的主题偏好
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark');
+            themeToggle.textContent = '🌞';
+        } else {
+            themeToggle.textContent = '🌙';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark');
+            
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '🌞';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+    </script>
+</body>
+</html>
