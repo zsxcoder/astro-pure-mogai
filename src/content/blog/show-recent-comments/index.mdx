@@ -21,7 +21,9 @@ language: '中文'
 
 代码片段Gist开源地址：[Recent Comments for Astro-Theme-Pure](https://gist.github.com/ljxme/e08c5d42abc5e5aa3fdda2d16aa5a60a)
 
-1. 新建`src/plugins/recentcomment.ts`文件并填入以下内容：
+### recentcomment.ts文件
+
+在 `src/plugins` 目录下新建 `recentcomment.ts` 文件并填入以下内容（**注意需要替换的部分**）：
 
 ``` ts title="recentcomment.ts"
 /**
@@ -52,7 +54,8 @@ interface WalineResponse {
  */
 export async function fetchRecentComments(limit: number = 5): Promise<WalineComment[]> {
   try {
-    const response = await fetch('https://<Waline后端地址>/api/comment?type=recent');
+	  // <Waline后端地址> 请将该部分替换为你自己搭建的Waline后端服务地址 <!-- [!code highlight:2] -->
+    const response = await fetch('https://<Waline后端地址>/api/comment?type=recent'); 
     if (!response.ok) {
       throw new Error(`获取评论失败: ${response.status}`);
     }
@@ -121,7 +124,9 @@ export function truncateText(text: string, length: number = 100): string {
 }
 ```
 
-2. 新建`src/assets/styles/rc.css`文件并填入以下内容：
+### rc.css文件
+
+在 `src/assets/styles` 目录下新建 `rc.css` 文件并填入以下内容：
 
 ```css title="rc.css"
 /* 最新评论组件样式 */
@@ -262,7 +267,9 @@ export function truncateText(text: string, length: number = 100): string {
 }
 ```
 
-3. 新建`src/components/RecentComments.astro`文件并填入以下内容：
+### RecentComments.astro文件
+
+3. 在目录下 `src/components` 目录下新建 `RecentComments.astro` 文件并填入以下内容：
 
 ```astro title="RecentComments.astro"
 ---
@@ -324,8 +331,9 @@ const comments = await fetchRecentComments(5);
 
 ## 使用
 
-- 在主页（`src/pages/index.astro`）中使用：
+### 在Pure主题主页中使用
 
+增添 `src/pages/index.astro` 文件内容如下：
 
 ```astro title="index.astro"
 ---
@@ -346,7 +354,7 @@ import RecentComments from '@/components/RecentComments.astro' //引入组件 # 
 </PageLayout>
 ```
 
-- 最小化使用：
+### 最小化使用
 
 ```astro
 ---
