@@ -145,7 +145,7 @@
     <div class="url-display" id="url-display"></div>
     
     <div class="buttons">
-      <button class="btn" id="back-btn">返回上一页</button>
+      <button class="btn" id="back-btn">取消跳转</button>
       <button class="btn btn-primary" id="continue-btn">继续访问</button>
     </div>
   </div>
@@ -166,11 +166,18 @@
     const urlDisplay = document.getElementById('url-display');
     urlDisplay.textContent = targetUrl;
     
-    // 按钮事件
+    // 按钮事件 - 取消跳转
     document.getElementById('back-btn').addEventListener('click', () => {
-      history.back();
+      // 取消跳转，返回到来源页面
+      if (document.referrer) {
+        // 如果有来源页面，则返回来源页面
+        window.location.href = document.referrer;
+      } else {
+        // 如果没有来源页面，则返回首页
+        window.location.href = '/';
+      }
     });
-    
+    // 按钮事件 - 继续访问
     document.getElementById('continue-btn').addEventListener('click', () => {
       if (targetUrl) {
         window.location.href = targetUrl;
