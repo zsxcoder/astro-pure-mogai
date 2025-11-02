@@ -103,9 +103,15 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card.png', As
 
 {/* SparkLite AI 摘要工具 */}
 <script src={customJs} is:inline></script>
-{Astro.url.pathname.includes('/blog/') && !(/\/blog\/\d+\/$/.test(Astro.url.pathname)) && (
-  <script src={gptJs} is:inline></script>
-)}
+{(() => {
+  const path = Astro.url.pathname;
+  // 排除形如 /blog/2/ 的分页路径
+  const isNumericPath = /\/blog\/\d+\/$/.test(path);
+  // 只在博客文章页面显示，且不在分页页面显示
+  return path.includes('/blog/') && !isNumericPath && (
+    <script src={gptJs} is:inline></script>
+  );
+})()}
 {/* SparkLite AI 摘要工具样式 */}
 <link rel='stylesheet' href={gptCss} />
 
