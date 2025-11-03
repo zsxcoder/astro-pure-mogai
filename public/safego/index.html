@@ -168,8 +168,18 @@
     
     // 按钮事件 - 取消跳转
     document.getElementById('back-btn').addEventListener('click', () => {
-      // 取消跳转，直接关闭当前页面
-      window.close();
+      // 尝试关闭页面，如果失败则返回上一页
+      try {
+        window.close();
+        // 如果window.close()在移动设备上不起作用，添加延迟检查窗口是否关闭
+        setTimeout(() => {
+          // 如果页面仍然打开，则返回上一页
+          window.history.back();
+        }, 100);
+      } catch (e) {
+        // 如果出现异常，返回上一页
+        window.history.back();
+      }
     });
     // 按钮事件 - 继续访问
     document.getElementById('continue-btn').addEventListener('click', () => {
