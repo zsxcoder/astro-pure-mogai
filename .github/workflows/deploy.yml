@@ -98,33 +98,66 @@ jobs:
       # - 获取访问令牌（请在 DogeCloud 控制台创建并保存到仓库 Secrets）：https://docs.dogecloud.com/cdn/api-access-token
       # - 提交刷新任务接口（目录刷新 type=dir）：https://docs.dogecloud.com/cdn/api-refresh-add
       # 为避免接口变更导致失败，这里直接使用预先创建的访问令牌 `DOGE_ACCESS_TOKEN`
-      - name: ♻️ Refresh CDN Directory
+      - name: ♻️ Refresh DogeCloud CDN Directory
         if: success()
         env:
-          # 在 GitHub 仓库设置中添加 Secrets：DOGE_ACCESS_TOKEN
-          DOGE_ACCESS_TOKEN: ${{ secrets.DOGE_ACCESS_TOKEN }}
+          # 在 GitHub 仓库设置中添加 Secrets：DOGE_ACCESS_KEY、DOGE_SECRET_KEY
+          DOGE_ACCESS_KEY: ${{ secrets.DOGE_ACCESS_KEY }}
+          DOGE_SECRET_KEY: ${{ secrets.DOGE_SECRET_KEY }}
         run: |
           echo "♻️ 正在刷新 CDN 目录缓存..."
-          if [ -z "$DOGE_ACCESS_TOKEN" ]; then
-            echo "❌ 缺少 DOGE_ACCESS_TOKEN，请在仓库 Secrets 中配置"; exit 1;
+          if [ -z "$DOGE_ACCESS_KEY" ] || [ -z "$DOGE_SECRET_KEY" ]; then
+            echo "❌ 缺少 DOGE_ACCESS_KEY 或 DOGE_SECRET_KEY，请在仓库 Secrets 中配置"; exit 1;
           fi
+          pip install --quiet requests
+          python - <<'PY'
+          import os, json, urllib.parse, hmac, hashlib, requests, sys
 
-          # 刷新目录列表：此处仅刷新根目录，可按需追加子目录
-          PAYLOAD='{"type":"dir","urls":["https://blog.ljx.icu/"]}'
+          def dogecloud_api(api_path, data, json_mode=False):
+              """
+              调用多吉云 API：计算 HMAC-SHA1 签名并提交请求
+              :param api_path: 接口路径（示例：/cdn/refresh/add.json）
+              :param data:     请求数据 dict（表单或 JSON）
+              :param json_mode: 是否以 JSON 发送（默认表单）
+              """
+              access_key = os.environ['DOGE_ACCESS_KEY']
+              secret_key = os.environ['DOGE_SECRET_KEY']
+              if json_mode:
+                  body = json.dumps(data, separators=(',', ':'))
+                  mime = 'application/json'
+              else:
+                  body = urllib.parse.urlencode(data)
+                  mime = 'application/x-www-form-urlencoded'
+              sign_str = api_path + "\n" + body
+              sign = hmac.new(secret_key.encode('utf-8'), sign_str.encode('utf-8'), hashlib.sha1).hexdigest()
+              auth = f"TOKEN {access_key}:{sign}"
+              resp = requests.post('https://api.dogecloud.com' + api_path, data=body, headers={'Authorization': auth, 'Content-Type': mime})
+              print('🔎 响应状态码：', resp.status_code)
+              print('📨 响应内容：', resp.text)
+              if 200 <= resp.status_code < 300:
+                  try:
+                      r = resp.json()
+                  except Exception:
+                      print('❌ 返回非 JSON'); sys.exit(1)
+                  if r.get('code') == 200:
+                      print('✅ 刷新任务提交成功')
+                      sys.exit(0)
+                  else:
+                      print('❌ API 返回错误：', r.get('msg'))
+                      sys.exit(1)
+              else:
+                  sys.exit(1)
 
-          # 发送刷新请求到 CDN API
-          HTTP_CODE=$(curl -sS -o /tmp/doge_resp.json -w "%{http_code}" \
-            -X POST "https://api.dogecloud.com/cdn/refresh/add" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${DOGE_ACCESS_TOKEN}" \
-            -d "$PAYLOAD")
+          def main():
+              """
+              提交目录刷新任务至 https://blog.ljx.icu/
+              使用 rtype=path 进行目录刷新（官方示例）
+              """
+              api_path = '/cdn/refresh/add.json'
+              urls = ['https://blog.ljx.icu/']
+              payload = {'rtype': 'path', 'urls': json.dumps(urls, separators=(',', ':'))}
+              dogecloud_api(api_path, payload, json_mode=False)
 
-          echo "🔎 响应状态码：$HTTP_CODE"
-          echo "📨 响应内容："
-          cat /tmp/doge_resp.json || true
-
-          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
-            echo "✅ DogeCloud 目录刷新任务已提交：https://blog.ljx.icu/"
-          else
-            echo "❌ 刷新接口返回非 2xx：$HTTP_CODE"; exit 1;
-          fi
+          if __name__ == '__main__':
+              main()
+          PY
