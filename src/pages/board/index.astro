@@ -2,17 +2,19 @@
 import BoardLayout from '@/layouts/BoardLayout.astro'
 import shuoshuo from '../../plugins/shuoshuo.js?url';
 import '@/assets/styles/text-background.css'
+import { Icon } from 'astro-pure/user'
 ---
 
 <BoardLayout title='留言板' comment>
  
 <div style="text-align:center; line-height:1.8; padding:20px 0; position:relative;">
-      <!-- 留言板的背景文字 -->
+  <!-- 留言板的背景文字 -->
   <div class="words-background">
     <p>富强 民主 文明 和谐</p>
     <p>自由 平等 公正 法治</p>
     <p>爱国 敬业 诚信 友善</p>
   </div>
+  
   <h2 style="font-size:26px; margin-bottom:12px;">欢迎来到留言板</h2>
   <p style="font-size:16px; color:#444;">您可以在这里与我和他人畅所欲言 🎤</p>
   <p style="font-size:16px; color:#444;">对本博客提出您认为不足之处 ✔️</p>
@@ -22,7 +24,25 @@ import '@/assets/styles/text-background.css'
 <div class="mt-4 border-t pt-4">
   <div id="talk"></div>
 </div>
-<div class="limit-notice">仅展示最近15条<a href='https://mm.ljx.icu/' target='_blank'>说说</a></div>
+<div class="limit-notice">仅展示最近15条说说
+  <a href='https://mm.ljx.icu/rss' target='_blank' class="rss-link">
+    <Icon name='rss' class='rss-icon' />
+  </a>
+</div>
+
+<style>
+  .rss-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>
+
 <script src={shuoshuo} no-pjax is:inline></script>
 
 </BoardLayout>
