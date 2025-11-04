@@ -31,10 +31,10 @@
 
 /* 词语背景样式 */
 .words-background {
-  position: fixed;
-  top: calc(50% - 255px);
+  position: absolute;
+  top: 0;
   left: 50%;
-  transform: translate(-50%, -50%); /* 确保背景居中 */
+  transform: translateX(-50%); /* 只水平居中，不垂直偏移 */
   z-index: -1; /* 确保在内容后面 */
   opacity: 0.3; /* 更自然的透明度 */
   width: 100%;
@@ -46,8 +46,9 @@
   writing-mode: horizontal-tb; /* 横向排列 */
   display: flex; /* 使用flex布局 */
   flex-direction: column; /* 垂直方向排列 */
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
+  justify-content: flex-start; /* 从顶部开始 */
+  align-items: center; /* 水平居中 */
+  padding-top: 80px; /* 顶部留出一定空间 */
   background-size: cover;
 }
 
