@@ -278,9 +278,11 @@ function renderTalks() {
         const commentLink = document.createElement('a');
         commentLink.href = 'javascript:;';
         commentLink.onclick = () => goComment(item.text);
+        commentLink.className = 'quote-btn';
+        commentLink.title = '引用此说说';
         const icon = document.createElement('span');
         icon.className = 'icon';
-        icon.innerHTML = '<i class="fa-solid fa-message fa-fw"></i>';
+        icon.innerHTML = '<i class="fa-solid fa-quote-left fa-fw"></i>';
         commentLink.appendChild(icon);
 
         talkBottom.appendChild(tags);

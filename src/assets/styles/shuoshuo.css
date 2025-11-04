@@ -174,11 +174,32 @@ html.dark, [data-theme=dark] {
 #talk .talk_item .talk_bottom .icon {
     float: right;
     transition: all .3s;
+    display: flex;
+    align-items: center;
 }
 #talk .talk_item .talk_bottom .icon:hover {
     color: #0066cc;
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
+
+.quote-btn {
+    background-color: var(--liushen-card-secondbg);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quote-btn:hover {
+    background-color: var(--liushen-button-hover-bg);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 #talk .talk_item .talk_bottom span.talk_tag,
 #talk .talk_item .talk_bottom span.location_tag {
     font-size: 14px;
