@@ -183,7 +183,7 @@ html.dark, [data-theme=dark] {
 }
 
 .quote-btn {
-    background-color: var(--liushen-card-secondbg);
+    background-color: rgba(217, 196, 141, 0.85);
     border-radius: 50%;
     width: 16px;
     height: 16px;
