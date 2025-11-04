@@ -92,3 +92,39 @@ jobs:
             git reset --hard origin/main
             git pull --depth=1
             echo "✅ 已拉取 page 分支最新内容"
+
+      # 9️⃣ 刷新 DogeCloud CDN 目录缓存
+      # 文档参考：
+      # - 获取访问令牌（请在 DogeCloud 控制台创建并保存到仓库 Secrets）：https://docs.dogecloud.com/cdn/api-access-token
+      # - 提交刷新任务接口（目录刷新 type=dir）：https://docs.dogecloud.com/cdn/api-refresh-add
+      # 为避免接口变更导致失败，这里直接使用预先创建的访问令牌 `DOGE_ACCESS_TOKEN`
+      - name: ♻️ Refresh CDN Directory
+        if: success()
+        env:
+          # 在 GitHub 仓库设置中添加 Secrets：DOGE_ACCESS_TOKEN
+          DOGE_ACCESS_TOKEN: ${{ secrets.DOGE_ACCESS_TOKEN }}
+        run: |
+          echo "♻️ 正在刷新 CDN 目录缓存..."
+          if [ -z "$DOGE_ACCESS_TOKEN" ]; then
+            echo "❌ 缺少 DOGE_ACCESS_TOKEN，请在仓库 Secrets 中配置"; exit 1;
+          fi
+
+          # 刷新目录列表：此处仅刷新根目录，可按需追加子目录
+          PAYLOAD='{"type":"dir","urls":["https://blog.ljx.icu/"]}'
+
+          # 发送刷新请求到 CDN API
+          HTTP_CODE=$(curl -sS -o /tmp/doge_resp.json -w "%{http_code}" \
+            -X POST "https://api.dogecloud.com/cdn/refresh/add" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${DOGE_ACCESS_TOKEN}" \
+            -d "$PAYLOAD")
+
+          echo "🔎 响应状态码：$HTTP_CODE"
+          echo "📨 响应内容："
+          cat /tmp/doge_resp.json || true
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ DogeCloud 目录刷新任务已提交：https://blog.ljx.icu/"
+          else
+            echo "❌ 刷新接口返回非 2xx：$HTTP_CODE"; exit 1;
+          fi
