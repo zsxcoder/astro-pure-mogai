@@ -1,6 +1,6 @@
 ---
 import { prod } from 'astro-pure/server'
-import { ClientRouter } from 'astro:transitions'
+// import { ClientRouter } from 'astro:transitions'
 import type { SiteMeta } from 'astro-pure/types'
 import config from '@/site-config'
 import gptJs from '../plugins/gpt.js?url';
@@ -127,9 +127,9 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card.png', As
 
 {/* Netease Mini Player */}
 <!-- 引入 Netease Mini Player 样式 -->
-<link rel="stylesheet" href="https://ljx-music-api.netlify.app/netease-mini-player-v2.css">
+<!-- <link rel="stylesheet" href="https://ljx-music-api.netlify.app/netease-mini-player-v2.css"> -->
 <!-- 引入 Netease Mini Player JS 文件 -->
-<script src="https://ljx-music-api.netlify.app/netease-mini-player-v2.js" is:inline defer></script>
+<!-- <script src="https://ljx-music-api.netlify.app/netease-mini-player-v2.js" is:inline defer></script> -->
 
 {/* 启用 Astro 客户端路由（View Transitions） */}
-<ClientRouter />
+<!-- <ClientRouter /> -->
