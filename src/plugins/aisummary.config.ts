@@ -8,6 +8,7 @@
  */
 // AI 摘要脚本配置（供脚本读取）：
 // AI_SUMMARY_API=https://aisummary.ljx.icu/api/spark-proxy
+// AI_SUMMARY_KEY=
 // 说明：上面两行仅作为配置占位与注释，被离线脚本解析，不会在浏览器中使用。
 // AISummary 静态摘要配置：
 var aisummaryTypingAnimate = true; // true 开启打字机动画；false 直接渲染文本
