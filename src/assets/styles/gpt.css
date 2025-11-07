@@ -104,6 +104,13 @@
     fill: hsl(var(--primary));
 }
 
+.sparkLite-disclaimer {
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+    margin-top: 0.5rem;
+    padding: 0 0.5rem;
+}
+
 .tianliGPT-title {
     display: flex;
     color: hsl(var(--muted-foreground));

@@ -18,6 +18,11 @@ const blog = defineCollection({
       // Required
       title: z.string().max(60),
       description: z.string().max(160),
+      /**
+       * AI 摘要字段，静态写入文章 Frontmatter。
+       * 由离线脚本生成，页面直接渲染，不在浏览器端请求。
+       */
+      summary: z.string().optional(),
       publishDate: z.coerce.date(),
       // Optional
       updatedDate: z.coerce.date().optional(),

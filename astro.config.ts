@@ -50,7 +50,8 @@ export default defineConfig({
     responsiveStyles: true,
     service: {
       entrypoint: 'astro/assets/services/sharp'
-    }
+    },
+    domains: ['tc.ljx.icu'] 
   },
 
   integrations: [
