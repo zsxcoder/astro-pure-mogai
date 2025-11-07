@@ -63,10 +63,11 @@ function readAIConfigFromCustom(): { api: string | null; key: string | null } {
  * 支持格式：var sparkLite_wordLimit = 8000; 或带空格与分号。
  */
 function readWordLimitFromCustom(): number | null {
-  const customPath = path.join(ROOT, 'src', 'plugins', 'custom.ts')
+  const customPath = path.join(ROOT, 'src', 'plugins', 'aisummary.config.ts')
   if (!fs.existsSync(customPath)) return null
   const content = fs.readFileSync(customPath, 'utf-8')
-  const m = content.match(/var\s+sparkLite_wordLimit\s*=\s*([0-9]+)/)
+  // 兼容旧变量名与新变量名
+  const m = content.match(/var\s+(?:aisummaryWordLimit|sparkLite_wordLimit)\s*=\s*([0-9]+)/)
   if (!m) return null
   const v = parseInt(m[1], 10)
   return Number.isFinite(v) && v > 0 ? v : null
@@ -76,7 +77,7 @@ function readWordLimitFromCustom(): number | null {
  * 从环境变量读取字数限制，支持 SPARKLITE_WORD_LIMIT 与 AI_SUMMARY_WORD_LIMIT。
  */
 function readWordLimitFromEnv(): number | null {
-  const envVal = process.env.SPARKLITE_WORD_LIMIT || process.env.AI_SUMMARY_WORD_LIMIT || ''
+  const envVal = process.env.AISUMMARY_WORD_LIMIT || process.env.SPARKLITE_WORD_LIMIT || process.env.AI_SUMMARY_WORD_LIMIT || ''
   const v = parseInt(envVal, 10)
   return Number.isFinite(v) && v > 0 ? v : null
 }
@@ -298,6 +299,9 @@ function toDeclarativeSentence(text: string, maxLen = SUMMARY_MAX_LEN): string {
  * 在 frontmatter 中写入/更新 `summary` 字段
  * 要求：summary 出现在两个 `---` 之间的最后一行（结束分隔线之前）。
  * 若已存在则移除原位置，统一追加到结束分隔线前；若无 frontmatter 则只写入 summary。
+ * @param frontmatter 原始 frontmatter 字符串（包含分隔线）
+ * @param summary 需要写入的摘要文本（已为单句、长度受控）
+ * @returns 更新后的 frontmatter 字符串（确保结束分隔线后带换行）
  */
 function upsertSummaryInFrontmatter(frontmatter: string, summary: string): string {
   if (!frontmatter) {
@@ -334,6 +338,8 @@ function upsertSummaryInFrontmatter(frontmatter: string, summary: string): strin
 
 /**
  * 简易 YAML 转义（单行文本）
+ * @param text 需要转义的摘要文本
+ * @returns 适配 YAML 的安全字符串（使用双引号包裹）
  */
 function escapeYaml(text: string): string {
   const s = (text || '').replace(/"/g, '\\"')

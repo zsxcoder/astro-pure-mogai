@@ -3,9 +3,9 @@ import { prod } from 'astro-pure/server'
 // import { ClientRouter } from 'astro:transitions'
 import type { SiteMeta } from 'astro-pure/types'
 import config from '@/site-config'
-import gptJs from '../plugins/gpt.ts?url';
-import customJs from '../plugins/custom.ts?url';
-import gptCss from '../assets/styles/gpt.css?url';
+import aisummary from '../plugins/aisummary.ts?url';
+import aisummaryConfig from '../plugins/aisummary.config.ts?url';
+import aisummaryCss from '../assets/styles/aisummary.css?url';
 import shuoshuoCss from '../assets/styles/shuoshuo.css?url';
 
 type Props = SiteMeta
@@ -106,13 +106,13 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card.png', As
   )
 }
 
-{/* SparkLite AI 摘要工具 */}
-<script src={customJs} is:inline></script>
+{/* AISummary 工具 */}
+<script src={aisummaryConfig} is:inline></script>
 {Astro.url.pathname.startsWith('/blog/')
   && !/^\/blog\/\d+\/?$/.test(Astro.url.pathname)
-  && <script src={gptJs} is:inline></script>}
-{/* SparkLite AI 摘要工具样式 */}
-<link rel='stylesheet' href={gptCss} />
+  && <script src={aisummary} is:inline></script>}
+{/* AISummary 样式 */}
+<link rel='stylesheet' href={aisummaryCss} />
 
 {/* 说说样式 */}
 <link rel='stylesheet' href={shuoshuoCss} />

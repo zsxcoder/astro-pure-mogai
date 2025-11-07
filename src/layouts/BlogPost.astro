@@ -57,11 +57,11 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
     </Fragment>
   </Hero>
 
-  {/* SparkLite AI 摘要（静态渲染） */}
+  {/* AISummary AI 摘要（静态渲染） */}
   {data.summary && (
-    <div class='post-SparkLite'>
-      <div class='sparkLite-title'>
-        <i class='sparkLite-title-icon'>
+    <div class='aisummary-container'>
+      <div class='aisummary-title'>
+        <i class='aisummary-title-icon'>
           <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'>
             <title>机器人</title>
             <g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>
@@ -69,11 +69,11 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
             </g>
           </svg>
         </i>
-        <div class='sparkLite-title-text'>Li's AI Summary</div>
-        <div class='sparkLite-tag' id='sparkLite-tag'>Li's AI</div>
+        <div class='aisummary-title-text'>Li's AI Summary</div>
+        <div class='aisummary-tag' id='aisummary-tag'>Li's AI</div>
       </div>
-      <div class='sparkLite-explanation' data-ai-summary={data.summary}>{data.summary}</div>
-      <div class='sparkLite-disclaimer'>本摘要由AI生成，仅供参考，内容准确性请以原文为准。</div>
+      <div class='aisummary-explanation' data-ai-summary={data.summary}>{data.summary}</div>
+      <div class='aisummary-disclaimer'>本摘要由AI生成，仅供参考，内容准确性请以原文为准。</div>
     </div>
   )}
 
