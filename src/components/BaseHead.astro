@@ -3,8 +3,7 @@ import { prod } from 'astro-pure/server'
 // import { ClientRouter } from 'astro:transitions'
 import type { SiteMeta } from 'astro-pure/types'
 import config from '@/site-config'
-import aisummary from '../plugins/aisummary.ts?url';
-import aisummaryConfig from '../plugins/aisummary.config.ts?url';
+import aisummaryConfig from '../plugins/aisummary.config.ts?raw';
 import aisummaryCss from '../assets/styles/aisummary.css?url';
 import shuoshuoCss from '../assets/styles/shuoshuo.css?url';
 
@@ -107,10 +106,14 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card.png', As
 }
 
 {/* AISummary 工具 */}
-<script src={aisummaryConfig} is:inline></script>
+<script is:inline>{aisummaryConfig}</script>
 {Astro.url.pathname.startsWith('/blog/')
   && !/^\/blog\/\d+\/?$/.test(Astro.url.pathname)
-  && <script src={aisummary} is:inline></script>}
+  && (
+    <script type='module' is:inline>
+      import '@/plugins/aisummary.ts'
+    </script>
+  )}
 {/* AISummary 样式 */}
 <link rel='stylesheet' href={aisummaryCss} />
 
