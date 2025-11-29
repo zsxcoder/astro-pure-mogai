@@ -13,7 +13,7 @@ export const theme: ThemeUserConfig = {
   /** Specify the default language for this site. */
   locale: {
     lang: 'zh-CN',
-    attrs: 'zh-CN',
+    attrs: 'zh_CN',
     // Date locale
     dateLocale: 'en-US',
     dateOptions: {
@@ -29,7 +29,7 @@ export const theme: ThemeUserConfig = {
   },
 
   // === Global configuration ===
-  titleDelimiter: '·',
+  titleDelimiter: '•',
   prerender: true,
   npmCDN: 'https://cdn.jsdmirror.com/npm',
 
@@ -130,7 +130,9 @@ export const integ: IntegrationUserConfig = {
       { name: 'Link', val: 'https://blog.ljx.icu' },
       { name: 'Rss', val: 'https://blog.ljx.icu/rss.xml' },
       { name: 'Avatar', val: 'https://blog.ljx.icu/favicon.png' },
-    ]
+    ],
+    // Cache avatars in `public/avatars/` to improve user experience.
+    cacheAvatar: false
   },
   // Enable page search function
   pagefind: true,

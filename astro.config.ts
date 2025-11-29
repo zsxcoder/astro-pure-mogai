@@ -1,13 +1,9 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 // import vercel from '@astrojs/vercel'
 import AstroPureIntegration from 'astro-pure'
-import { defineConfig } from 'astro/config'
+import { defineConfig, fontProviders } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-// import node from '@astrojs/node'
-
-// Others
-// import { visualizer } from 'rollup-plugin-visualizer'
 
 // Local integrations
 // Local rehype & remark plugins
@@ -50,8 +46,7 @@ export default defineConfig({
     responsiveStyles: true,
     service: {
       entrypoint: 'astro/assets/services/sharp'
-    },
-    domains: ['tc.ljx.icu'] 
+    }
   },
 
   integrations: [
@@ -105,6 +100,20 @@ export default defineConfig({
     }
   },
   experimental: {
-    contentIntellisense: true
+    contentIntellisense: true, // allow vscode plugin to support *mdx files
+    fonts: [
+      {
+        provider: fontProviders.fontshare(),
+        name: 'Satoshi',
+        cssVariable: '--font-satoshi',
+        // Default included:
+        // weights: [400],
+        // styles: ["normal", "italics"],
+        // subsets: ["cyrillic-ext", "cyrillic", "greek-ext", "greek", "vietnamese", "latin-ext", "latin"],
+        // fallbacks: ["sans-serif"],
+        weights: [400, 500],
+        subsets: ['latin']
+      }
+    ]
   }
 })

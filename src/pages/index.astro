@@ -22,6 +22,15 @@ import '@/assets/styles/text-background.css'
 const MAX_POSTS = 10
 const allPosts = await getBlogCollection()
 const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
+
+const imagePath = config.logo.src
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/*.{jpeg,jpg,png,gif,avif,webp}'
+)
+if (!images[imagePath])
+  throw new Error(
+    `"${imagePath}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif,avif,webp}"`
+  )
 ---
 
 <PageLayout meta={{ title: '首页' }} highlightColor='#FFF8DC'>
@@ -43,8 +52,8 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
     </div>
     <section class='animate mb-10 flex flex-col items-center gap-y-7' id='content-header'>
       <Image
-        src={avatar}
-        alt='profile'
+        src={images[imagePath]()}
+        alt={config.logo.alt || 'Logo'}
         class='h-28 w-auto rounded-full border p-1'
         loading='eager'
       />
