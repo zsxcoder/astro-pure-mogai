@@ -1,6 +1,5 @@
 ---
 import { prod } from 'astro-pure/server'
-// import { ClientRouter } from 'astro:transitions'
 import type { SiteMeta } from 'astro-pure/types'
 import config from '@/site-config'
 
@@ -158,3 +157,6 @@ const socialImageURL = new URL(ogImage ? ogImage : '/images/social-card.png', As
 ></script>
 
 {/* Netease Mini Player */}
+
+{/* Page Preload */}
+<script src={`${config.npmCDN}/instant.page@5.2.0/instantpage.js`} type='module' is:inline></script>
