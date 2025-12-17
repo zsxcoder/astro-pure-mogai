@@ -101,19 +101,19 @@ export default defineConfig({
   },
   experimental: {
     contentIntellisense: true, // allow vscode plugin to support *mdx files
-    fonts: [
-      {
-        provider: fontProviders.fontshare(),
-        name: 'Satoshi',
-        cssVariable: '--font-satoshi',
-        // Default included:
-        // weights: [400],
-        // styles: ["normal", "italics"],
-        // subsets: ["cyrillic-ext", "cyrillic", "greek-ext", "greek", "vietnamese", "latin-ext", "latin"],
-        // fallbacks: ["sans-serif"],
-        weights: [400, 500],
-        subsets: ['latin']
-      }
-    ]
+    // fonts: [
+    //   {
+    //     provider: fontProviders.fontshare(),
+    //     name: 'Satoshi',
+    //     cssVariable: '--font-satoshi',
+    //     // Default included:
+    //     // weights: [400],
+    //     // styles: ["normal", "italics"],
+    //     // subsets: ["cyrillic-ext", "cyrillic", "greek-ext", "greek", "vietnamese", "latin-ext", "latin"],
+    //     // fallbacks: ["sans-serif"],
+    //     weights: [400, 500],
+    //     subsets: ['latin']
+    //   }
+    // ]
   }
 })
