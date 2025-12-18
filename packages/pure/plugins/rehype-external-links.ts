@@ -41,11 +41,22 @@ export default function rehypeExternalLinks(options: ExternalLinkOptions = {}) {
     visit(tree, 'element', (node: Element) => {
       if (node.tagName === 'a' && typeof node.properties?.href === 'string') {
         const href = node.properties.href
-        const protocol = href.startsWith('//')
-          ? 'http' // treat protocol-relative as http
-          : href.slice(0, href.indexOf(':'))
+        let checkHref = href
+        if (href.startsWith('/safego')) {
+          try {
+            const safeGoUrl = new URL(href)
+            const targetUrl = safeGoUrl.searchParams.get('url')
+            if (targetUrl) checkHref = targetUrl
+          } catch {}
+        }
 
-        if (href.startsWith('//') || (isAbsoluteUrl(href) && protocols.includes(protocol))) {
+        const protocol = checkHref.startsWith('//')
+          ? 'http' // treat protocol-relative as http
+          : checkHref.indexOf(':') > -1
+            ? checkHref.slice(0, checkHref.indexOf(':'))
+            : ''
+
+        if (checkHref.startsWith('//') || (isAbsoluteUrl(checkHref) && protocols.includes(protocol))) {
           node.properties = {
             ...node.properties,
             rel: 'nofollow noopener noreferrer',
