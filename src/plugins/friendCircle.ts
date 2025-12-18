@@ -60,6 +60,27 @@ export class FriendCircle {
     this.createContainers()
   }
 
+  private getSafeLink(link: string | URL): string {
+    const urlStr = link instanceof URL ? link.toString() : link
+    const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1']
+
+    if (!urlStr || (!urlStr.startsWith('http') && !urlStr.startsWith('//'))) return urlStr
+
+    try {
+      const urlObj = new URL(urlStr)
+      if (
+        exclude.some(
+          (domain) => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain)
+        )
+      ) {
+        return urlStr
+      }
+      return `/safego?url=${encodeURIComponent(urlStr)}`
+    } catch {
+      return urlStr
+    }
+  }
+
   private createContainers() {
     this.randomArticleContainer = this.createElement('div', { id: 'random-article' })
     this.container = this.createElement('div', {
@@ -153,7 +174,7 @@ export class FriendCircle {
       </div>
       <div class="article-container">
         <div class="article-author author-click">${article.author}</div>
-        <a class="article-title" href="${article.link instanceof URL ? article.link.toString() : article.link}" target="_blank">${article.title}</a>
+        <a class="article-title" href="${this.getSafeLink(article.link)}" target="_blank">${article.title}</a>
         <div class="article-date">️${article.created.substring(0, 10)}</div>
       </div>
     `
@@ -171,7 +192,7 @@ export class FriendCircle {
       <div class="random-title">Random Poll</div>
       <div class="article-container">
         <div class="article-author">${randomArticle.author}</div>
-        <a class="article-title" href="${randomArticle.link}" target="_blank">${randomArticle.title}</a>
+        <a class="article-title" href="${this.getSafeLink(randomArticle.link)}" target="_blank">${randomArticle.title}</a>
         <div class="article-date">️${randomArticle.created.substring(0, 10)}</div>
       </div>
       <button id="random-refresh">
@@ -194,7 +215,7 @@ export class FriendCircle {
       <div class="modal-content">
         <div class="modal-header">
           <img class="modal-author-avatar" src="${avatar || this.config.error_img}" alt="">
-          <a class="modal-author-name-link" href="${new URL(link.toString()).origin}" target="_blank">${author}</a>
+          <a class="modal-author-name-link" href="${this.getSafeLink(new URL(link.toString()).origin)}" target="_blank">${author}</a>
         </div>
         <div id="modal-articles-container"></div>
       </div>
@@ -209,7 +230,7 @@ export class FriendCircle {
     authorArticles.slice(0, 4).forEach((article) => {
       const articleTemplate = `
         <div class="modal-article">
-          <a class="modal-article-title" href="${article.link instanceof URL ? article.link.toString() : article.link}" target="_blank">${article.title}</a>
+          <a class="modal-article-title" href="${this.getSafeLink(article.link)}" target="_blank">${article.title}</a>
           <div class="modal-article-date">${article.created.substring(0, 10)}</div>
         </div>`
       modalArticlesContainer.insertAdjacentHTML('beforeend', articleTemplate)

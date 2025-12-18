@@ -1,0 +1,120 @@
+---
+import { Button } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+const meta = {
+  description: '即将离开本站，前往外部链接',
+  title: '跳转提示'
+}
+---
+
+<PageLayout {meta}>
+  <div class='flex flex-col items-center justify-center min-h-[60vh] px-4 text-center animate'>
+    <div
+      class='w-full max-w-xl p-8 border rounded-2xl bg-card text-card-foreground shadow-sm space-y-6'
+    >
+      <h1 class='text-2xl font-medium sm:text-3xl'>即将离开本站</h1>
+
+      <div class='text-muted-foreground'>
+        <p>您即将访问外部链接</p>
+        <div
+          class='my-4 p-3 bg-muted rounded-lg break-all text-foreground font-mono text-sm'
+          id='url-display'
+        >
+          Loading...
+        </div>
+      </div>
+
+      <div
+        class='text-sm text-muted-foreground bg-orange-50/50 dark:bg-orange-900/10 p-4 rounded-lg border border-orange-200 dark:border-orange-800/30'
+      >
+        <p class='font-medium text-orange-600 dark:text-orange-400 mb-1'>安全提示</p>
+        <p>外部网站内容不受本站控制，请注意您的账号和隐私安全</p>
+      </div>
+
+      <div class='py-2'>
+        <p class='text-sm text-muted-foreground'>
+          <span id='timer' class='font-bold text-primary text-lg mx-1'>5</span> 秒后将自动跳转
+        </p>
+      </div>
+
+      <div class='flex flex-wrap gap-4 justify-center mt-4'>
+        <Button title='取消跳转' as='button' id='back-btn' variant='back' class='cursor-pointer' />
+        <Button
+          title='立即跳转'
+          as='button'
+          id='continue-btn'
+          variant='ahead'
+          class='cursor-pointer'
+        />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 获取URL参数
+    const urlParams = new URLSearchParams(window.location.search)
+    const targetUrl = urlParams.get('url')
+
+    const urlDisplay = document.getElementById('url-display')
+    const timerDisplay = document.getElementById('timer')
+    const backBtn = document.getElementById('back-btn')
+    const continueBtn = document.getElementById('continue-btn')
+
+    let countdown = 5
+    let timer: ReturnType<typeof setTimeout> | null = null
+
+    if (targetUrl) {
+      // 显示目标URL
+      if (urlDisplay) urlDisplay.textContent = targetUrl
+
+      // 自动跳转逻辑
+      const tick = () => {
+        if (countdown > 0) {
+          if (timerDisplay) timerDisplay.textContent = countdown.toString()
+          countdown--
+          timer = setTimeout(tick, 1000)
+        } else {
+          window.location.href = targetUrl
+        }
+      }
+
+      // 开始倒计时
+      tick()
+    } else {
+      if (urlDisplay) urlDisplay.textContent = '无效的链接参数'
+      if (timerDisplay) {
+        const parent = timerDisplay.parentElement
+        if (parent) parent.style.display = 'none'
+      }
+    }
+
+    // 按钮事件
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        if (timer) clearTimeout(timer)
+        try {
+          if (window.history.length > 1) {
+            window.history.back()
+          } else {
+            window.close()
+            // 如果无法关闭，回首页
+            setTimeout(() => {
+              window.location.href = '/'
+            }, 300)
+          }
+        } catch (e) {
+          window.location.href = '/'
+        }
+      })
+    }
+
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        if (targetUrl) {
+          window.location.href = targetUrl
+        }
+      })
+    }
+  </script>
+</PageLayout>

@@ -1,13 +1,15 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 // import vercel from '@astrojs/vercel'
 import AstroPureIntegration from 'astro-pure'
-import { defineConfig, fontProviders } from 'astro/config'
+import { defineConfig } from 'astro/config'
+// import {fontProviders} from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 
 // Local integrations
 // Local rehype & remark plugins
 import rehypeAutolinkHeadings from './src/plugins/rehype-auto-link-headings.ts'
+import rehypeSafeGo from './src/plugins/rehype-safe-go.ts'
 // Shiki
 import {
   addCopyButton,
@@ -74,6 +76,7 @@ export default defineConfig({
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
+      [rehypeSafeGo, { exclude: ['blog.ljx.icu', 'localhost', '127.0.0.1'] }],
       [
         rehypeAutolinkHeadings,
         {
@@ -100,7 +103,7 @@ export default defineConfig({
     }
   },
   experimental: {
-    contentIntellisense: true, // allow vscode plugin to support *mdx files
+    contentIntellisense: true // allow vscode plugin to support *mdx files
     // fonts: [
     //   {
     //     provider: fontProviders.fontshare(),
