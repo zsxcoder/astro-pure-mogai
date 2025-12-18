@@ -1,4 +1,3 @@
-/* eslint-disable */
 function renderTalks() {
   const talkContainer = document.querySelector('#talk')
   if (!talkContainer) return
@@ -232,7 +231,7 @@ function renderTalks() {
     return {
       content,
       user: item.username || '匿名',
-      avatar: 'https://tc.ljx.icu/file/imgs/leQV3mP6.png',
+      avatar: 'https://tc.ljx.icu/file/imgs/eClZn65w.png',
       date,
       location: '',
       tags:
