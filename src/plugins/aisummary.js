@@ -85,9 +85,7 @@ const aisummary = {
     // 进入视口时才运行动画，提高性能
     const observer = new IntersectionObserver(
       (entries) => {
-        const isVisible = entries[0].isIntersecting
-        animationRunning = isVisible
-        if (animationRunning && !started) {
+        if (entries[0].isIntersecting && !started) {
           started = true
           setTimeout(() => requestAnimationFrame(animate), 200)
         }
