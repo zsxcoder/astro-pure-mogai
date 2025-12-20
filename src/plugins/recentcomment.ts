@@ -3,6 +3,8 @@
  * 通过Waline API获取最新评论并格式化显示
  */
 
+import config from '@/site-config'
+
 // 定义评论数据接口
 interface WalineComment {
   nick: string // 评论者昵称
@@ -26,7 +28,10 @@ interface WalineResponse {
  */
 export async function fetchRecentComments(limit: number = 5): Promise<WalineComment[]> {
   try {
-    const response = await fetch('https://waline.ljx.icu/api/comment?type=recent')
+    const server = (config.integ.waline.server || '').replace(/\/$/, '')
+    if (!server) return []
+
+    const response = await fetch(`${server}/api/comment?type=recent`)
     if (!response.ok) {
       throw new Error(`获取评论失败: ${response.status}`)
     }

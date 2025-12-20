@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-pure/user'
+import config from '@/site-config'
 import {
   fetchRecentComments,
   formatCommentTime,
@@ -7,11 +8,14 @@ import {
   truncateText
 } from '@/plugins/recentcomment'
 
+const limit = 5
+const refreshMs = 60_000
+
 // 获取最新评论数据
-const comments = await fetchRecentComments(5)
+const comments = await fetchRecentComments(limit)
 ---
 
-<div class='recent-comments'>
+<div class='recent-comments' data-recent-comments data-limit={limit} data-refresh-ms={refreshMs}>
   <div class='recent-comments-title'>
     <Icon name='list' />
     <span>最新评论</span>
@@ -44,19 +48,205 @@ const comments = await fetchRecentComments(5)
   </div>
 </div>
 
-<script>
-  // 客户端清理HTML标签
-  document.addEventListener('astro:page-load', () => {
-    const commentTexts = document.querySelectorAll('.comment-text')
+<script
+  is:inline
+  type='module'
+  data-astro-rerun
+  define:vars={{ walineServer: config.integ.waline.server, defaultLimit: limit, defaultRefreshMs: refreshMs }}
+>
+  const normalizeServer = (server) => String(server || '').replace(/\/$/, '')
+
+  const formatCommentTime = (timestamp) => {
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diff = now.getTime() - date.getTime()
+
+    if (diff < 60 * 1000) return '刚刚'
+    if (diff < 60 * 60 * 1000) return `${Math.floor(diff / (60 * 1000))}分钟前`
+    if (diff < 24 * 60 * 60 * 1000) return `${Math.floor(diff / (60 * 60 * 1000))}小时前`
+    if (diff < 7 * 24 * 60 * 60 * 1000) return `${Math.floor(diff / (24 * 60 * 60 * 1000))}天前`
+
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  }
+
+  const stripHtml = (html) => {
+    const doc = new DOMParser().parseFromString(String(html || ''), 'text/html')
+    return doc.body.textContent || ''
+  }
+
+  const truncateText = (text, length = 100) => {
+    const s = String(text || '')
+    if (s.length <= length) return s
+    return s.slice(0, length) + '...'
+  }
+
+  const normalizeUrl = (url) => {
+    const s = String(url || '')
+    if (!s) return '#'
+    return s.endsWith('/') ? s.slice(0, -1) : s
+  }
+
+  const enhanceLinks = (root) => {
+    const commentTexts = root.querySelectorAll('.comment-text')
     commentTexts.forEach((element) => {
-      // 确保链接在新窗口打开
       const links = element.querySelectorAll('a')
       links.forEach((link) => {
         link.setAttribute('target', '_blank')
         link.setAttribute('rel', 'noopener noreferrer')
       })
     })
-  })
+  }
+
+  const buildKey = (items) =>
+    items.map((c) => `${c.nick ?? ''}|${c.time ?? ''}|${c.url ?? ''}|${c.avatar ?? ''}`).join('||')
+
+  const renderComments = (root, comments) => {
+    const listEl = root.querySelector('.comment-list')
+    if (!listEl) return
+
+    listEl.replaceChildren()
+
+    if (!comments.length) {
+      const empty = document.createElement('div')
+      empty.className = 'comment-empty'
+      empty.textContent = '暂无评论数据'
+      listEl.appendChild(empty)
+      return
+    }
+
+    const frag = document.createDocumentFragment()
+
+    for (const comment of comments) {
+      const item = document.createElement('div')
+      item.className = 'comment-item'
+
+      const avatarWrap = document.createElement('div')
+      avatarWrap.className = 'comment-avatar'
+
+      const img = document.createElement('img')
+      img.src = comment.avatar || ''
+      img.alt = comment.nick || ''
+      img.loading = 'lazy'
+      avatarWrap.appendChild(img)
+
+      const content = document.createElement('div')
+      content.className = 'comment-content'
+
+      const meta = document.createElement('div')
+      meta.className = 'comment-meta'
+
+      const author = document.createElement('span')
+      author.className = 'comment-author'
+      author.textContent = comment.nick || ''
+
+      const time = document.createElement('span')
+      time.className = 'comment-time'
+      time.dataset.time = String(comment.time || '')
+      time.textContent = comment.time ? formatCommentTime(comment.time) : ''
+
+      meta.append(author, time)
+
+      const text = document.createElement('div')
+      text.className = 'comment-text'
+      text.textContent = truncateText(stripHtml(comment.comment), 100)
+
+      const link = document.createElement('a')
+      link.className = 'comment-link'
+      link.href = normalizeUrl(comment.url)
+      link.textContent = '查看详情 →'
+
+      content.append(meta, text, link)
+      item.append(avatarWrap, content)
+
+      frag.appendChild(item)
+    }
+
+    listEl.appendChild(frag)
+    enhanceLinks(root)
+  }
+
+  const updateTimesOnly = (root) => {
+    const timeEls = root.querySelectorAll('.comment-time[data-time]')
+    timeEls.forEach((el) => {
+      const timestamp = Number(el.dataset.time)
+      if (!Number.isFinite(timestamp) || timestamp <= 0) return
+      el.textContent = formatCommentTime(timestamp)
+    })
+  }
+
+  const fetchRecentComments = async (server, signal) => {
+    const base = normalizeServer(server)
+    if (!base) return []
+
+    const res = await fetch(`${base}/api/comment?type=recent`, { signal })
+    if (!res.ok) return []
+
+    const json = await res.json()
+    const data = Array.isArray(json?.data) ? json.data : []
+    return data
+  }
+
+  const initRecentComments = (root) => {
+    const limit = Number(root.dataset.limit || defaultLimit) || defaultLimit
+    const refreshMs = Number(root.dataset.refreshMs || defaultRefreshMs) || defaultRefreshMs
+
+    let lastKey = ''
+    const aborter = new AbortController()
+
+    const tick = async () => {
+      try {
+        const list = await fetchRecentComments(walineServer, aborter.signal)
+        const items = list.slice(0, limit)
+        const key = items.length ? buildKey(items) : '__EMPTY__'
+
+        if (key !== lastKey) {
+          lastKey = key
+          renderComments(root, items)
+        } else {
+          updateTimesOnly(root)
+        }
+      } catch (e) {
+        if (e?.name === 'AbortError') return
+      }
+    }
+
+    enhanceLinks(root)
+    tick()
+
+    const timer = window.setInterval(() => {
+      if (document.hidden) return
+      tick()
+    }, refreshMs)
+
+    const onVisible = () => {
+      if (!document.hidden) tick()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+
+    return () => {
+      aborter.abort()
+      window.clearInterval(timer)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }
+
+  const disposers = new Set()
+
+  const boot = () => {
+    document.querySelectorAll('[data-recent-comments]').forEach((root) => {
+      if (root.__recentCommentsInited) return
+      root.__recentCommentsInited = true
+      disposers.add(initRecentComments(root))
+    })
+  }
+
+  const disposeAll = () => {
+    disposers.forEach((fn) => fn())
+    disposers.clear()
+  }
+
+  document.addEventListener('astro:page-load', boot)
+  document.addEventListener('astro:before-swap', disposeAll)
 </script>
 
 <style is:global>
