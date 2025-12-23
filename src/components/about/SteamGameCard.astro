@@ -48,8 +48,8 @@ try {
   if (gamesMatch) {
     games = JSON.parse(gamesMatch[1])
   } else {
-      // Fallback: try to find the player profile if rgGames is missing (e.g. private profile)
-      console.warn('Steam games data (rgGames) not found in response.')
+    // Fallback: try to find the player profile if rgGames is missing (e.g. private profile)
+    console.warn('Steam games data (rgGames) not found in response.')
   }
 
   // Extract Profile Info (optional)
@@ -57,12 +57,11 @@ try {
   if (avatarMatch) {
     avatar = avatarMatch[1]
   }
-  
+
   const nameMatch = html.match(/<span class="actual_persona_name">(.*?)<\/span>/)
   if (nameMatch) {
     personaName = nameMatch[1]
   }
-
 } catch (e) {
   console.error('Steam Fetch Error:', e)
   error = e
@@ -71,8 +70,8 @@ try {
 // Filter and sort games if needed
 // recent tab usually returns recently played.
 if (games.length > 0) {
-    // Ensure we have limits
-    games = games.slice(0, limit)
+  // Ensure we have limits
+  games = games.slice(0, limit)
 }
 ---
 
@@ -81,60 +80,58 @@ if (games.length > 0) {
   {...props}
 >
   <div class='m-0 px-2 flex items-center gap-2'>
-    {avatar && (
-      <img src={avatar} alt={personaName} class='size-6 rounded-full' />
-    )}
+    {avatar && <img src={avatar} alt={personaName} class='size-6 rounded-full' />}
     <div class='text-lg font-medium leading-none'>
       {personaName || id} 的 Steam 游戏
     </div>
-    <a 
-      href={`https://steamcommunity.com/id/${id}/games`} 
-      target="_blank" 
-      class="ml-auto text-xs text-muted-foreground hover:text-primary transition-colors"
+    <a
+      href={`https://steamcommunity.com/id/${id}/games`}
+      target='_blank'
+      class='ml-auto text-xs text-muted-foreground hover:text-primary transition-colors'
     >
       更多 &rarr;
     </a>
   </div>
 
-  {error ? (
-    <div class="text-center py-4 text-sm text-muted-foreground">
-      <p>无法获取 Steam 数据 (可能由于网络原因)</p>
-    </div>
-  ) : games.length === 0 ? (
-    <div class="text-center py-4 text-sm text-muted-foreground">
-      <p>暂无游戏数据或个人资料私密</p>
-    </div>
-  ) : (
-    <div class='grid grid-cols-1 gap-x-2 gap-y-2 sm:grid-cols-2'>
-      {games.map((game) => (
-        <a
-          href={`https://store.steampowered.com/app/${game.appid}`}
-          target='_blank'
-          rel='noopener noreferrer'
-          class='group relative text-sm leading-normal no-underline'
-        >
-          <div class='flex items-center gap-x-3 rounded-lg border border-transparent px-1.5 py-1 transition-colors hover:border-border hover:bg-muted'>
-            <div class='relative h-10 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted'>
-              <img
-                src={`https://steamcdn-a.akamaihd.net/steam/apps/${game.appid}/header.jpg`}
-                alt={game.name}
-                class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                loading="lazy"
-              />
-            </div>
-            <div class='z-20 flex flex-col min-w-0'>
-              <div class='font-medium text-foreground truncate' title={game.name}>
-                {game.name}
+  {
+    error ? (
+      <div class='text-center py-4 text-sm text-muted-foreground'>
+        <p>无法获取 Steam 数据 (可能由于网络原因)</p>
+      </div>
+    ) : games.length === 0 ? (
+      <div class='text-center py-4 text-sm text-muted-foreground'>
+        <p>暂无游戏数据或个人资料私密</p>
+      </div>
+    ) : (
+      <div class='grid grid-cols-1 gap-x-2 gap-y-2 sm:grid-cols-2'>
+        {games.map((game) => (
+          <a
+            href={`https://store.steampowered.com/app/${game.appid}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            class='group relative text-sm leading-normal no-underline'
+          >
+            <div class='flex items-center gap-x-3 rounded-lg border border-transparent px-1.5 py-1 transition-colors hover:border-border hover:bg-muted'>
+              <div class='relative h-10 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted'>
+                <img
+                  src={`https://steamcdn-a.akamaihd.net/steam/apps/${game.appid}/header.jpg`}
+                  alt={game.name}
+                  class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                  loading='lazy'
+                />
               </div>
-              {game.hours_forever && (
-                <div class='font-normal text-muted-foreground text-xs'>
-                  {game.hours_forever}
+              <div class='z-20 flex flex-col min-w-0'>
+                <div class='font-medium text-foreground truncate' title={game.name}>
+                  {game.name}
                 </div>
-              )}
+                {game.hours_forever && (
+                  <div class='font-normal text-muted-foreground text-xs'>{game.hours_forever}</div>
+                )}
+              </div>
             </div>
-          </div>
-        </a>
-      ))}
-    </div>
-  )}
+          </a>
+        ))}
+      </div>
+    )
+  }
 </div>

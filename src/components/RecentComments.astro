@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-pure/user'
 import config from '@/site-config'
+
 // import {
 //   fetchRecentComments,
 //   formatCommentTime,
@@ -53,7 +54,11 @@ const refreshMs = 60_000
   is:inline
   type='module'
   data-astro-rerun
-  define:vars={{ walineServer: config.integ.waline.server, defaultLimit: limit, defaultRefreshMs: refreshMs }}
+  define:vars={{
+    walineServer: config.integ.waline.server,
+    defaultLimit: limit,
+    defaultRefreshMs: refreshMs
+  }}
 >
   const normalizeServer = (server) => String(server || '').replace(/\/$/, '')
 
