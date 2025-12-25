@@ -47,6 +47,7 @@ const { class: className } = Astro.props
         serverURL: walineConfig.server || '',
         emoji,
         reaction: ['/icons/heart-item.svg'],
+        requiredMeta: ['nick', 'mail'],
         ...walineConfig.additionalConfigs
       })
     }
@@ -168,9 +169,19 @@ const { class: className } = Astro.props
     position: relative;
   }
 
+  /* 将星号直接添加到 label 元素伪类上，使其紧贴文字左侧 */
+  #waline :global(label[for='wl-nick'])::before,
+  #waline :global(label[for='wl-mail'])::before {
+    content: '*';
+    color: #ef4444;
+    margin-right: 4px;
+    font-weight: 600;
+  }
+
+
   /* end */
 
-  #waline :global(.wl-header-item:nth-child(1)):before {
+  /* #waline :global(.wl-header-item:nth-child(1)):before {
     content: '输入QQ号会自动获取昵称和头像🐧';
   }
 
@@ -185,26 +196,25 @@ const { class: className } = Astro.props
   #waline :global(.wl-header-item:focus-within::before) {
     display: block;
     animation: fadeIn 0.3s ease-in-out;
-  }
+  } */
 
   /* 主内容区 */
-  #waline :global(.wl-header-item::before) {
-    display: none; /* 先隐藏起来 */
-    position: absolute; /* 绝对定位 */
-    top: -31px; /* 向上移动31像素 */
-    white-space: nowrap; /* 文字强制不换行，防止left:50%导致的文字换行 */
-    border-radius: 8px; /* 圆角 */
-    left: 60%; /* 距离左边50% */
-    transform: translate(-50%); /* 然后再向左边挪动自身的一半，即可实现居中 */
-    /* 填充 */
+  /* #waline :global(.wl-header-item::before) {
+    display: none;
+    position: absolute;
+    top: -31px;
+    white-space: nowrap;
+    border-radius: 8px;
+    left: 60%;
+    transform: translate(-50%);
     padding: 4px 12px;
-    background: rgba(194, 166, 97, 0.85); /* 更改为蓝色系，增加透明度 */
+    background: rgba(194, 166, 97, 0.85);
     color: #fff;
-    font-size: 0.85rem; /* 稍微调小字体 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 添加阴影效果 */
-    backdrop-filter: blur(4px); /* 添加模糊背景效果 */
-    z-index: 100; /* 确保显示在最上层 */
-  }
+    font-size: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+  } */
 
   @keyframes fadeIn {
     from {
