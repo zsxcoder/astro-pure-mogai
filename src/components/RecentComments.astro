@@ -18,35 +18,12 @@ const refreshMs = 60_000
 
 <div class='recent-comments' data-recent-comments data-limit={limit} data-refresh-ms={refreshMs}>
   <div class='recent-comments-title'>
-    <Icon name='list' />
+    <Icon name='list' class='me-2' color='#A6923F' />
     <span>最新评论</span>
   </div>
 
   <div class='comment-list'>
     <div class='comment-empty'>加载中...</div>
-    <!-- {
-      comments.length > 0 ? (
-        comments.map((comment) => (
-          <div class='comment-item'>
-            <div class='comment-avatar'>
-              <img src={comment.avatar} alt={comment.nick} loading='lazy' />
-            </div>
-            <div class='comment-content'>
-              <div class='comment-meta'>
-                <span class='comment-author'>{comment.nick}</span>
-                <span class='comment-time'>{formatCommentTime(comment.time)}</span>
-              </div>
-              <div class='comment-text' set:html={truncateText(stripHtml(comment.comment), 100)} />
-              <a href={comment.url ? comment.url.replace(/\/$/, '') : '#'} class='comment-link'>
-                查看详情 →
-              </a>
-            </div>
-          </div>
-        ))
-      ) : (
-        <div class='comment-empty'>暂无评论数据</div>
-      )
-    } -->
   </div>
 </div>
 

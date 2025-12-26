@@ -2,7 +2,7 @@
 .recent-comments {
   background-color: hsl(var(--background) / var(--un-bg-opacity, 1));
   border: 1px solid hsl(var(--border) / var(--un-border-opacity, 1));
-  border-radius: var(--radius);
+  border-radius: 16px;
   padding: 1rem;
   margin-bottom: 1.5rem;
   margin-top: 0;

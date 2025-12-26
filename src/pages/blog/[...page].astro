@@ -6,6 +6,7 @@ import { Paginator, PostPreview } from 'astro-pure/components/pages'
 import { getBlogCollection, getUniqueTags, sortMDByDate } from 'astro-pure/server'
 import { Button, Icon } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
+import RecentComments from '@/components/RecentComments.astro'
 import config from '@/site-config'
 
 export const prerender = true
@@ -82,22 +83,25 @@ const paginationProps = {
           {/* sidebar */}
           {!!uniqueTags.length && (
             <aside class='animate' id='sidebar'>
-              <h2 class='mb-4 flex items-center text-lg font-semibold'>
-                <Icon name='tag-2' class='me-2' />
-                Tags
-              </h2>
-              <ul class='text-bgColor flex flex-wrap gap-2'>
-                {uniqueTags.map((tag) => (
-                  <li>
-                    <Button title={tag} href={`/tags/${tag}`} variant='pill' />
-                  </li>
-                ))}
-              </ul>
-              <span class='mt-4 block sm:text-end'>
-                <a aria-label='View all blog categories' href='/tags' data-astro-prefetch>
-                  View all →
-                </a>
-              </span>
+              <div class='mb-4'>
+                <h2 class='mb-4 flex items-center text-lg font-semibold'>
+                  <Icon name='tag-2' class='me-2' color='#A6923F' />
+                  Tags
+                </h2>
+                <ul class='text-bgColor flex flex-wrap gap-2'>
+                  {uniqueTags.map((tag) => (
+                    <li>
+                      <Button title={tag} href={`/tags/${tag}`} variant='pill' />
+                    </li>
+                  ))}
+                </ul>
+                <span class='mt-4 block sm:text-end'>
+                  <a aria-label='View all blog categories' href='/tags' data-astro-prefetch>
+                    View all →
+                  </a>
+                </span>
+              </div>
+            <RecentComments />
             </aside>
           )}
         </div>
