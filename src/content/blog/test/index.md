@@ -1,10 +1,11 @@
 ---
-title: Astro Build
+title: Test
 description: 'Write your description here.'
-publishDate: 2025-12-06 13:53:57
+publishDate: 2024-12-06
 tags:
   - Example
   - Technology
+pin: true
 draft: true
 ---
 
