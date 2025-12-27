@@ -39,6 +39,7 @@ const blog = defineCollection({
       language: z.string().optional(),
       draft: z.boolean().default(false),
       // Special fields
+      pin: z.boolean().optional(),
       comment: z.boolean().default(true)
     })
 })

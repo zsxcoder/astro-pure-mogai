@@ -57,7 +57,8 @@ const postDate = data.updatedDate ?? data.publishDate
       {/* title */}
       <div class='flex justify-between'>
         <div class={detailed && 'font-medium'}>
-          {data.draft && <span class='text-red-500'>(Draft) </span>}
+          {data.pin && <span class='text-primary mr-1'>[置顶]</span>}
+          {data.draft && <span class='text-red-500'>(Draft)</span>}
           {data.title}
         </div>
         <svg
