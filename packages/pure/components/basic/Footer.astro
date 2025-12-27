@@ -19,60 +19,65 @@ const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
   <div class='border-t pt-5'>
     <div class='flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0'>
       <div
-        class='flex items-center gap-x-4 gap-y-2 text-muted-foreground max-sm:flex-col [&_a]:text-foreground'
+        class='flex items-center sm:items-start gap-x-4 gap-y-2 text-sm text-muted-foreground max-sm:flex-col [&_a]:text-foreground'
       >
         {/* Position 1 */}
         {
           footerLink1.length > 0 && (
-            <div>
-              {footerLink1.map(({ title, link, style }, index) => (
-                <span>
-                  <a href={link} target='_blank' class={style}>
-                    {title}
-                  </a>
-                  {index < footerLink1.length - 1 && ' • '}
-                </span>
+            <div class='flex flex-col gap-y-1'>
+              {footerLink1.map(({ title, link, style } ) => (
+                <a href={link} target='_blank' class={style}>
+                  {title}
+                </a>
               ))}
             </div>
           )
         }
-        {/* Position 2 */}
-        <div>
-          {config.footer.year}
-          {config.author}
+        <div class='flex flex-col gap-y-1'>
+          {/* Position 2 */}
+          <div>
+            {config.footer.year}
+            {config.author}
+            {
+              footerConf.links && footerConf.links.length > 0 && (
+                <>
+                  &
+                  <span>
+                    {footerConf.links
+                      .filter(({ pos }) => pos === 2)
+                      .map(({ title, link, style }) => (
+                        <span>
+                          <a href={link} target='_blank' class={style}>
+                            {title}
+                          </a>
+                        </span>
+                      ))}
+                  </span>
+                </>
+              )
+            }
+          </div>
           {
-            footerConf.links && footerConf.links.length > 0 && (
-              <>
+            footerConf.credits && (
+              <span>
+                <a href='https://github.com/withastro/astro' target='_blank'>
+                  Astro
+                </a>
                 &
-                <span>
-                  {footerConf.links
-                    .filter(({ pos }) => pos === 2)
-                    .map(({ title, link, style }) => (
-                      <span>
-                        <a href={link} target='_blank' class={style}>
-                          {title}
-                        </a>
-                      </span>
-                    ))}
-                </span>
-              </>
+                <a href='https://github.com/cworld1/astro-theme-pure' target='_blank'>
+                  Pure
+                </a>
+                theme powered
+              </span>
             )
           }
         </div>
-        {
-          footerConf.credits && (
-            <span>
-              <a href='https://github.com/withastro/astro' target='_blank'>
-                Astro
-              </a>
-              &
-              <a href='https://github.com/cworld1/astro-theme-pure' target='_blank'>
-                Pure
-              </a>
-              theme powered
-            </span>
-          )
-        }
+
+        <div class='flex items-center gap-x-2'>
+          ∑ Visits:<span id='vercount_value_site_pv'>Loading...</span> | 
+          ∑ Views:<span id='vercount_value_page_pv'>Loading...</span> | 
+          ∑ Visitors:<span id='vercount_value_site_uv'>Loading...</span>
+        </div>
       </div>
 
       {/* Social Brands */}
