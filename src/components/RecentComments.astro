@@ -129,16 +129,12 @@ const refreshMs = 60_000
 
       meta.append(author, time)
 
-      const text = document.createElement('div')
+      const text = document.createElement('a')
       text.className = 'comment-text'
       text.textContent = truncateText(stripHtml(comment.comment), 100)
+      text.href = normalizeUrl(comment.url) + (comment.objectId ? `#${comment.objectId}` : '')
 
-      const link = document.createElement('a')
-      link.className = 'comment-link'
-      link.href = normalizeUrl(comment.url)
-      link.textContent = '查看详情 →'
-
-      content.append(meta, text, link)
+      content.append(meta, text)
       item.append(avatarWrap, content)
 
       frag.appendChild(item)
