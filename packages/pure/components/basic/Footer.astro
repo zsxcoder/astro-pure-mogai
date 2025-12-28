@@ -12,7 +12,7 @@ social.rss = {
   url: '/rss.xml'
 }
 
-const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
+const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 2) || []
 
 const vercountItems = [
   { label: '∑ Visits', id: 'vercount_value_site_pv' },
@@ -25,22 +25,10 @@ const vercountItems = [
   <div class='border-t pt-5'>
     <div class='flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0'>
       <div
-        class='flex items-center sm:items-start gap-x-4 gap-y-2 text-sm text-muted-foreground max-sm:flex-col [&_a]:text-foreground'
+        class='flex flex-col items-center sm:items-start gap-y-2 text-sm text-muted-foreground [&_a]:text-foreground'
       >
-        {/* Position 1 */}
-        {
-          footerLink1.length > 0 && (
-            <div class='flex flex-col gap-y-1'>
-              {footerLink1.map(({ title, link, style }) => (
-                <a href={link} target='_blank' class={style}>
-                  {title}
-                </a>
-              ))}
-            </div>
-          )
-        }
-        <div class='flex flex-col gap-y-1'>
-          {/* Position 2 */}
+        <div class='flex flex-col sm:flex-row items-center sm:items-start gap-x-4 gap-y-2'>
+          {/* Position 1 */}
           <div>
             {config.footer.year}
             {config.author}
@@ -50,7 +38,7 @@ const vercountItems = [
                   &
                   <span>
                     {footerConf.links
-                      .filter(({ pos }) => pos === 2)
+                      .filter(({ pos }) => pos === 1)
                       .map(({ title, link, style }) => (
                         <span>
                           <a href={link} target='_blank' class={style}>
@@ -78,6 +66,21 @@ const vercountItems = [
             )
           }
         </div>
+        {/* Position 2 */}
+        {
+          footerLink1.length > 0 && (
+            <div>
+              {footerLink1.map(({ title, link, style }, index) => (
+                <span>
+                  <a href={link} target='_blank' class={style}>
+                    {title}
+                  </a>
+                  {index < footerLink1.length - 1 && ' | '}
+                </span>
+              ))}
+            </div>
+          )
+        }
       </div>
 
       {/* Vercount info */}

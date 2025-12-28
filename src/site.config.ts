@@ -70,18 +70,20 @@ export const theme: ThemeUserConfig = {
       {
         title: '鄂ICP备2025150801号-1',
         link: 'https://beian.miit.gov.cn/',
-        style: 'text-sm' // Uno/TW CSS class
+        style: 'text-sm', // Uno/TW CSS class
+        pos: 2
       },
       {
         title: '川公网安备51170302000216号',
         link: 'https://beian.mps.gov.cn/#/query/webSearch?code=51170302000216',
-        style: 'text-sm'
+        style: 'text-sm',
+        pos: 2
       },
       // Privacy Policy link
       {
         title: 'Site Policy',
         link: '/terms/list',
-        pos: 2 // position set to 2 will be appended to copyright line
+        pos: 1 // position set to 2 will be appended to copyright line
       }
     ],
     /** Enable displaying a “Astro & Pure theme powered” link in your site’s footer. */
