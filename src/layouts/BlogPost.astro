@@ -44,13 +44,8 @@ const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString()
 const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-text-opacity))'
 
 // Content Obsolete Warning
-const DAY = 24 * 60 * 60 * 1000
-const OUTDATED_DAYS = 30
-const daysSinceUpdate = Math.floor((Date.now() - new Date(articleDate).getTime()) / DAY)
-const isOutdated = daysSinceUpdate > OUTDATED_DAYS
-const updatedAt = new Date(articleDate)
-const now = new Date()
-const diffDays = Math.floor((now.getTime() - updatedAt.getTime()) / DAY)
+const updatedAt = new Date(articleDate).getTime()
+const diffDays = Math.floor((Date.now() - updatedAt) / 86400000)
 ---
 
 <PageLayout
@@ -64,7 +59,7 @@ const diffDays = Math.floor((now.getTime() - updatedAt.getTime()) / DAY)
     <Fragment slot='description'>
       {!isDraft && enableComment && <PageInfo comment class='mt-1' />}
       {
-        isOutdated && (
+        Math.floor((Date.now() - updatedAt) / 86400000) > 30 && (
           <p class='mt-1 text-sm italic text-amber-500'>
             本文最后更新于<span class='mx-1 font-medium text-red-500'>{diffDays}</span>
             天以前，部分信息可能已经过时，请注意检查。
