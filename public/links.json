@@ -135,10 +135,10 @@
           "avatar": "/images/linuxdo.png"
         },
         {
-          "name": "Astro",
-          "intro": "The web framework for content-driven websites",
-          "link": "https://astro.build",
-          "avatar": "/images/astro.png"
+          "name": "V2EX",
+          "intro": "Way to explore",
+          "link": "https://v2ex.com",
+          "avatar": "/images/v2ex.png"
         }
       ]
     }
