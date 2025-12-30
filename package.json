@@ -48,10 +48,5 @@
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.21.0"
-  },
-  "description": "English | [简体中文](./README-zh-CN.md)",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }
