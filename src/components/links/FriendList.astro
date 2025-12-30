@@ -35,6 +35,24 @@ interface Props {
 }
 const { title, list: friendList, ...props } = Astro.props
 
+let remoteData: Record<string, number> = {}
+try {
+  const res = await fetch('https://check-links.s3.bitiful.net/link.json')
+  const json = await res.json()
+  for (const group of json.friends) {
+    for (const f of group.link_list) {
+      remoteData[f.link] = f.responseTime
+    }
+  }
+} catch (e) {
+  console.warn('Failed to fetch remote link.json', e)
+}
+
+const enrichedLinkList = friendList.link_list.map(frd => ({
+  ...frd,
+  responseTime: remoteData[frd.link] ?? frd.responseTime
+}))
+
 const getAvatarSrc = (friend: friend) =>
   (config.integ?.links?.cacheAvatar ?? false)
     ? (friend.avatar_cache?.path ?? friend.avatar)
@@ -60,7 +78,7 @@ const getSafeLink = (link: string) => {
 <div class='grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3' {...props}>
   {
     friendList.link_list.length > 0 ? (
-      shuffle(friendList.link_list).map((frd: friend) => (
+      shuffle(enrichedLinkList).map((frd: friend) => (
         <a href={getSafeLink(frd.link)} target='_blank' class='no-underline'>
           <div class='group relative h-full overflow-hidden rounded-2xl border bg-background px-2.5 py-1.5 transition-colors hover:bg-muted sm:px-4 sm:py-2'>
             {frd.responseTime !== undefined && (
