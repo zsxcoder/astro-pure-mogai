@@ -122,8 +122,9 @@ export const integ: IntegrationUserConfig = {
   links: {
     // Friend logbook
     logbook: [
-      { date: '2025-10-30', content: " [AirTouchの小站] rejected, [Shuoer's blog] inactived" },
-      { date: '2025-10-22', content: ' [青序栈] rejected' },
+      { date: '2025-12-31', content: ' [Sans] accepted' },
+      { date: '2025-10-30', content: " [AirTouchの小站] accepted, [Shuoer's blog] inactived" },
+      { date: '2025-10-22', content: ' [青序栈] accepted' },
       { date: '2025-10-17', content: ' [清羽飞扬] added' },
       { date: '2025-10-10', content: " [Shuoer's blog] added" },
       {
