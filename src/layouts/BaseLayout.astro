@@ -69,10 +69,6 @@ const {
           hsl(var(--primary) / var(--un-text-opacity))
         ) !important;
       }
-    </style>
-
-    {/* Vercount */}
-    {vercount.enable && <script src={vercount.script} async is:inline data-astro-rerun />}
 
       /* Extend safe area for some special screens
        * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/env
@@ -96,5 +92,9 @@ const {
         }
       }
     </style>
+    
+    {/* Vercount */}
+    {vercount.enable && <script src={vercount.script} async is:inline data-astro-rerun />}
+  
   </body>
 </html>

@@ -183,6 +183,8 @@ export const ThemeConfigSchema = () =>
       /** Blog page size for pagination */
       blogPageSize: z.number().optional().default(8),
 
+      /** Whether to show the table of contents in the sidebar. */
+      tocCollapse: z.boolean().optional().default(true),
       /** Share buttons to show */
       share: ShareSchema()
     })
