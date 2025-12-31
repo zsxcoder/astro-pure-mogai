@@ -1,6 +1,11 @@
 name: 🔗 Friend Links Check
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'public/links.json'
   schedule:
     - cron: '0 8 * * *'
   workflow_dispatch:
@@ -19,7 +24,7 @@ jobs:
           node-version: 20
 
       - name: Install deps
-        run: npm ci
+        run: npm install p-limit tsx
 
       - name: Run link check
         run: npx tsx scripts/check-links.ts
