@@ -23,8 +23,6 @@ export default function AstroPureIntegration(opts: UserInputConfig): AstroIntegr
       'The astro-pure integration expects a right configuration object with at least a `title` property.\n\n'
     )
   const integrations: AstroIntegration[] = []
-  const remarkPlugins: RemarkPlugins = []
-  const rehypePlugins: RehypePlugins = []
 
   return {
     name: 'astro-pure',
@@ -36,6 +34,23 @@ export default function AstroPureIntegration(opts: UserInputConfig): AstroIntegr
           'Invalid config passed to astro-pure integration'
         )
 
+        const remarkPlugins: RemarkPlugins = [...(config.markdown?.remarkPlugins ?? [])]
+        const rehypePlugins: RehypePlugins = [
+          [
+            rehypeExternalLinks,
+            {
+              content: { type: 'text', value: userConfig.content.externalLinks.content },
+              contentProperties: userConfig.content.externalLinks.properties
+            }
+          ],
+          ...(config.markdown?.rehypePlugins ?? []),
+          rehypeTable
+        ]
+
+        if (userConfig.integ.mediumZoom.enable)
+          remarkPlugins.push([remarkAddZoomable, userConfig.integ.mediumZoom.options])
+        remarkPlugins.push(remarkReadingTime)
+
         // Add built-in integrations only if they are not already added by the user through the
         // config or by a plugin.
         const allIntegrations = [...config.integrations, ...integrations]
@@ -43,27 +58,13 @@ export default function AstroPureIntegration(opts: UserInputConfig): AstroIntegr
           integrations.push(sitemap())
         }
         if (!allIntegrations.find(({ name }) => name === '@astrojs/mdx')) {
-          integrations.push(mdx({ optimize: true }))
+          integrations.push(
+            mdx({ optimize: true, remarkPlugins: remarkPlugins as any, rehypePlugins: rehypePlugins as any })
+          )
         }
         if (!allIntegrations.find(({ name }) => name === 'unocss')) {
           integrations.push(UnoCSS({ injectReset: true }))
         }
-
-        // Add supported remark plugins based on user config.
-        if (userConfig.integ.mediumZoom.enable)
-          remarkPlugins.push([remarkAddZoomable, userConfig.integ.mediumZoom.options])
-        remarkPlugins.push(remarkReadingTime)
-
-        // Add supported rehype plugins based on user config.
-        rehypePlugins.push([
-          rehypeExternalLinks,
-          {
-            content: { type: 'text', value: userConfig.content.externalLinks.content },
-            contentProperties: userConfig.content.externalLinks.properties
-          }
-        ])
-        // Make table scrollable on overflow
-        rehypePlugins.push(rehypeTable)
 
         // Add Starlight directives restoration integration at the end of the list so that remark
         // plugins injected by Starlight plugins through Astro integrations can handle text and
