@@ -23,7 +23,7 @@ const imagePath = config.logo.src
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/*.{jpeg,jpg,png,gif,avif,webp}'
 )
-if (imagePath && !images[imagePath])
+if (!images[imagePath])
   throw new Error(
     `"${imagePath}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif,avif,webp}"`
   )

@@ -14,7 +14,7 @@ import config from '@/site-config'
       const pageview = await import(`${npmCDN}/@waline/client@v3/dist/pageview.js`)
       const el = document.querySelector('.waline-pageview-count')
       if (el) {
-        return pageview.pageviewCount({
+        pageview.pageviewCount({
           serverURL: walineServer,
           path: window.location.pathname
         })
@@ -26,7 +26,5 @@ import config from '@/site-config'
 
   const abort = await loadPageview()
   // After 500ms, if the network request has not been completed, cancel this operation
-  if (typeof abort === 'function') {
-    setTimeout(() => abort(), 500)
-  }
+  setTimeout(() => abort(), 500)
 </script>

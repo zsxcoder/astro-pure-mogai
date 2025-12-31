@@ -163,9 +163,9 @@ export const integ: IntegrationUserConfig = {
   // https://unocss.dev/presets/typography
   typography: {
     class: 'prose text-base',
-    // The style of blockquote font, normal or italic (default to italic in typography)
+    // The style of blockquote font `normal` / `italic` (default to italic in typography)
     blockquoteStyle: 'italic',
-    // The style of inline code block, code or modern (default to code in typography)
+    // The style of inline code block `code` / `modern` (default to code in typography)
     inlineCodeBlockStyle: 'modern'
   },
   // [Lightbox]
@@ -183,6 +183,8 @@ export const integ: IntegrationUserConfig = {
     enable: true,
     // Server service link
     server: 'https://waline.ljx.icu/',
+    // Show meta info for comments
+    showMeta: false,
     // Refer https://waline.js.org/en/guide/features/emoji.html
     emoji: ['bmoji', 'ljxme', 'heybox_cube', 'heybox_heniang', 'linedog'],
     // Refer https://waline.js.org/en/reference/client/props.html
