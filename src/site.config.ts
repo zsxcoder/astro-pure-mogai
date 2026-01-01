@@ -49,7 +49,7 @@ export const theme: ThemeUserConfig = {
     //   content: ''
     // }
   ],
-  customCss: [],
+  customCss: ['./src/assets/styles/app.css', './src/assets/styles/global.css'],
 
   /** Configure the header of your site. */
   header: {
