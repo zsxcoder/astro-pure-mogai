@@ -69,19 +69,19 @@ export const theme: ThemeUserConfig = {
     // year: `© 2019 - ${new Date().getFullYear()}`,
     links: [
       // Registration link
-      {
-        title: '',
-        link: '',
-        style: 'text-sm', // Uno/TW CSS class
-        pos: 2
-      },
-      {
-        title: '',
-        link: '',
-        style: 'text-sm',
-        pos: 2
-      },
-      // Privacy Policy link
+    //   {
+    //     title: '',
+    //     link: '',
+    //     style: 'text-sm',
+    //     pos: 2
+    //   },
+    //   {
+    //     title: '',
+    //     link: '',
+    //     style: 'text-sm',
+    //     pos: 2
+    //   },
+
       {
         title: 'Site Policy',
         link: '/terms/list',
