@@ -139,8 +139,9 @@ async function cacheFriendAvatar(friend: Friend) {
     const targetPath = path.join(avatarOutputDir, fileName)
 
     try {
-      const buffer = Buffer.from(await response.arrayBuffer())
-      await writeFile(targetPath, buffer)
+      const arrayBuffer = await response.arrayBuffer()
+      const uint8Array = new Uint8Array(arrayBuffer)
+      await writeFile(targetPath, uint8Array)
       friend.avatar_cache = {
         hash,
         path: `/avatars/${fileName}`
