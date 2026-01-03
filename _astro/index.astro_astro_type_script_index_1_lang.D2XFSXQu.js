@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/fc.C5oMm-qE.css"])))=>i.map(i=>d[i]);
+import{_ as t}from"./preload-helper.BlTxHScW.js";import{F as i}from"./friendCircle.CUFNHOO8.js";t(()=>Promise.resolve({}),__vite__mapDeps([0]));const r=new i;r.init({private_api_url:"https://fc.ljx.icu/",page_turning_number:10,error_img:"https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c"});r.load();

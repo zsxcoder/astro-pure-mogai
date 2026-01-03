@@ -1,0 +1,1 @@
+/* empty css           */import{F as t}from"./friendCircle.CUFNHOO8.js";const r=new t;r.init({private_api_url:"https://fc.ljx.icu/",page_turning_number:10,error_img:"https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c"});r.load();
