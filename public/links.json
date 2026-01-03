@@ -95,13 +95,13 @@
           }
         },
         {
-          "name": "Sans",
-          "intro": "神都是孤独的",
-          "link": "https://qingw.netlify.app/",
-          "avatar": "https://codeforces.com/userpic.codeforces.org/5452668/title/c4a6a17cb05008e5.jpg",
+          "name": "Qingw",
+          "intro": "Just do it!",
+          "link": "https://qingw.top/",
+          "avatar": "http://qingw.top/images/fll.webp",
           "avatar_cache": {
-            "hash": "f04475d9bf9dce54",
-            "path": "/avatars/f04475d9bf9dce54.jpg"
+            "hash": "1233738427a4ea35",
+            "path": "/avatars/1233738427a4ea35.webp"
           }
         }
       ]
