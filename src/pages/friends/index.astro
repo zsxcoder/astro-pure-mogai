@@ -1,0 +1,124 @@
+---
+import PageLayout from '@/layouts/CommonPage.astro';
+import FriendsList from '@/components/FriendsList';
+import FriendLevelLegend from '@/components/FriendLevelLegend';
+import DisconnectedFriendsList from '@/components/DisconnectedFriendsList';
+import SiteInfo from '@/components/SiteInfo';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { FRIEND_LINKS } from '../../friends';
+import config from '../../site.config';
+import type { Config } from 'astro-pure/types';
+
+const headings = [
+  { depth: 2, slug: 'friend-levels', text: '友链等级' },
+  { depth: 2, slug: 'connected-friends', text: '活跃友链' },
+  { depth: 2, slug: 'disconnected-links', text: '失联友链' },
+  { depth: 2, slug: 'small-circle', text: '朋友圈' },
+  { depth: 2, slug: 'apply-links', text: '申请友链' },
+];
+
+const typedConfig = config as Config;
+
+const FRIEND_LINK_CONTACT = [
+  { name: 'name', val: (typedConfig.header.menu || []).find((item: any) => item.title === '关于')?.title || '钟神秀' },
+  { name: 'url', val: (typedConfig.header.menu || []).find((item: any) => item.title === '关于')?.link || '/about' },
+  { name: 'description', val: typedConfig.description || '造化钟神秀，阴阳割昏晓。' },
+  { name: 'avatar', val: typedConfig.logo?.src || '/favicon/favicon.ico' },
+  { name: 'email', val: typedConfig.footer.social?.email || '3149261770@qq.com' }
+];
+---
+
+<PageLayout title='友人帐' {headings} comment>
+  <div data-vss="animate-in fade-in slide-in-from-bottom-8 duration-500">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white font-serif mb-4">友人帐</h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 font-serif italic">
+        探索更多优秀的内容创作者和技术伙伴。
+      </p>
+    </div>
+
+    <!-- Legend -->
+    <ErrorBoundary>
+      <FriendLevelLegend client:visible />
+    </ErrorBoundary>
+
+    <!-- Friends List with Pagination -->
+    <ErrorBoundary>
+      <FriendsList client:load links={FRIEND_LINKS} />
+    </ErrorBoundary>
+
+    <!-- Disconnected Friends List -->
+    <ErrorBoundary>
+      <DisconnectedFriendsList client:load links={FRIEND_LINKS} />
+    </ErrorBoundary>
+
+      <h2 id='small-circle'>朋友圈</h2>
+  <div id='friend-circle-lite-root' class='not-prose'>Loading...</div>
+  <script>
+    import('@/assets/styles/fc.css')
+
+    import { FriendCircle } from '@/plugins/friendCircle'
+
+    const fc = new FriendCircle()
+    fc.init({
+      private_api_url: 'https://fc.ljx.icu/',
+      page_turning_number: 10,
+      error_img: 'https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c'
+    })
+    fc.load()
+  </script>
+
+    <!-- Apply Section -->
+             <h2 id="apply-links" class="text-xl font-bold text-slate-900 dark:text-white mb-4">申请友链</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <!-- 申请友链 -->
+      <div class="rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <svg class="w-6 h-6 text-docs-accent dark:text-dark-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: 'translateY(9px)' }}>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white">友链要求</h3>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+          欢迎技术与生活类博客交换友链
+        </p>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+          评论区留言或请发送邮件至 <a href={`mailto:${FRIEND_LINK_CONTACT.find(item => item.name === 'email')?.val}`} class="text-docs-accent dark:text-dark-accent hover:underline">{FRIEND_LINK_CONTACT.find(item => item.name === 'email')?.val}</a>
+        </p>
+        <!-- 提示信息框 -->
+        <div class="rounded-lg border-2 border-dashed border-docs-accent/30 dark:border-dark-accent/30 bg-docs-accent/5 dark:bg-dark-accent/10 p-4 text-center">
+          <p class="text-sm text-docs-accent dark:text-dark-accent font-medium mb-1">
+            博客名称、描述、地址、头像等信息
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            任意格式均可,包含基本信息即可
+          </p>
+        </div>
+      </div>
+
+      <!-- 本站信息 -->
+      <ErrorBoundary>
+        <SiteInfo client:load />
+      </ErrorBoundary>
+    </div>
+  </div>
+
+  <script>
+    // Force TOC to update when page loads and when dynamic components are loaded
+    window.addEventListener('load', () => {
+      // Trigger scroll event to force TOC update
+      window.dispatchEvent(new Event('scroll'));
+      
+      // Set a timeout to update again after dynamic components are loaded
+      setTimeout(() => {
+        window.dispatchEvent(new Event('scroll'));
+      }, 1000);
+    });
+    
+    // Listen for dynamic component loading
+    document.addEventListener('astro:page-load', () => {
+      window.dispatchEvent(new Event('scroll'));
+    });
+  </script>
+</PageLayout>

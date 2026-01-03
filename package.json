@@ -24,16 +24,23 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
+    "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/vercel": "^9.0.2",
+    "@unocss/reset": "^66.5.12",
     "@waline/client": "^3.8.0",
     "astro": "^5.16.6",
     "astro-pure": "1.4.0",
+    "hastscript": "^9.0.1",
     "katex": "^0.16.27",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "sharp": "^0.34.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
     "@astrojs/markdown-remark": "^6.3.10",

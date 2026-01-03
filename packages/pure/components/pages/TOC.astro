@@ -45,12 +45,7 @@ const toc = generateToc(headings)
 
     constructor() {
       super()
-      // Initialize the headings and tocLinks
-      this.headings = Array.from(
-        document.querySelectorAll(
-          'article h1, article h2, article h3, article h4, article h5, article h6'
-        )
-      )
+      // Initialize tocLinks immediately, but headings will be updated dynamically
       this.tocLinks = Array.from(this.querySelectorAll('a[href^="#"]')).map((link) => ({
         element: link as HTMLAnchorElement,
         progressBar: link.previousElementSibling as HTMLElement,
@@ -58,43 +53,90 @@ const toc = generateToc(headings)
       }))
     }
 
+    // Update headings dynamically to include client-side rendered components
+    updateHeadings() {
+      this.headings = Array.from(
+        document.querySelectorAll(
+          'article h1, article h2, article h3, article h4, article h5, article h6'
+        )
+      )
+    }
+
     updatePositionAndStyle = () => {
+      // Update headings dynamically to handle client-side rendered components
+      this.updateHeadings()
+      
       const windowHeight = window.innerHeight
-      const pageOffset =
-        window.scrollY - ((document.querySelector('#content') as HTMLElement)?.offsetTop || 0)
-      const postOffset =
-        ((document.querySelector('#content') as HTMLElement)?.offsetHeight || 0) + 127
-
-      this.headings.forEach((el, index) => {
-        const nextHeadingTop = this.headings[index + 1]?.offsetTop || postOffset
-        const range = [el.offsetTop - pageOffset, nextHeadingTop - pageOffset - el.offsetHeight]
-        const progress = (windowHeight - range[0]) / (range[1] - range[0])
-
-        this.headingProgress[el.id] = {
-          inView: range[0] < windowHeight && range[1] > 0,
-          progress: Math.max(0, Math.min(1, progress))
+      const contentElement = document.querySelector('#content') as HTMLElement
+      if (!contentElement) return
+      
+      // Get content element position relative to viewport
+      const contentRect = contentElement.getBoundingClientRect()
+      const contentTop = contentRect.top + window.scrollY
+      const contentHeight = contentElement.offsetHeight
+      
+      // Reset headingProgress for all slugs
+      this.tocLinks.forEach(({ slug }) => {
+        this.headingProgress[slug] = {
+          inView: false,
+          progress: 0
         }
       })
 
-      this.tocLinks.forEach(({ element: el, progressBar: bar, slug }, i) => {
-        const { inView, progress } = this.headingProgress[slug]
-        if (this.headingProgress[slug]) {
-          el.classList.toggle('highlight', inView)
-          el.classList.toggle('highlight-bg-translucent', inView)
-          el.classList.toggle(
-            'rounded-t-2xl',
-            inView && (i === 0 || !this.headingProgress[this.tocLinks[i - 1]?.slug].inView)
-          )
-          el.classList.toggle(
-            'rounded-b-2xl',
-            inView &&
-              (i === this.tocLinks.length - 1 ||
-                !this.headingProgress[this.tocLinks[i + 1]?.slug].inView)
-          )
-          bar.classList.toggle('is-read', !inView && progress === 1)
-          bar.classList.toggle('highlight-bg', inView)
-          bar.style.setProperty('height', `${progress * 90}%`)
+      // Update progress for all headings
+      this.headings.forEach((el, index) => {
+        if (!el.id) return
+        
+        // Get heading position relative to viewport and document
+        const headingRect = el.getBoundingClientRect()
+        const headingTop = headingRect.top + window.scrollY
+        const headingBottom = headingRect.bottom + window.scrollY
+        
+        // Calculate next heading top or content bottom
+        const nextHeading = this.headings[index + 1]
+        const nextHeadingTop = nextHeading ? (nextHeading.getBoundingClientRect().top + window.scrollY) : (contentTop + contentHeight)
+        
+        // Calculate heading range relative to content
+        const headingRangeStart = headingTop - contentTop
+        const headingRangeEnd = nextHeadingTop - contentTop
+        const headingRangeHeight = headingRangeEnd - headingRangeStart
+        
+        // Calculate scroll position relative to content
+        const scrollPosition = window.scrollY - contentTop
+        const viewportBottomInContent = scrollPosition + windowHeight
+        
+        // Determine if heading is in view
+        const inView = headingTop < viewportBottomInContent && headingBottom > scrollPosition
+        
+        // Calculate progress
+        const progress = Math.max(0, Math.min(1, (viewportBottomInContent - headingRangeStart) / headingRangeHeight))
+
+        this.headingProgress[el.id] = {
+          inView,
+          progress
         }
+      })
+
+      // Update TOC links based on heading progress
+      this.tocLinks.forEach(({ element: el, progressBar: bar, slug }, i) => {
+        const progressData = this.headingProgress[slug] || { inView: false, progress: 0 }
+        const { inView, progress } = progressData
+        
+        el.classList.toggle('highlight', inView)
+        el.classList.toggle('highlight-bg-translucent', inView)
+        el.classList.toggle(
+          'rounded-t-2xl',
+          inView && (i === 0 || !(this.headingProgress[this.tocLinks[i - 1]?.slug]?.inView))
+        )
+        el.classList.toggle(
+          'rounded-b-2xl',
+          inView &&
+            (i === this.tocLinks.length - 1 ||
+              !(this.headingProgress[this.tocLinks[i + 1]?.slug]?.inView))
+        )
+        bar.classList.toggle('is-read', !inView && progress === 1)
+        bar.classList.toggle('highlight-bg', inView)
+        bar.style.setProperty('height', `${progress * 90}%`)
       })
     }
 
@@ -119,9 +161,24 @@ const toc = generateToc(headings)
         })
       })
 
-      // Initial first and listen to scroll event
+      // Initial update and listen to scroll event
+      this.updateHeadings()
+      this.updatePositionAndStyle()
       setInterval(this.updatePositionAndStyle, 100)
       window.addEventListener('scroll', this.updatePositionAndStyle)
+      
+      // Listen for dynamic content changes
+      const observer = new MutationObserver(() => {
+        this.updateHeadings()
+        this.updatePositionAndStyle()
+      })
+      const articleElement = document.querySelector('article')
+      if (articleElement) {
+        observer.observe(articleElement, {
+          childList: true,
+          subtree: true
+        })
+      }
     }
   }
 

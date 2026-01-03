@@ -4,6 +4,7 @@ import AstroPureIntegration from 'astro-pure'
 import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
+import react from '@astrojs/react'
 
 // Local integrations
 import rehypeAutolinkHeadings from './src/plugins/rehype-auto-link-headings.ts'
@@ -26,7 +27,7 @@ import config from './src/site.config.ts'
 // https://astro.build/config
 export default defineConfig({
   // [Basic]
-  site: 'https://blog.ljx.icu',
+  site: 'https://blog.mcyzsx.top',
   // Deploy to a sub path
   // https://astro-pure.js.org/docs/setup/deployment#platform-with-base-path
   // base: '/astro-pure/',
@@ -61,7 +62,7 @@ export default defineConfig({
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
-      [rehypeSafeGo, { exclude: ['blog.ljx.icu', 'localhost', '127.0.0.1'] }],
+      [rehypeSafeGo, { exclude: ['blog.mcyzsx.top', 'localhost', '127.0.0.1'] }],
       [
         rehypeAutolinkHeadings,
         {
@@ -99,7 +100,8 @@ export default defineConfig({
     // astro-pure will automatically add sitemap, mdx & unocss
     // sitemap(),
     // mdx(),
-    AstroPureIntegration(config)
+    AstroPureIntegration(config),
+    react()
   ],
 
   // [Experimental]

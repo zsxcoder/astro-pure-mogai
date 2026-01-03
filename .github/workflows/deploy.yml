@@ -71,35 +71,35 @@ jobs:
 
 
       # Sync to CNB repository (with GitHub commit message)
-      - name: 🌐 Sync to CNB repository
-        run: |
-          cd dist
-          git branch -M main
-          git remote add cnb "https://${{ secrets.CNB_USERNAME }}:${{ secrets.CNB_TOKEN }}@cnb.cool/ljxme/lisblogsourcecode.git"
-          git fetch cnb || true
-          # Get current GitHub commit message
-          COMMIT_MSG=$(git log -1 --pretty=%s)
-          GITHUB_COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-          git commit --allow-empty -m "🔄 Sync from GitHub: ${COMMIT_MSG}\n🔗 ${GITHUB_COMMIT_URL}"
-          git push --force --quiet cnb main
-          echo "✅ 已同步至 CNB 仓库（带 GitHub 提交信息）"
+    #   - name: 🌐 Sync to CNB repository
+    #     run: |
+    #       cd dist
+    #       git branch -M main
+    #       git remote add cnb "https://${{ secrets.CNB_USERNAME }}:${{ secrets.CNB_TOKEN }}@cnb.cool/ljxme/lisblogsourcecode.git"
+    #       git fetch cnb || true
+    #       # Get current GitHub commit message
+    #       COMMIT_MSG=$(git log -1 --pretty=%s)
+    #       GITHUB_COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+    #       git commit --allow-empty -m "🔄 Sync from GitHub: ${COMMIT_MSG}\n🔗 ${GITHUB_COMMIT_URL}"
+    #       git push --force --quiet cnb main
+    #       echo "✅ 已同步至 CNB 仓库（带 GitHub 提交信息）"
 
       # Deploy to server via SSH (with GitHub commit message)
-      - name: 🔧 SSH Deploy to Server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /opt/1panel/www/sites/myblog/index/
-            git config --global --add safe.directory "$(pwd)"
-            git fetch --all --depth=1
-            git reset --hard origin/main
-            git pull --depth=1
-            echo "✅ 已拉取 page 分支最新内容"
+    #   - name: 🔧 SSH Deploy to Server
+    #     uses: appleboy/ssh-action@v1
+    #     with:
+    #       host: ${{ secrets.SERVER_IP }}
+    #       username: ${{ secrets.USERNAME }}
+    #       key: ${{ secrets.KEY }}
+    #       passphrase: ${{ secrets.PASSPHRASE }}
+    #       port: ${{ secrets.PORT }}
+    #       script: |
+    #         cd /opt/1panel/www/sites/myblog/index/
+    #         git config --global --add safe.directory "$(pwd)"
+    #         git fetch --all --depth=1
+    #         git reset --hard origin/main
+    #         git pull --depth=1
+    #         echo "✅ 已拉取 page 分支最新内容"
 
       # Refresh DogeCloud CDN directory cache (with GitHub commit message)
       # Documentation:

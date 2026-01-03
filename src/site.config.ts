@@ -8,11 +8,11 @@ export const vercount: { enable: boolean; script: string } = {
 export const theme: ThemeUserConfig = {
   // [Basic]
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: "梨尽兴 | Li's Blog",
+  title: "钟神秀 | ZSX's Blog",
   /** Will be used in index page & copyright declaration */
-  author: 'Ljx',
+  author: '钟神秀',
   /** Description metadata for your website. Can be used in page metadata. */
-  description: 'A place for peace',
+  description: '造化钟神秀，阴阳割昏晓。',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
   favicon: '/favicon/favicon.ico',
   /** The default social card image for your site which should be a path to an image in the `public/` directory. */
@@ -31,7 +31,7 @@ export const theme: ThemeUserConfig = {
   },
   /** Set a logo image to show in the homepage. */
   logo: {
-    src: '/src/assets/avatar.png',
+    src: '/src/assets/avatar.jpg',
     alt: 'Avatar'
   },
 
@@ -65,19 +65,19 @@ export const theme: ThemeUserConfig = {
   /** Configure the footer of your site. */
   footer: {
     // Year format
-    year: `© 2025 - ${new Date().getFullYear()}`,
+    year: `© 2026 - ${new Date().getFullYear()}`,
     // year: `© 2019 - ${new Date().getFullYear()}`,
     links: [
       // Registration link
       {
-        title: '鄂ICP备2025150801号-1',
-        link: 'https://beian.miit.gov.cn/',
+        title: '',
+        link: '',
         style: 'text-sm', // Uno/TW CSS class
         pos: 2
       },
       {
-        title: '川公网安备51170302000216号',
-        link: 'https://beian.mps.gov.cn/#/query/webSearch?code=51170302000216',
+        title: '',
+        link: '',
         style: 'text-sm',
         pos: 2
       },
@@ -92,9 +92,9 @@ export const theme: ThemeUserConfig = {
     credits: true,
     /** Optional details about the social media accounts for this site. */
     social: {
-      email: 'mailto:me@ljx.icu',
-      github: 'https://github.com/ljxme',
-      telegram: 'https://t.me/ljxme'
+      email: 'mailto:3149261770@qq.com',
+      github: 'https://github.com/zsxcoder',
+      telegram: 'https://t.me/KemiaoJun'
     }
   },
 
@@ -122,23 +122,23 @@ export const integ: IntegrationUserConfig = {
   links: {
     // Friend logbook
     logbook: [
-      { date: '2025-12-31', content: ' [Sans] accepted' },
-      { date: '2025-10-30', content: " [AirTouchの小站] accepted, [Shuoer's blog] inactived" },
-      { date: '2025-10-22', content: ' [青序栈] accepted' },
-      { date: '2025-10-17', content: ' [清羽飞扬] added' },
-      { date: '2025-10-10', content: " [Shuoer's blog] added" },
-      {
-        date: '2025-10-09',
-        content: " [温锦瑜的博客]、[Chancel's blog]、[FKUN]、[Zeruns's Blog] added"
-      }
+    //   { date: '2025-12-31', content: ' [Sans] accepted' },
+    //   { date: '2025-10-30', content: " [AirTouchの小站] accepted, [Shuoer's blog] inactived" },
+    //   { date: '2025-10-22', content: ' [青序栈] accepted' },
+    //   { date: '2025-10-17', content: ' [清羽飞扬] added' },
+    //   { date: '2025-10-10', content: " [Shuoer's blog] added" },
+    //   {
+    //     date: '2025-10-09',
+    //     content: " [温锦瑜的博客]、[Chancel's blog]、[FKUN]、[Zeruns's Blog] added"
+    //   }
     ],
     // Yourself link info
     applyTip: [
-      { name: 'Name', val: '梨尽兴' },
+      { name: 'Name', val: '钟神秀' },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://blog.ljx.icu' },
-      { name: 'Rss', val: 'https://blog.ljx.icu/rss.xml' },
-      { name: 'Avatar', val: 'https://blog.ljx.icu/favicon.png' }
+      { name: 'Link', val: 'https://blog.mcyzsx.top' },
+      { name: 'Rss', val: 'https://blog.mcyzsx.top/rss.xml' },
+      { name: 'Avatar', val: 'https://blog.mcyzsx.top/avatar.jpg' }
     ],
     // Cache avatars in `public/avatars/` to improve user experience.
     cacheAvatar: true
