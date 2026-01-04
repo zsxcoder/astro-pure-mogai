@@ -11,12 +11,18 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.6
         version: 0.9.6(prettier-plugin-astro@0.14.1)(prettier@3.7.4)(typescript@5.9.3)
+      '@astrojs/mdx':
+        specifier: ^4.3.13
+        version: 4.3.13(astro@5.16.6(@types/node@25.0.3)(@vercel/functions@2.2.13)(jiti@2.6.1)(rollup@4.54.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
       '@astrojs/react':
         specifier: ^4.4.2
         version: 4.4.2(@types/node@25.0.3)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(jiti@2.6.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tsx@4.21.0)(yaml@2.8.2)
       '@astrojs/rss':
         specifier: ^4.0.14
         version: 4.0.14
+      '@astrojs/sitemap':
+        specifier: ^3.6.0
+        version: 3.6.0
       '@astrojs/vercel':
         specifier: ^9.0.2
         version: 9.0.2(astro@5.16.6(@types/node@25.0.3)(@vercel/functions@2.2.13)(jiti@2.6.1)(rollup@4.54.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(react@19.2.3)(rollup@4.54.0)(vue@3.5.26(typescript@5.9.3))
@@ -26,12 +32,6 @@ importers:
       '@shikijs/types':
         specifier: ^3.20.0
         version: 3.20.0
-      '@types/hast':
-        specifier: ^3.0.4
-        version: 3.0.4
-      '@types/mdast':
-        specifier: ^4.0.4
-        version: 4.0.4
       '@unocss/reset':
         specifier: ^66.5.12
         version: 66.5.12
@@ -44,6 +44,9 @@ importers:
       astro-pure:
         specifier: 1.4.0
         version: 1.4.0(@types/node@25.0.3)(@vercel/functions@2.2.13)(jiti@2.6.1)(postcss@8.5.6)(rollup@4.54.0)(tsx@4.21.0)(typescript@5.9.3)(vite@6.4.1(@types/node@25.0.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
+      hast-util-select:
+        specifier: ^6.0.4
+        version: 6.0.4
       hastscript:
         specifier: ^9.0.1
         version: 9.0.1
@@ -53,12 +56,18 @@ importers:
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
+      node-html-parser:
+        specifier: ^7.0.1
+        version: 7.0.1
       react:
         specifier: ^19.2.3
         version: 19.2.3
       react-dom:
         specifier: ^19.2.3
         version: 19.2.3(react@19.2.3)
+      rehype:
+        specifier: ^13.0.2
+        version: 13.0.2
       rehype-katex:
         specifier: ^7.0.1
         version: 7.0.1
@@ -83,12 +92,21 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      ultrahtml:
+        specifier: ^1.5.3
+        version: 1.6.0
       unified:
         specifier: ^11.0.5
         version: 11.0.5
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
     devDependencies:
       '@astrojs/markdown-remark':
         specifier: ^6.3.10
@@ -4549,7 +4567,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 25.0.3
 
   '@types/unist@2.0.11': {}
 
