@@ -5,9 +5,12 @@ import Icon from '../../../packages/pure/components/user/Icon.astro';
 interface Props {
   href: string;
   icon?: string;
+  color?: string;
+  size?: string;
+  class?: string;
 }
 
-const { href, icon: propIcon } = Astro.props;
+const { href, icon: propIcon, color, size, class: className } = Astro.props;
 const icon = propIcon || getIconFromDomain(href);
 
 // 检查是否为外部链接
@@ -28,16 +31,18 @@ const domain = isExternal ? getDomain(href) : href;
 
 <a 
   href={href} 
-  class="link-with-icon"
+  class={`link-with-icon ${className || ''}`}
   target={isExternal ? '_blank' : '_self'}
   rel={isExternal ? 'noopener noreferrer' : ''}
   title={domain}
+  style={color ? { color } : {}}
 >
   {icon && (
     <Icon 
       name={icon as any} 
       class="domain-icon"
-      size="0.7em"
+      size={size || "0.7em"}
+      color={color}
     />
   )}
   <slot />
