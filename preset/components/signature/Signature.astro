@@ -26,7 +26,7 @@ const {
 
 <div
   class:list={[
-    'signature-wrapper w-40 float-right mt-4 [&_path]:stroke-black dark:[&_path]:stroke-gray-2 [&_path]:opacity-0',
+    'signature-wrapper w-40 float-right mt-4 [&_path]:stroke-black dark:[&_path]:stroke-white',
     className
   ]}
   data-mode={mode}
@@ -84,7 +84,11 @@ const {
       path.style.transition = 'none'
       path.style.opacity = '1'
       path.style.fill = 'transparent' // 关键
-      path.dataset.targetFill = '#000' // 想填的颜色
+      // 填充颜色固定为白色
+      path.dataset.targetFill = '#ffffff' // 填充颜色固定为白色
+      // 根据当前主题设置描边颜色
+      const isDarkMode = document.documentElement.classList.contains('dark')
+      path.style.stroke = isDarkMode ? '#ffffff' : '#000000' // 确保描边颜色正确
     })
 
     // 使用递归方式实现顺序动画
