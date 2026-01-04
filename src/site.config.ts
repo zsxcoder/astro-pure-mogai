@@ -225,5 +225,45 @@ export const terms: CardListData = {
   ]
 }
 
+// Author profile configuration
+export const AUTHOR_PROFILE = {
+  name: '钟神秀',
+  avatar: '/src/assets/avatar.jpg',
+  birthYear: 2005,
+  mbti: 'INFJ',
+  location: '中国, 苏州',
+  locationPatterns: {
+    show: true,
+    opacity: 0.15
+  },
+  locationDescription: '造化钟神秀，阴阳割昏晓~',
+  role: 'Student',
+  blogContent: '<p>热爱技术，喜欢分享，专注于前端开发和开源项目，在这里记录我的资源分享、踩坑记录和生活日常。</p>',
+  skills: {
+    programmingLanguages: ['JavaScript', 'TypeScript', 'HTML', 'CSS'],
+    frameworks: ['React', 'Vue', 'Astro'],
+    tools: ['Git', 'VS Code', 'Docker', 'PNPM', 'AI']
+  },
+  socialLinks: [
+    { name: 'GitHub', icon: 'Github', link: 'https://github.com/zsxcoder' },
+    { name: 'Email', icon: 'Mail', link: 'mailto:3149261770@qq.com' },
+    { name: 'Telegram', icon: 'mdi:telegram', link: 'https://t.me/KemiaoJun' },
+    { name: 'QQ', icon: 'simple-icons:qq', link: 'https://qm.qq.com/q/eLZhXoSonY' },
+    { name: 'Mastodon', icon: 'mdi:mastodon', link: 'https://mastodon.social/@zsxcoder' }
+  ]
+}
+
+// License configuration
+export const LICENSE_CONFIG = {
+  enable: true,
+  text: '© 2026 钟神秀. All rights reserved.',
+  showOriginalBadge: true
+}
+
+// Post card configuration
+export const POST_CARD = {
+  maxVisibleTags: 3
+}
+
 const config = { ...theme, integ } as Config
 export default config

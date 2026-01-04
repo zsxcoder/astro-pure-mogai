@@ -1,347 +1,78 @@
 ---
-import { MediumZoom } from 'astro-pure/advanced'
-import { Button, Collapse, Spoiler, Timeline } from 'astro-pure/user'
-import PageLayout from '@/layouts/CommonPage.astro'
-import Substats from '@/components/about/Substats.astro'
-import ToolSection from '@/components/about/ToolSection.astro'
+import { getCollection } from 'astro:content';
+import PageLayout from '@/layouts/CommonPage.astro';
+import AuthorCard from '@/components/about/AuthorCard';
+import PostCard from '@/components/about/PostCard';
+import Single from '@/components/Single.astro';
 
-// import SteamGameCard from '@/components/about/SteamGameCard.astro'
+// 获取最新文章
+const allPosts = await getCollection('blog');
+const latestPosts = allPosts
+  .sort((a, b) => {
+    const dateA = new Date(a.data.publishDate);
+    const dateB = new Date(b.data.publishDate);
+    return dateB.getTime() - dateA.getTime();
+  })
+  .slice(0, 3);
 
-const headings = [
-  { depth: 2, slug: 'hobbies', text: '爱好' },
-  { depth: 2, slug: 'tools', text: '工具' },
-  { depth: 2, slug: 'subscription', text: '订阅' },
-  { depth: 2, slug: 'social-networks', text: '社交网络' },
-  // { depth: 2, slug: 'gossips', text: 'Gossips' },
-  { depth: 2, slug: 'about-blog', text: '关于博客' }
-]
+// 关于页面数据
+const aboutData = [
+  {
+    single: [
+      {
+        tip: '个人简介',
+        title: '关于我',
+        content: '一个大学在读牛马，自动化专业，在这里记录一些文字。',
+        lishi: '欢迎您来到我的博客📘！'
+      }
+    ]
+  }
+];
 ---
 
-<PageLayout title='关于' {headings} view>
-  <p>站点简介</p>
-  <p>名称是为了备案临时起的🤪</p>
-  <Button
-    as='a'
-    href='https://github.com/ljxme/friend-circle-lite/issues/new?template=%E9%82%AE%E7%AE%B1%E8%AE%A2%E9%98%85.md'
-    title='订阅本站❤️'
-    variant='ahead'
-    class='not-prose'
-    target='_blank'
-    rel='noopener noreferrer'
-  />
-  <p>作者简介</p>
-  <p>一个无聊无趣的人~🫥</p>
-  <p>
-    格言：无。 <Spoiler>一只闲云野鹤🪶~</Spoiler>
-  </p>
-  <Button title='赞助我😘' class='w-fit' href='/projects#sponsorship' variant='ahead' />
+<PageLayout title='关于' view>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {/* 关于标题 */}
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white font-serif mb-4">关于</h1>
+    </div>
+    
+    {/* 个人信息卡片 */}
+    <div class="mb-16 flex justify-center">
+      <AuthorCard client:load className="max-w-4xl w-full" showLicense={false} />
+    </div>
 
-  {/* general-talk */}
-  <h2 id='hobbies'>爱好</h2>
-  <ul>
-    <li>之前乐于读些闲书消磨时间</li>
-    <li>现在乐于做些不知何意义的事蹉跎光阴</li>
-    <li>未来乐于追忆现在的事回味过往时光</li>
-  </ul>
+    {/* 最新文章 */}
+    <div class="max-w-4xl mx-auto mt-16">
+      <div class="flex items-center gap-4 mb-8">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white font-serif">最新文章</h2>
+        <div class="h-px flex-grow bg-slate-200 dark:bg-white/10"></div>
+        <a href="/" class="text-sm font-medium text-blue-500 dark:text-blue-400 hover:underline">查看全部</a>
+      </div>
+      <div class="flex flex-col gap-6">
+        {latestPosts.map((post) => (
+          <PostCard 
+            client:load
+            post={{
+              id: post.id,
+              title: post.data.title,
+              summary: post.data.summary || '',
+              date: new Date(post.data.publishDate).toLocaleDateString('zh-CN'),
+              tags: post.data.tags || [],
+              slug: post.id,
+            }}
+          />
+        ))}
+      </div>
+    </div>
 
-  {/* <SteamGameCard id='ljxme' class='mt-4' /> */}
-
-  {/* tools */}
-  <h2 id='tools'>工具</h2>
-  <p>当前所用的工具如下：</p>
-  <!-- design tools
-  <ToolSection
-    class='mb-5'
-    title='设计工具'
-    tools={[
-      {
-        name: 'Photoshop',
-        description: '图片编辑',
-        href: 'https://www.adobe.com/products/photoshop',
-        icon: import('@/assets/tools/photoshop.svg?raw')
-      },
-      {
-        name: 'Illustrator',
-        description: 'Vector Drawing',
-        href: 'https://www.adobe.com/products/illustrator',
-        icon: import('@/assets/tools/illustrator.svg?raw')
-      },
-      {
-        name: 'After Effects',
-        description: 'Motion Graphics',
-        href: 'https://www.adobe.com/products/aftereffects',
-        icon: import('@/assets/tools/aftereffects.svg?raw')
-      },
-      {
-        name: 'Premiere Pro',
-        description: 'Video Editing',
-        href: 'https://www.adobe.com/products/premiere',
-        icon: import('@/assets/tools/premiere.svg?raw')
-      }
-    ]}
-  />
-  -->
-  <ToolSection
-    class='mb-5'
-    title='生产力工具'
-    tools={[
-      {
-        name: 'Zen',
-        description: 'Browser',
-        href: 'https://zen-browser.app/',
-        icon: import('@/assets/tools/zenbrowser.svg?raw')
-      },
-      {
-        name: 'Raycast',
-        description: 'Treasure Chest',
-        href: 'https://www.raycast.com/',
-        icon: import('@/assets/tools/raycast.svg?raw')
-      },
-      {
-        name: 'Notion',
-        description: 'Note Taking',
-        href: 'https://www.notion.so/',
-        icon: import('@/assets/tools/notion.svg?raw')
-      },
-      {
-        name: 'Typora',
-        description: 'Markdown Editor',
-        href: 'https://typora.io/',
-        icon: import('@/assets/tools/typora.svg?raw')
-      }
-    ]}
-  />
-  <ToolSection
-    class='mb-5'
-    title='开发工具'
-    tools={[
-      {
-        name: 'VS Code',
-        description: 'IDE',
-        href: 'https://code.visualstudio.com/',
-        icon: import('@/assets/tools/vscode.svg?raw')
-      },
-      {
-        name: 'Trae',
-        description: 'AI Code Editor',
-        href: 'https://trae.ai/',
-        icon: import('@/assets/tools/trae.svg?raw')
-      },
-      {
-        name: 'Cursor',
-        description: 'AI Code Editor',
-        href: 'https://cursor.com/',
-        icon: import('@/assets/tools/cursor.svg?raw')
-      },
-      {
-        name: 'ChatGPT',
-        description: 'AI Assistant',
-        href: 'https://chat.openai.com/',
-        icon: import('@/assets/tools/chatgpt.svg?raw')
-      },
-      {
-        name: 'IntelliJ IDEA',
-        description: 'Minecraft Mod Development',
-        href: 'https://www.jetbrains.com/idea/',
-        icon: import('@/assets/tools/intellij-idea.svg?raw')
-      },
-      {
-        name: 'PyCharm',
-        description: 'Python Learning',
-        href: 'https://www.jetbrains.com/pycharm/',
-        icon: import('@/assets/tools/pycharm.svg?raw')
-      }
-    ]}
-  />
-  <ToolSection
-    class='mb-5'
-    title='环境'
-    tools={[
-      {
-        name: 'Debian 12.9',
-        description: 'Aliyun Server',
-        href: 'https://www.debian.org/',
-        icon: import('@/assets/tools/debian.svg?raw')
-      },
-      {
-        name: 'Windows 11',
-        description: 'ASUS TUF Gaming F5 Pro',
-        href: 'https://news.microsoft.com/windows11-general-availability/',
-        icon: import('@/assets/tools/windows11.svg?raw')
-      }
-    ]}
-  />
-
-  {/* subscription */}
-  <h2 id='subscription'>订阅</h2>
-  <p>当前订阅的服务如下（包含AFF链接）：</p>
-  <ToolSection
-    class='mb-5'
-    title='订阅服务'
-    tools={[
-      {
-        name: 'Aliyun',
-        description: 'Domain,DNS,Servers | 240.9￥/Year',
-        href: 'https://www.aliyun.com/minisite/goods?userCode=sna6zh3p',
-        icon: import('@/assets/tools/alibabacloud.svg?raw')
-      },
-      {
-        name: 'Zeabur',
-        description: 'Serverless Platform | 5$/Month',
-        href: 'https://zeabur.com/referral?referralCode=xlinkexe',
-        icon: import('@/assets/tools/zeabur.svg?raw')
-      },
-      {
-        name: 'Qiniu',
-        description: 'CDN | Free',
-        href: 'https://s.qiniu.com/bEnEJn',
-        icon: import('@/assets/tools/qiniu.svg?raw')
-      },
-      {
-        name: 'Tencent Cloud',
-        description: 'CDN | Overbilling',
-        href: 'https://cloud.tencent.com/',
-        icon: import('@/assets/tools/tencentcloud.svg?raw')
-      }
-    ]}
-  />
-
-  {/* social-networks */}
-  <h2 id='social-networks'>社交网络</h2>
-  <p>欢迎关注我的社交网络，与我互动、分享经验、交流知识。</p>
-  <Substats
-    stats={[
-      {
-        platform: 'GitHub',
-        icon: 'github',
-        link: 'https://github.com/ljxme',
-        text: 'followers',
-        api: 'github/ljxme'
-      },
-      {
-        platform: 'Telegram',
-        icon: 'telegram',
-        color: '#2ca5e0',
-        link: 'https://t.me/ljx_me',
-        text: 'members',
-        api: 'telegram/ljx_me'
-      },
-      {
-        platform: 'Bilibili',
-        icon: 'bilibili',
-        color: '#fe7398',
-        link: 'https://space.bilibili.com/3546950943115449',
-        text: 'fans',
-        // api: 'bilibili/3546950943115449'
-        count: 1
-      },
-      {
-        platform: 'Steam',
-        icon: 'steam',
-        color: '#50769d',
-        link: 'https://steamcommunity.com/id/ljxme/',
-        text: 'games',
-        api: 'steamgames/76561199036307152'
-      }
-    ]}
-  />
-  <!--
-  {/* gossips */}
-  <h2 id='gossips'>Gossips</h2>
-  <Collapse title='Lorem ipsum'>
-    Lorem ipsum dolor sit amet, vidit suscipit at mei. Quem denique mea id. Usu ei regione indoctum
-    dissentiunt, cu meliore fuisset mei, vel quod voluptua ne. Ex dicat impedit mel, at eum oratio
-    possit voluptatum.
-  </Collapse>
-  -->
-  {/* about-blog */}
-  <h2 id='about-blog'>关于博客</h2>
-  <p>
-    建站碎笔<Spoiler
-      >更详细请查看<a href='https://blog.ljx.icu/blog/blog-begin/'>《博客伊始》</a></Spoiler
-    >
-  </p>
-  <Timeline
-    events={[
-      {
-        date: '2025-10-07',
-        content:
-          '在 <a href="https://wanwang.aliyun.com/" target="_blank">阿里云（原万网）</a> 注册域名 <b>ljx.icu</b> 并选择 <a href="https://astro.build/" target="_blank">Astro</a> 作为框架，<a href="https://github.com/cworld1/astro-theme-pure" target="_blank">Astro Theme Pure</a> 作为主题，开始逐渐迁移博客到阿里云服务器。'
-      },
-      {
-        date: '2025-08-26',
-        content:
-          '在 <a href="https://www.namesilo.com/"target="_blank">NameSilo</a> 注册域名 <b>artemisia.icu</b> ，并用 <a href="https://www.cloudflare.com/"target="_blank">Cloudflare</a> 进行域名托管、DNS解析等服务，采用 <a href="https://docs.tangly1024.com/"target="_blank">NotionNext</a> 和 <a href="https://www.notion.com/"target="_blank">Notion</a> 作为博客的框架及内容管理系统。最后博客则静态托管于 <a href="https://vercel.com/"target="_blank">Vercel</a> 。'
-      },
-      {
-        date: '2021-2024',
-        content:
-          '博客写作换成了 <a href="https://gridea.dev/"target="_blank">Gridea</a> 作为客户端，选择 <a href="https://www.netlify.com/"target="_blank">Netlify</a> 作为托管平台，GitHub仓库只作为源码备份使用。<s>域名都不记得在哪个免费平台薅的了QAQ</s> ，在 <a href="https://digitalplat.org/"target="_blank">DigitalPlat</a> 注册了域名 <b>artemisia.us.kg</b> ，后续因其网站政策原因迁移至 <b>artemisia.dpdns.org</b> ，不过博客也没维护多长时间'
-      },
-      {
-        date: '2019-2020',
-        content:
-          '初识博客,采用 <a href="https://pages.github.com/"target="_blank">GitHubPages</a> 作为托管平台,开始写作。<s>其实也没怎么写，只是初步接触到了博客这个东西。</s>'
-      }
-    ]}
-  />
-  <Collapse title='本网站更新日志'>
-    <Timeline
-      events={[
-        { date: '2025-10-30', content: '更新Waline表情包为自定义表情包' },
-        { date: '2025-10-23', content: '完善评论及相关通知类功能，改善签名布局位置' },
-        { date: '2025-10-14', content: '实现文章AI摘要功能' },
-        { date: '2025-10-13', content: '接入CDN服务，对字体进行分割并使用CDN加速' },
-        { date: '2025-10-11', content: '网站所有备案完成' }
-      ]}
-    />
-  </Collapse>
-  <p>网站的顺畅运行和个性化定制也依赖于以下优秀项目/服务提供商提供的资源和技术支持：</p>
-  <ul>
-    <li>域名 & 服务器: <a href='https://www.aliyun.com/' target='_blank'>Aliyun</a></li>
-    <li>
-      框架 & 主题: <a href='https://astro.build/' target='_blank'>Astro</a> +
-      <a href='https://github.com/cworld1/astro-theme-pure' target='_blank'>Astro Theme Pure</a>
-    </li>
-    <li>
-      安全保障: <a href='https://www.1panel.cn/' target='_blank'>1Panel</a>
-    </li>
-    <li>
-      国外分流 & CI/CD: <a href='https://www.cloudflare.com/' target='_blank'>Cloudflare</a>
-    </li>
-    <li>
-      CDN: <a href='https://www.dogecloud.com/' target='_blank'>多吉云</a> +
-      <a href='https://www.qiniu.com/' target='_blank'>七牛云</a> +
-      <a href='https://cloud.tencent.com/' target='_blank'>腾讯云</a>
-    </li>
-    <li>
-      资源加速 & 存储: <a href='https://cdn.jsdmirror.com/' target='_blank'>JSDMirror</a> +
-      <a href='https://www.bitiful.com/' target='_blank'>缤纷云</a> +
-      <a href='https://imagekit.io/' target='_blank'>Imagekit</a>
-    </li>
-    <li>评论系统: <a href='https://waline.js.org' target='_blank'>Waline</a></li>
-    <li>
-      访问统计: <a href='https://supabase.com/' target='_blank'>Supabase</a> +
-      <a href='https://waline.js.org/' target='_blank'>Waline</a> +
-      <a href='https://www.vercount.one/' target='_blank'>Vercount</a>
-    </li>
-    <li>
-      其他统计: <a href='https://github.com/spencerwooo/substats' target='_blank'>Substats</a>
-    </li>
-    <li>网站字体: <a href='https://github.com/lxgw/' target='_blank'>霞鹜文楷Bright</a></li>
-  </ul>
-  <Collapse title='网站优化结果'>
-    <figure class='mt-4'>
-      <img
-        src='https://tc.ljx.icu/file/imgs/lTEDvghx.png'
-        alt='还在优化中🥲'
-        loading='lazy'
-        class='zoomable rounded shadow max-w-sm md:max-w-md mx-auto my-0'
-      />
-      <figcaption class='mt-2 text-sm text-gray-600 text-center'>
-        <a href='/images/youhua.png' target='_blank'>详情图片</a>
-      </figcaption>
-    </figure>
-    <MediumZoom />
-  </Collapse>
+    {/* Single组件 */}
+    <div class="max-w-4xl mx-auto mt-16">
+      <div class="flex items-center gap-4 mb-8">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white font-serif">更多信息</h2>
+        <div class="h-px flex-grow bg-slate-200 dark:bg-white/10"></div>
+      </div>
+      <Single about={aboutData} />
+    </div>
+  </div>
 </PageLayout>

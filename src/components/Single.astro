@@ -1,0 +1,149 @@
+---
+// 导入 MDX 内容组件
+import AboutContent from '../content/about.mdx';
+
+interface SingleItem {
+  tip: string;
+  title: string;
+  content: string;
+  lishi: string;
+}
+
+interface AboutSection {
+  single: SingleItem[];
+}
+
+interface Props {
+  about?: AboutSection[];
+}
+
+const { about = [] } = Astro.props;
+---
+
+<div class="author-content-item single create-site-post" style="width: 100%">
+  {/* 如果有 about 属性，渲染它的内容 */}
+  {about.length > 0 ? (
+    about.map((singleItem, index) => (
+      <div class="mb-8">
+        {singleItem.single.map((single) => (
+          <div>
+            <div class="author-content-item-tips">
+              {single.tip}
+            </div>
+            <div class="author-content-item-title">
+              {single.title}
+            </div>
+            <p class="author-content-item-content">
+              {single.content}
+            </p>
+            <div class="lishi">
+              {single.lishi}
+            </div>
+          </div>
+        ))}
+      </div>
+    ))
+  ) : (
+    /* 如果没有 about 属性，显示提示信息 */
+    <p class="text-center mb-4">
+      可于 about.md 配置补充说明。
+    </p>
+  )}
+  
+  {/* 渲染 about.mdx 内容 */}
+  <div class="singlePost">
+    <AboutContent />
+  </div>
+</div>
+
+<style scoped>
+/* single */
+.author-content-item {
+  &.single {
+    width: 100%;
+  }
+  .author-content-item-tips {
+    opacity: .8;
+    font-size: 12px;
+    margin-bottom: .5rem;
+    color: var(--color-text-secondary);
+  }
+}
+.author-content-item-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+.lishi {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  color: var(--color-text-primary);
+  margin-top: 0.5rem;
+}
+.author-content-item-content {
+  margin-bottom: 1rem;
+  margin-top: .5rem;
+  vertical-align: middle;
+  color: var(--color-text-secondary);
+}
+
+/* 新增样式，确保 Markdown 内容美观 */
+.singlePost {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.article {
+  color: var(--color-text-primary);
+  line-height: 1.7;
+}
+
+/* 确保 Markdown 内容中的标题、段落等元素样式美观 */
+.article h1,
+.article h2,
+.article h3,
+.article h4,
+.article h5,
+.article h6 {
+  color: var(--color-text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.article p {
+  margin-bottom: 1rem;
+}
+
+.article a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.article a:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.article ul,
+.article ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.5rem;
+}
+
+.article blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+</style>

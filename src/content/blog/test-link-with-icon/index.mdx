@@ -56,20 +56,41 @@ import Poetry from '../../../components/custom/Poetry.astro'
 
 ## Badge 组件测试
 
+### 基本用法
+
 <Badge text="示例徽章" />
 
+### 超链接功能测试
+
+#### 基本文本徽章带链接
 <Badge text="GitHub" link="https://github.com" />
+<Badge text="Twitter" link="https://twitter.com" />
+<Badge text="Google" link="https://google.com" />
 
-<Badge text="User" link="https://github.com/zsxcoder" />
+#### GitHub 链接（自动显示头像）
+<Badge text="GitHub User" link="https://github.com/zsxcoder" />
+<Badge text="Astro" link="https://github.com/withastro" />
 
+#### 自定义图片徽章带链接
+<Badge img="https://home.zsxcoder.top/api/avatar.png" text="自定义图片链接" link="https://zsxcoder.top" />
+<Badge img="https://picsum.photos/200" text="随机图片链接" link="https://example.com" />
 
-<Badge img="https://home.zsxcoder.top/api/avatar.png" text="自定义图片" />
+#### 方形徽章带链接
+<Badge text="方形链接徽章" link="https://example.com" square />
+<Badge text="GitHub 方形" link="https://github.com" square />
 
+#### 圆形徽章带链接
+<Badge text="圆形链接徽章" link="https://example.com" round />
+<Badge text="Twitter 圆形" link="https://twitter.com" round />
 
-<Badge text="方形徽章" square />
+#### 外部链接强制标记
+<Badge text="内部链接" link="/about" />
+<Badge text="外部链接" link="https://example.com" external />
 
-
-<Badge text="圆形徽章" round />
+#### 纯图标链接徽章
+<Badge link="https://github.com" />
+<Badge link="https://twitter.com" />
+<Badge link="https://example.com" />
 
 ## Poetry 诗歌组件测试
 

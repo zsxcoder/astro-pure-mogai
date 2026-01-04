@@ -5,9 +5,10 @@ interface Props {
   link?: string;
   round?: boolean;
   square?: boolean;
+  external?: boolean;
 }
 
-const { img, text, link, round: propRound, square: propSquare } = Astro.props;
+const { img, text, link, round: propRound, square: propSquare, external } = Astro.props;
 
 // 辅助函数：获取GitHub用户名
 function getGhUsername(link?: string): string | null {
@@ -24,7 +25,7 @@ function getGhAvatar(username: string): string {
 
 // 辅助函数：检查是否为外部链接
 function isExtLink(link: string): boolean {
-  return link.startsWith('http') || link.startsWith('https');
+  return link.startsWith('http') || link.startsWith('https') || !!external;
 }
 
 // 辅助函数：获取域名
@@ -69,13 +70,16 @@ const isRound = computedImg ? !propSquare : propRound;
 
 // 计算提示文本
 const tip = link ? (isExtLink(link) ? getDomain(link) : safelyDecodeUriComponent(link)) : '';
+
+// 计算是否显示外部链接图标
+const showExternalIcon = link && isExtLink(link);
 ---
 
-<!-- 根据是否有链接选择渲染标签 -->
+<!-- 统一的徽章容器，根据是否有链接选择渲染标签 -->
 {link ? (
   <a 
     href={link} 
-    class={`badge ${isRound ? 'round' : ''}`}
+    class={`badge ${isRound ? 'round' : ''} ${showExternalIcon ? 'external' : ''}`}
     target={isExtLink(link) ? '_blank' : '_self'}
     rel={isExtLink(link) ? 'noopener noreferrer' : ''}
     title={tip}
@@ -92,6 +96,16 @@ const tip = link ? (isExtLink(link) ? getDomain(link) : safelyDecodeUriComponent
       <slot>
         {text}
       </slot>
+      {/* 外部链接图标 */}
+      {showExternalIcon && (
+        <span class="badge-external-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </span>
+      )}
     </span>
   </a>
 ) : (
@@ -119,13 +133,16 @@ const tip = link ? (isExtLink(link) ? getDomain(link) : safelyDecodeUriComponent
 /* 对齐到基线，同时保持图片垂直居中 */
 .badge {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   margin: 0.1em;
   border: 1px solid var(--c-border, #e5e7eb);
   border-radius: 4px;
   box-sizing: content-box;
   background-color: var(--c-bg-2, #f9fafb);
   font-size: 0.875em;
+  line-height: normal;
+  height: fit-content;
+  vertical-align: middle;
   transition: color 0.2s;
   text-decoration: none;
   color: inherit;
@@ -139,30 +156,83 @@ const tip = link ? (isExtLink(link) ? getDomain(link) : safelyDecodeUriComponent
   }
 }
 
-.badge[href]:hover {
-  color: var(--c-text, #111827);
+/* 所有链接徽章的悬停效果 */
+.badge[href] {
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
+.badge[href]:hover {
+  color: var(--c-text, #111827);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 圆形徽章样式 */
 .badge.round, .badge.round > .badge-icon {
   border-radius: 0.8em;
 }
 
+/* 方形徽章样式 */
+.badge:not(.round) > .badge-icon {
+  border-radius: 3.5px;
+}
+
+/* 徽章图标样式 */
 .badge-icon {
   align-self: normal;
   height: 1.6em;
   border-radius: 3.5px;
 }
 
+/* 徽章文本样式 */
+.badge-text {
+  padding: 0.2em 0.4em;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+}
+
+/* 徽章文本与图标间距 */
 .badge-icon + .badge-text {
   margin-inline-start: -0.1em;
 }
 
-.badge-text {
-  padding: 0.2em 0.4em;
-  line-height: 1.2;
-}
-
+/* 隐藏空文本 */
 .badge-text:empty {
   display: none;
+}
+
+/* 外部链接图标样式 */
+.badge-external-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+/* 外部链接图标悬停效果 */
+.badge[href]:hover .badge-external-icon {
+  opacity: 1;
+}
+
+/* 图片徽章样式 */
+.badge:has(.badge-icon) {
+  align-items: center;
+}
+
+/* 纯文本徽章样式 */
+.badge:not(:has(.badge-icon)) {
+  padding: 0.2em 0.4em;
+}
+
+/* 圆形纯文本徽章样式 */
+.badge.round:not(:has(.badge-icon)) {
+  border-radius: 1em;
+  padding: 0.2em 0.6em;
 }
 </style>
