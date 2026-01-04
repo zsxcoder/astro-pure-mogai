@@ -136,9 +136,9 @@ export const integ: IntegrationUserConfig = {
     applyTip: [
       { name: 'Name', val: '钟神秀' },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://blog.mcyzsx.top' },
-      { name: 'Rss', val: 'https://blog.mcyzsx.top/rss.xml' },
-      { name: 'Avatar', val: 'https://blog.mcyzsx.top/avatar.jpg' }
+      { name: 'Link', val: 'https://b.zsxcoder.top' },
+      { name: 'Rss', val: 'https://b.zsxcoder.top/rss.xml' },
+      { name: 'Avatar', val: 'https://b.zsxcoder.top/avatar.jpg' }
     ],
     // Cache avatars in `public/avatars/` to improve user experience.
     cacheAvatar: true

@@ -27,7 +27,7 @@ import config from './src/site.config.ts'
 // https://astro.build/config
 export default defineConfig({
   // [Basic]
-  site: 'https://blog.mcyzsx.top',
+  site: 'https://b.zsxcoder.top',
   // Deploy to a sub path
   // https://astro-pure.js.org/docs/setup/deployment#platform-with-base-path
   // base: '/astro-pure/',
@@ -62,7 +62,7 @@ export default defineConfig({
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
-      [rehypeSafeGo, { exclude: ['blog.mcyzsx.top', 'localhost', '127.0.0.1'] }],
+      [rehypeSafeGo, { exclude: ['b.zsxcoder.top', 'localhost', '127.0.0.1'] }],
       [
         rehypeAutolinkHeadings,
         {
