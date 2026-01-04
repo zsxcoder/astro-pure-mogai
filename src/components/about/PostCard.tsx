@@ -34,7 +34,7 @@ export default function PostCard({ post }: PostCardProps) {
         padding: '1.25rem',
       }}
     >
-      <a href={`/posts/${post.slug}`} className="absolute inset-0 z-20"></a>
+      <a href={`/blog/${post.slug}`} className="absolute inset-0 z-20"></a>
 
       {/* Background Watermark/Pattern - Distinct mark */}
       <div className="absolute -bottom-2 -right-2 w-24 h-24 opacity-[0.03] group-hover:opacity-[0.08] transition-all duration-500 pointer-events-none rotate-12 group-hover:rotate-0 group-hover:scale-110">
