@@ -194,7 +194,7 @@ function renderTalks() {
   }
 
   const fetchAndRenderTalks = () => {
-    const url = 'https://mm.ljx.icu/api/echo/page'
+    const url = 'https://ech0.050815.xyz/api/echo/page'
     const cacheKey = 'talksCache'
     const cacheTimeKey = 'talksCacheTime'
     const cacheDuration = 30 * 60 * 1000
@@ -346,8 +346,8 @@ function renderTalks() {
 
     return {
       content,
-      user: item.username || '匿名',
-      avatar: 'https://tc.ljx.icu/file/imgs/eClZn65w.png',
+      user: item.username || '钟神秀',
+      avatar: 'https://home.zsxcoder.top/api/avatar.png',
       date,
       location: '',
       tags:
