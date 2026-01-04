@@ -26,6 +26,12 @@ importers:
       '@astrojs/vercel':
         specifier: ^9.0.2
         version: 9.0.2(astro@5.16.6(@types/node@25.0.3)(@vercel/functions@2.2.13)(jiti@2.6.1)(rollup@4.54.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(react@19.2.3)(rollup@4.54.0)(vue@3.5.26(typescript@5.9.3))
+      '@iconify/json':
+        specifier: ^2.2.417
+        version: 2.2.417
+      '@iconify/react':
+        specifier: ^6.0.2
+        version: 6.0.2(react@19.2.3)
       '@shikijs/core':
         specifier: ^3.20.0
         version: 3.20.0
@@ -735,6 +741,14 @@ packages:
         optional: true
       prettier-plugin-ember-template-tag:
         optional: true
+
+  '@iconify/json@2.2.417':
+    resolution: {integrity: sha512-/MzthgckJ4vEwdHmAbAn6Bph5WnR4tzVcHMs/nZl3v5hOVRw80SK28UPnG7jjsCB41WWjWPnWdMEdOZfUMZS5w==}
+
+  '@iconify/react@6.0.2':
+    resolution: {integrity: sha512-SMmC2sactfpJD427WJEDN6PMyznTFMhByK9yLW0gOTtnjzzbsi/Ke/XqsumsavFPwNiXs8jSiYeZTmLCLwO+Fg==}
+    peerDependencies:
+      react: '>=16'
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -4158,6 +4172,16 @@ snapshots:
       '@vue/compiler-sfc': 3.5.26
     transitivePeerDependencies:
       - supports-color
+
+  '@iconify/json@2.2.417':
+    dependencies:
+      '@iconify/types': 2.0.0
+      pathe: 2.0.3
+
+  '@iconify/react@6.0.2(react@19.2.3)':
+    dependencies:
+      '@iconify/types': 2.0.0
+      react: 19.2.3
 
   '@iconify/types@2.0.0': {}
 
