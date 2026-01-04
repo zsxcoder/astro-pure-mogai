@@ -3,6 +3,15 @@ import type { FriendLink } from '../friends';
 import { FRIEND_LEVELS } from '../consts/friendLevels';
 import { ThumbsUp } from 'lucide-react';
 
+interface LinkStatus {
+    link: string;
+    latency: number;
+}
+
+interface LinkStatusData {
+    link_status: LinkStatus[];
+}
+
 interface FriendCardProps {
     link: FriendLink;
 }
@@ -11,6 +20,7 @@ const FriendCard: React.FC<FriendCardProps> = ({ link }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
     const [shouldLoad, setShouldLoad] = useState(false);
+    const [linkStatus, setLinkStatus] = useState<LinkStatus[]>([]);
     const imgRef = useRef<HTMLDivElement>(null);
 
     // 计算已添加天数
@@ -42,6 +52,46 @@ const FriendCard: React.FC<FriendCardProps> = ({ link }) => {
 
     const levelInfo = getLevelInfo();
 
+    // 获取当前链接的状态信息
+    const getCurrentLinkStatus = () => {
+        const currentLink = link.url.replace(/\/$/, '');
+        return linkStatus.find(item => item.link.replace(/\/$/, '') === currentLink);
+    };
+
+    // 获取状态标签的样式和文本
+    const getStatusTagInfo = () => {
+        const status = getCurrentLinkStatus();
+        if (!status) {
+            return {
+                text: '未知',
+                className: 'status-tag-red'
+            };
+        }
+
+        let latencyText = '未知';
+        let className = 'status-tag-red'; // 默认红色
+
+        if (status.latency === -1) {
+            latencyText = '未知';
+        } else {
+            latencyText = status.latency.toFixed(2) + ' s';
+            if (status.latency <= 2) {
+                className = 'status-tag-green';
+            } else if (status.latency <= 5) {
+                className = 'status-tag-light-yellow';
+            } else if (status.latency <= 10) {
+                className = 'status-tag-dark-yellow';
+            }
+        }
+
+        return {
+            text: latencyText,
+            className
+        };
+    };
+
+    const statusTagInfo = getStatusTagInfo();
+
     useEffect(() => {
         if (!imgRef.current || shouldLoad) return;
 
@@ -59,18 +109,59 @@ const FriendCard: React.FC<FriendCardProps> = ({ link }) => {
         return () => observer.disconnect();
     }, [shouldLoad]);
 
+    useEffect(() => {
+        const cacheKey = "statusTagsData";
+        const cacheExpirationTime = 30 * 60 * 1000; // 半小时
+        const jsonUrl = 'https://check-flink.mcyzsx.top/result.json';
+
+        const fetchDataAndUpdateUI = async () => {
+            try {
+                const response = await fetch(jsonUrl);
+                const data: LinkStatusData = await response.json();
+                setLinkStatus(data.link_status);
+                
+                // 缓存数据
+                const cacheData = {
+                    data: data,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+            } catch (error) {
+                console.error('Error fetching test-flink result.json:', error);
+            }
+        };
+
+        // 检查缓存
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            const { data, timestamp } = JSON.parse(cachedData);
+            if (Date.now() - timestamp < cacheExpirationTime) {
+                setLinkStatus(data.link_status);
+                return;
+            }
+        }
+
+        // 缓存过期或不存在，重新获取
+        fetchDataAndUpdateUI();
+    }, []);
+
     return (
         <a
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group relative flex flex-col gap-3 p-5 rounded-xl border transition-all duration-300 
+            className={`group flink-list-item relative flex flex-col gap-3 p-5 rounded-xl border transition-all duration-300 
                 bg-white dark:bg-white/5 
                 hover:-translate-y-1 hover:shadow-lg
                 ${levelInfo ? levelInfo.border.replace('border-', 'border-opacity-50 hover:border-opacity-100 ') : 'border-gray-200 dark:border-white/10'}
                 overflow-hidden min-h-[140px] h-auto no-underline
             `}
         >
+            {/* Status Tag */}
+            <div className={`status-tag ${statusTagInfo.className}`}>
+                {statusTagInfo.text}
+            </div>
+
             {/* Background Decoration Pattern (Optional) */}
             <div className={`absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-5 transition-opacity pointer-events-none ${levelInfo?.theme}`}>
                 {levelInfo && <levelInfo.Icon size={120} />}

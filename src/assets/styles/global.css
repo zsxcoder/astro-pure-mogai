@@ -284,3 +284,33 @@ span.katex-display {
     border-radius: 999px;
   }
 }
+
+/* Friend link status tags */
+.status-tag {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 3px 8px;
+  border-radius: 12px 0px 12px 0px;
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+  transition: font-size 0.3s ease-out, width 0.3s ease-out, opacity 0.3s ease-out;
+}
+.flink-list-item:hover .status-tag {
+  font-size: 0px;
+  opacity: 0;
+}
+/* 固态颜色 */
+.status-tag-green {
+  background-color: #005E00; /* 绿色 */
+}
+.status-tag-light-yellow {
+  background-color: #FED101; /* 浅黄色 */
+}
+.status-tag-dark-yellow {
+  background-color: #F0B606; /* 深黄色 */
+}
+.status-tag-red {
+  background-color: #B90000; /* 红色 */
+}

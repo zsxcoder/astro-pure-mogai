@@ -136,7 +136,7 @@ export const integ: IntegrationUserConfig = {
     applyTip: [
       { name: 'Name', val: '钟神秀' },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://b.zsxcoder.top' },
+      { name: 'Link', val: 'https://mcy.zsxcoder.top' },
       { name: 'Rss', val: 'https://b.zsxcoder.top/rss.xml' },
       { name: 'Avatar', val: 'https://home.zsxcoder.top/api/avatar.png' }
     ],

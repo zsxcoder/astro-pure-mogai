@@ -37,7 +37,7 @@ const { title, list: friendList, ...props } = Astro.props
 
 let remoteData: Record<string, number> = {}
 try {
-  const res = await fetch('https://check-links.s3.bitiful.net/link.json')
+  const res = await fetch('https://check-flink.mcyzsx.top/result.json')
   const json = await res.json()
   for (const group of json.friends) {
     for (const f of group.link_list) {
