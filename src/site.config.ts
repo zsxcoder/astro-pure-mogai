@@ -228,7 +228,7 @@ export const terms: CardListData = {
 // Author profile configuration
 export const AUTHOR_PROFILE = {
   name: '钟神秀',
-  avatar: '/src/assets/avatar.jpg',
+  avatar: 'https://home.zsxcoder.top/api/avatar.png',
   birthYear: 2005,
   mbti: 'INFJ',
   location: '中国, 苏州',
