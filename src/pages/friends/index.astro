@@ -8,6 +8,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { FRIEND_LINKS } from '../../friends';
 import config from '../../site.config';
 import type { Config } from 'astro-pure/types';
+import LinkWithIcon from '../../components/custom/LinkWithIcon.astro';
 
 const headings = [
   { depth: 2, slug: 'friend-levels', text: '友链等级' },
@@ -62,7 +63,7 @@ const FRIEND_LINK_CONTACT = [
 
     const fc = new FriendCircle()
     fc.init({
-      private_api_url: 'https://fc.ljx.icu/',
+      private_api_url: 'https://fc.mcyzsx.top/',
       page_turning_number: 10,
       error_img: 'https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c'
     })
@@ -84,7 +85,7 @@ const FRIEND_LINK_CONTACT = [
           欢迎技术与生活类博客交换友链
         </p>
         <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
-          评论区留言或请发送邮件至 <a href={`mailto:${FRIEND_LINK_CONTACT.find(item => item.name === 'email')?.val}`} class="text-docs-accent dark:text-dark-accent hover:underline">{FRIEND_LINK_CONTACT.find(item => item.name === 'email')?.val}</a>
+          评论区留言或仓库提交<LinkWithIcon href="https://github.com/zsxcoder/astro-pure-mogai/blob/main/src/friends.ts">PR</LinkWithIcon>或请发送邮件至 <a href={`mailto:${FRIEND_LINK_CONTACT.find(item => item.name === 'email')?.val}`} class="text-docs-accent dark:text-dark-accent hover:underline">{FRIEND_LINK_CONTACT.find(item => item.name === 'email')?.val}</a>
         </p>
         <!-- 提示信息框 -->
         <div class="rounded-lg border-2 border-dashed border-docs-accent/30 dark:border-dark-accent/30 bg-docs-accent/5 dark:bg-dark-accent/10 p-4 text-center">

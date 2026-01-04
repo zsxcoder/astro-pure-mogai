@@ -1,0 +1,113 @@
+---
+title: 通过Waline API获取最新评论并显示
+description: 基于waline官方文档接口的小运用
+publishDate: '2025-11-02'
+tags:
+  - 主题魔改
+  - Waline
+  - TypeScript
+  - CSS
+  - Astro
+comment: true
+language: 中文
+summary: >-
+  文章介绍了如何通过Waline API获取最新评论并显示在网站中。首先，浏览了Waline的官方接口文档，发现可以通过
+  /api/comment?type=recent
+  接口获取最新评论数据。然后，编写了一个适用于当前主题的评论展示组件。接下来，引入了代码片段Gist，并在src/plugins目录下新建了recentcomment.ts文件，并在src/assets/styles目录下新建了rc.css文件。最后，在src/components目录下新建了RecentComments.astro文件，并在Pure主题主页中使用了这个组件。
+---
+
+import LinkWithIcon from '../../../components/custom/LinkWithIcon.astro'
+import Badge from '../../../components/custom/Badge.astro'
+import Poetry from '../../../components/custom/Poetry.astro'
+
+# LinkWithIcon 组件测试
+
+这是一个测试文档，用于演示 LinkWithIcon 组件的功能。
+
+## 基本使用
+
+<LinkWithIcon href="https://github.com">GitHub</LinkWithIcon>
+
+<LinkWithIcon href="https://twitter.com">Twitter</LinkWithIcon>
+
+<LinkWithIcon href="https://youtube.com">YouTube</LinkWithIcon>
+
+<LinkWithIcon href="https://bilibili.com">B站</LinkWithIcon>
+
+<LinkWithIcon href="https://zhihu.com">知乎</LinkWithIcon>
+
+## 自定义图标
+
+<LinkWithIcon href="https://example.com" icon="github">使用 GitHub 图标的示例链接</LinkWithIcon>
+
+<LinkWithIcon href="https://example.com" icon="x">使用 Twitter 图标的示例链接</LinkWithIcon>
+
+<LinkWithIcon href="https://example.com" icon="telegram">使用 YouTube 图标的示例链接</LinkWithIcon>
+
+## 自定义颜色和大小
+
+<LinkWithIcon href="https://github.com" color="#333" size="24px">GitHub (自定义颜色和大小)</LinkWithIcon>
+
+<LinkWithIcon href="https://twitter.com" color="#1DA1F2" size="20px">Twitter (自定义颜色和大小)</LinkWithIcon>
+
+## 自定义类名
+
+<LinkWithIcon href="https://github.com" class="font-bold text-red-500">GitHub (自定义类名)</LinkWithIcon>
+
+## Badge 组件测试
+
+<Badge text="示例徽章" />
+
+<Badge text="GitHub" link="https://github.com" />
+
+<Badge text="User" link="https://github.com/zsxcoder" />
+
+
+<Badge img="https://home.zsxcoder.top/api/avatar.png" text="自定义图片" />
+
+
+<Badge text="方形徽章" square />
+
+
+<Badge text="圆形徽章" round />
+
+## Poetry 诗歌组件测试
+
+### 基本用法
+
+<Poetry>
+床前明月光，
+疑是地上霜。
+举头望明月，
+低头思故乡。
+</Poetry>
+
+### 带标题和作者
+
+<Poetry title="静夜思" author="李白">
+床前明月光，
+疑是地上霜。
+举头望明月，
+低头思故乡。
+</Poetry>
+
+### 完整示例
+
+<Poetry 
+  title="将进酒" 
+  author="李白"
+  footer="《全唐诗》卷一百六十四"
+>
+君不见黄河之水天上来，奔流到海不复回。
+君不见高堂明镜悲白发，朝如青丝暮成雪。
+人生得意须尽欢，莫使金樽空对月。
+天生我材必有用，千金散尽还复来。
+烹羊宰牛且为乐，会须一饮三百杯。
+岑夫子，丹丘生，将进酒，杯莫停。
+与君歌一曲，请君为我倾耳听。
+钟鼓馔玉不足贵，但愿长醉不复醒。
+古来圣贤皆寂寞，惟有饮者留其名。
+陈王昔时宴平乐，斗酒十千恣欢谑。
+主人何为言少钱，径须沽取对君酌。
+五花马，千金裘，呼儿将出换美酒，与尔同销万古愁。
+</Poetry>
