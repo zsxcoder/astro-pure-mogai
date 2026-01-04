@@ -138,7 +138,7 @@ export const integ: IntegrationUserConfig = {
       { name: 'Desc', val: theme.description || 'Null' },
       { name: 'Link', val: 'https://b.zsxcoder.top' },
       { name: 'Rss', val: 'https://b.zsxcoder.top/rss.xml' },
-      { name: 'Avatar', val: 'https://b.zsxcoder.top/avatar.jpg' }
+      { name: 'Avatar', val: 'https://home.zsxcoder.top/api/avatar.png' }
     ],
     // Cache avatars in `public/avatars/` to improve user experience.
     cacheAvatar: true
