@@ -35,17 +35,25 @@ interface Props {
 }
 const { title, list: friendList, ...props } = Astro.props
 
-let remoteData: Record<string, number> = {}
+let remoteData: Record<string, number> = {};
 try {
-  const res = await fetch('https://check-flink.mcyzsx.top/result.json')
-  const json = await res.json()
-  for (const group of json.friends) {
-    for (const f of group.link_list) {
-      remoteData[f.link] = f.responseTime
+  const res = await fetch('https://check-flink.mcyzsx.top/result.json');
+  const json = await res.json();
+  // 检查json.friends是否为数组
+  if (Array.isArray(json.friends)) {
+    for (const group of json.friends) {
+      // 检查group是否有link_list属性且为数组
+      if (group && Array.isArray(group.link_list)) {
+        for (const f of group.link_list) {
+          if (f && f.link && typeof f.responseTime === 'number') {
+            remoteData[f.link] = f.responseTime;
+          }
+        }
+      }
     }
   }
 } catch (e) {
-  console.warn('Failed to fetch remote link.json', e)
+  console.warn('Failed to fetch remote link.json', e);
 }
 
 const enrichedLinkList = friendList.link_list.map((frd) => ({
