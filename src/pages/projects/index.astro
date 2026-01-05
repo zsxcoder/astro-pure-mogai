@@ -5,11 +5,12 @@ import { Button, Icon } from 'astro-pure/user'
 // import { Collapse } from 'astro-pure/user'
 import PageLayout from '@/layouts/CommonPage.astro'
 // import ProjectSection from '@/components/projects/ProjectSection.astro'
-// import Sponsors from '@/components/projects/Sponsors.astro'
+import Sponsors from '@/components/projects/Sponsors.astro'
 import Sponsorship from '@/components/projects/Sponsorship.astro'
-import alipay from '@/assets/alipay-qrcode.jpg'
+import alipay from '@/assets/alipay-qrcode.webp'
 // import KeyIcon from '@/assets/icons/key.svg'
-import wechat from '@/assets/wechat-qrcode.jpg'
+import wechat from '@/assets/wechat-qrcode.webp'
+import aifadian from '@/assets/aifadian.jpg'
 
 const headings = [
   //  { depth: 2, slug: 'theme', text: 'Theme' },
@@ -28,7 +29,7 @@ const headings = [
   <p>Github Activities:</p>
   <p>
     <Image
-      src='https://ghchart.rshah.org/ljxme'
+      src='https://ghchart.rshah.org/zsxcoder'
       alt='github activities'
       width={663}
       height={104}
@@ -181,23 +182,31 @@ const headings = [
   <!-- sponsorship -->
   <h2 id='sponsorship'>赞助</h2>
   <p>请在赞助后留下一条消息或主动联系我。</p>
-  <Sponsorship
-    methods={[
-      { name: 'WeChat', icon: 'wechat-pay', image: wechat },
-      { name: 'Alipay', icon: 'alipay', image: alipay }
-    ]}
-  />
-  <!-- 
+  <div class="flex flex-col items-center gap-4">
+    <Sponsorship
+      methods={[
+        { name: 'WeChat', icon: 'wechat-pay', image: wechat },
+        { name: 'Alipay', icon: 'alipay', image: alipay }
+      ]}
+      class="flex flex-row justify-center gap-4"
+    />
+    <Sponsorship
+      methods={[
+        { name: 'Afdian', icon: 'aifadian', image: aifadian }
+      ]}
+    />
+  </div>
+  
   <p>感谢以下赞助者：</p>
   <Sponsors
     sponsors={[
-      { name: 'C*a（酷安@暴走の蜗牛）', amount: '2.00', date: '2019-07-02' },
-      { name: '华雄(QQ：1300****71)', amount: '5.00', date: '2019-12-30' },
-      { name: '◌(QQ：1934****45)', amount: '3.00', date: '2019-12-30' },
-      { name: 'Anonymous', amount: '20.00', date: '2022-04-06' }
+      { name: '暂无', amount: 0.00, date: '2026-01-05' },
+    //   { name: '华雄(QQ：1300****71)', amount: 5.00, date: '2019-12-30' },
+    //   { name: '◌(QQ：1934****45)', amount: 3.00, date: '2019-12-30' },
+    //   { name: 'Anonymous', amount: 20.00, date: '2022-04-06' }
     ]}
   />
-  -->
+ 
 </PageLayout>
 
 <style>
