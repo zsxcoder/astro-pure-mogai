@@ -38,7 +38,7 @@ export const theme: ThemeUserConfig = {
   // === Global configuration ===
   titleDelimiter: '•',
   prerender: true, // pagefind search is not supported with prerendering disabled
-  npmCDN: 'https://cdn.jsdmirror.com/npm',
+  npmCDN: 'https://cdn.jsdmirror.cn/npm',
 
   // Still in test
   head: [
