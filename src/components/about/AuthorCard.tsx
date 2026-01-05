@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AUTHOR_PROFILE, LICENSE_CONFIG } from '../../site.config';
-import { Copyright, Github, Mail, MapPin, Globe, Link as LinkIcon, User, Cake, Check, Briefcase, Twitter, Linkedin, Code2, Terminal, Cpu, Compass } from 'lucide-react';
+import { Copyright, Mail, MapPin, Link as LinkIcon, Check, Code2, Terminal, Cpu, Compass } from 'lucide-react';
 import { Icon } from '@iconify/react';
 interface AuthorCardProps {
     className?: string;
@@ -11,7 +11,6 @@ interface AuthorCardProps {
 
 // Lucide React 图标映射
 const lucideIconMap: Record<string, any> = {
-    Github,
     Mail,
 };
 
@@ -28,7 +27,6 @@ const renderIcon = (iconName: string, size: number = 16, className: string = '')
 };
 
 export default function AuthorCard({ className = '', title, showLicense = true, summary = '' }: AuthorCardProps) {
-    const [showWechatQR, setShowWechatQR] = useState(false);
     const [copiedDouyinId, setCopiedDouyinId] = useState(false);
     const [copiedLink, setCopiedLink] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
@@ -92,7 +90,8 @@ export default function AuthorCard({ className = '', title, showLicense = true, 
                     textArea.setSelectionRange(0, 999999);
                 }
                 
-                success = document.execCommand('copy');
+                // 使用类型断言消除废弃API警告，保留作为降级方案
+                success = (document as any).execCommand('copy');
                 document.body.removeChild(textArea);
             } catch (err) {
                 console.warn('execCommand failed', err);
@@ -171,7 +170,7 @@ export default function AuthorCard({ className = '', title, showLicense = true, 
                                             className="p-1.5 rounded text-muted-foreground hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 dark:hover:bg-[#1DA1F2]/20 transition-all duration-200"
                                             aria-label="Share on Twitter"
                                         >
-                                            <Twitter size={16} />
+                                            <Icon icon="lucide:x" width={16} height={16} />
                                         </a>
                                         <a
                                             href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}`}
@@ -180,7 +179,7 @@ export default function AuthorCard({ className = '', title, showLicense = true, 
                                             className="p-1.5 rounded text-muted-foreground hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 dark:hover:bg-[#0A66C2]/20 transition-all duration-200"
                                             aria-label="Share on LinkedIn"
                                         >
-                                            <Linkedin size={16} />
+                                            <Icon icon="lucide:linkedin" width={16} height={16} />
                                         </a>
                                         <div className="w-px h-3 bg-border mx-1"></div>
                                         <button
@@ -566,10 +565,7 @@ export default function AuthorCard({ className = '', title, showLicense = true, 
                     {AUTHOR_PROFILE.socialLinks?.map((social, index) => {
                         const socialNameLower = social.name.toLowerCase();
                         const isDouyin = social.name === '抖音' || (social as any).douyinId || socialNameLower === 'tiktok';
-                        const isEmail = socialNameLower === 'email';
                         const isWeChat = socialNameLower === 'wechat';
-                        const isBilibili = socialNameLower === 'bilibili';
-                        const isGitHub = socialNameLower === 'github';
 
                         // Compact Genshin Button Style
                         const btnClass = "relative group/btn flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm cursor-pointer transition-all duration-300 overflow-hidden";

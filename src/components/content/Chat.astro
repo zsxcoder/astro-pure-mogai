@@ -21,8 +21,8 @@ const { messages } = Astro.props;
 // 使用 marked 的扩展功能来处理代码高亮
 const renderer = new marked.Renderer();
 
-// 重写代码块渲染方法
-renderer.code = function(code, lang) {
+// 重写代码块渲染方法 - 适配 marked 新版本的方法签名
+renderer.code = function({ text: code, lang }: { text: string; lang?: string | undefined; escaped?: boolean | undefined }) {
   // 确保 lang 是字符串类型
   const language = lang || '';
   

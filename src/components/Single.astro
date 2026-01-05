@@ -23,7 +23,7 @@ const { about = [] } = Astro.props;
 <div class="author-content-item single create-site-post" style="width: 100%">
   {/* 如果有 about 属性，渲染它的内容 */}
   {about.length > 0 ? (
-    about.map((singleItem, index) => (
+    about.map((singleItem) => (
       <div class="mb-8">
         {singleItem.single.map((single) => (
           <div>
