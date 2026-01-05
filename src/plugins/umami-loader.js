@@ -2,8 +2,8 @@ var currentDomain = window.location.hostname
 
 if (currentDomain.includes('blog.ljx.icu')) {
   var script = document.createElement('script')
-  script.src = 'https://umami.ljx.icu/script.js'
-  script.setAttribute('data-website-id', 'ad11c7a4-dbb8-42ff-8f60-7c225d9e9ffd')
+  script.src = 'https://umami.mcyzsx.top/script.js'
+  script.setAttribute('data-website-id', 'ff05c8fb-3fa8-4ef9-a31e-553b5c566169')
   script.async = true
   document.head.appendChild(script)
   console.log('========成功加载 [Umami] 统计分析工具代码========')
