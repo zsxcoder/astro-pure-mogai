@@ -15,7 +15,7 @@
         "rehype-katex": "^7.0.1",
         "remark-math": "^6.0.0",
         "sharp": "^0.34.5",
-        "typescript": "^5.9.3",
+        "typescript": "^5.9.3"
       },
       "devDependencies": {
         "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
@@ -23,14 +23,14 @@
         "eslint": "^9.39.1",
         "eslint-plugin-astro": "^1.5.0",
         "prettier": "^3.7.4",
-        "prettier-plugin-astro": "^0.14.1",
-      },
+        "prettier-plugin-astro": "^0.14.1"
+      }
     },
     "packages/pure": {
       "name": "astro-pure",
       "version": "1.3.7",
       "bin": {
-        "astro-pure": "scripts/index.js",
+        "astro-pure": "scripts/index.js"
       },
       "dependencies": {
         "@astrojs/mdx": "^4.3.12",
@@ -41,9 +41,9 @@
         "hast-util-select": "^6.0.4",
         "node-html-parser": "^7.0.1",
         "pagefind": "^1.4.0",
-        "unocss": "^66.5.9",
-      },
-    },
+        "unocss": "^66.5.9"
+      }
+    }
   },
   "packages": {
     "@antfu/install-pkg": ["@antfu/install-pkg@1.1.0", "", { "dependencies": { "package-manager-detector": "^1.3.0", "tinyexec": "^1.0.1" } }, "sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ=="],
@@ -1626,6 +1626,6 @@
 
     "boxen/string-width/strip-ansi/ansi-regex": ["ansi-regex@6.2.2", "", {}, "sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg=="],
 
-    "widest-line/string-width/strip-ansi/ansi-regex": ["ansi-regex@6.2.2", "", {}, "sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg=="],
+    "widest-line/string-width/strip-ansi/ansi-regex": ["ansi-regex@6.2.2", "", {}, "sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg=="]
   }
 }

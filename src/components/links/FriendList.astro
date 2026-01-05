@@ -57,21 +57,6 @@ const getAvatarSrc = (friend: friend) =>
   (config.integ?.links?.cacheAvatar ?? false)
     ? (friend.avatar_cache?.path ?? friend.avatar)
     : friend.avatar
-
-const getSafeLink = (link: string) => {
-  const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1']
-  if (!link || (!link.startsWith('http') && !link.startsWith('//'))) return link
-  try {
-    const urlObj = new URL(link)
-    if (
-      exclude.some((domain) => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain))
-    )
-      return link
-    return `/safego?url=${encodeURIComponent(link)}`
-  } catch {
-    return link
-  }
-}
 ---
 
 {title && <h2 id={friendList.id_name}>{title}</h2>}
@@ -79,7 +64,7 @@ const getSafeLink = (link: string) => {
   {
     friendList.link_list.length > 0 ? (
       shuffle(enrichedLinkList).map((frd: friend) => (
-        <a href={getSafeLink(frd.link)} target='_blank' class='no-underline'>
+        <a href={frd.link} target='_blank' class='no-underline'>
           <div class='group relative h-full overflow-hidden rounded-2xl border bg-background px-2.5 py-1.5 transition-colors hover:bg-muted sm:px-4 sm:py-2'>
             {frd.responseTime !== undefined && (
               <div class='absolute right-1.5 top-2 z-1 flex items-center gap-1 rounded-2xl bg-muted/50 px-1.5 py-0 text-[10px] leading-[1rem] text-muted-foreground backdrop-blur-sm transition-colors group-hover:bg-background/50 group-hover:text-foreground'>

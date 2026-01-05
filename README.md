@@ -2,7 +2,7 @@
 
 # [![Typing SVG](https://readme-typing-svg.demolab.com?font=Rubik+Glitch&size=40&pause=2000&color=000000&vCenter=true&random=true&height=40&lines=Hi%2C+I'm+L+J+X)](https://git.io/typing-svg)
 
-<img align='right' src="./README.assets/imgs/person.png" width="150" alt="person">
+<img align='right' src=".github/.assets/imgs/person.png" width="150" alt="person">
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Convergence&pause=1000&color=000000&vCenter=true&random=true&height=20&lines=Loose+clouds+and+wild+cranes)](https://git.io/typing-svg)
 
@@ -44,5 +44,5 @@ Except for the way the sidebar is provided, here are some ways that you can find
 [![ljxme's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=ljxme&theme=github-light&radius=16&height=300&border_color=E0E0E0)](https://github.com/ashutosh00710/github-readme-activity-graph)
 
 <div align="right">
-  <img src="./README.assets/svg/signature.svg" width="150" alt="signature">
+  <img src=".github/.assets/svg/signature.svg" width="150" alt="signature">
 </div>
