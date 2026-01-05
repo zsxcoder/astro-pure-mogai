@@ -95,7 +95,7 @@ export const theme: ThemeUserConfig = {
     social: {
       email: 'mailto:3149261770@qq.com',
       github: 'https://github.com/zsxcoder',
-      telegram: 'https://t.me/KemiaoJun'
+      telegram: 'https://t.me/zsxcoderchat_bot'
     }
   },
 
@@ -248,7 +248,7 @@ export const AUTHOR_PROFILE = {
   socialLinks: [
     { name: 'GitHub', icon: 'Github', link: 'https://github.com/zsxcoder' },
     { name: 'Email', icon: 'Mail', link: 'mailto:3149261770@qq.com' },
-    { name: 'Telegram', icon: 'mdi:telegram', link: 'https://t.me/KemiaoJun' },
+    { name: 'Telegram', icon: 'mdi:telegram', link: 'https://t.me/zsxcoderchat_bot' },
     { name: 'QQ', icon: 'simple-icons:qq', link: 'https://qm.qq.com/q/eLZhXoSonY' },
     { name: 'Mastodon', icon: 'mdi:mastodon', link: 'https://mastodon.social/@zsxcoder' }
   ]
