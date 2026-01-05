@@ -22,6 +22,7 @@ import Badge from '../../../components/content/Badge.astro'
 import Poetry from '../../../components/content/Poetry.astro'
 import Alert from '../../../components/content/Alert.astro'
 import Chat from '../../../components/content/Chat.astro'
+import Folding from '../../../components/content/Folding.astro'
 
 # LinkWithIcon 组件测试
 
@@ -489,3 +490,105 @@ import Chat from '../../../components/content/Chat.astro'
     },
   ]}
 />
+
+## Folding 折叠组件测试
+
+### 基本用法
+
+<Folding title="这是一个折叠面板">
+  这是折叠面板的内容。你可以在里面放置任何内容，包括文本、图片、代码块等。
+</Folding>
+
+### 带有 Markdown 内容
+
+<Folding title="带有 Markdown 格式的内容">
+  - 这是一个列表项
+  - 这是另一个列表项
+  - 这是第三个列表项
+  
+  **粗体文本** 和 *斜体文本* 也可以正常显示。
+  
+  ```javascript
+  // 代码块也能正常工作
+  console.log("Hello, Folding Component!");
+  ```
+</Folding>
+
+### 使用插槽自定义标题
+
+<Folding>
+  <div slot="title">📌 这是自定义标题（使用插槽）</div>
+  这是使用插槽自定义标题的折叠面板内容。
+</Folding>
+
+### 使用不同标签作为标题
+
+<Folding>
+  <h3 slot="title">🎯 这是使用h3标签的标题</h3>
+  这是使用h3标签作为标题的折叠面板内容。
+</Folding>
+
+<Folding>
+  <strong slot="title">💡 这是使用strong标签的标题</strong>
+  这是使用strong标签作为标题的折叠面板内容。
+</Folding>
+
+### 嵌套折叠面板
+
+<Folding title="外层折叠面板">
+  这是外层折叠面板的内容。
+  
+  <Folding title="内层折叠面板 1">
+    这是第一个内层折叠面板的内容。
+  </Folding>
+  
+  <Folding title="内层折叠面板 2">
+    这是第二个内层折叠面板的内容。
+    
+    <Folding title="第三层折叠面板">
+      这是第三层折叠面板的内容，嵌套层级可以根据需要继续扩展。
+    </Folding>
+  </Folding>
+</Folding>
+
+### 默认展开的折叠面板
+
+<Folding title="默认展开的折叠面板" open>
+  这是一个默认展开的折叠面板，通过设置 `open` 属性为 `true` 实现。
+  
+  - 这个面板在页面加载时就会自动展开
+  - 用户可以点击标题将其收起
+  - 可以用于展示重要信息或经常访问的内容
+  
+  ```javascript
+  // 使用示例
+  <Folding title="默认展开" open>
+    内容
+  </Folding>
+  ```
+</Folding>
+
+### 默认展开的插槽标题示例
+
+<Folding open>
+  <div slot="title">
+    📌 默认展开的自定义标题（使用插槽）
+  </div>
+  这是一个默认展开的折叠面板，使用了插槽自定义标题。
+  
+  <Alert type="info" title="提示">
+    默认展开功能适用于所有类型的折叠面板，包括使用插槽自定义标题的情况。
+  </Alert>
+</Folding>
+
+### 带有 Alert 组件
+
+<Folding title="带有提示框的折叠面板">
+  <Alert type="info" title="提示信息">
+    这是一个带有 Alert 组件的折叠面板，展示了组件的嵌套使用能力。
+  </Alert>
+  
+  <Alert type="warning" title="注意事项">
+    折叠面板可以包含各种复杂的组件内容，使用起来非常灵活。
+  </Alert>
+</Folding>
