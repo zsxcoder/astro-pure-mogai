@@ -193,177 +193,74 @@ function renderTalks() {
     }
   }
 
-  const fetchAndRenderTalks = () => {
-    const url = 'https://ech0.050815.xyz/api/echo/page'
-    const cacheKey = 'talksCache'
-    const cacheTimeKey = 'talksCacheTime'
-    const cacheDuration = 30 * 60 * 1000
-    const cachedData = localStorage.getItem(cacheKey)
-    const cachedTime = localStorage.getItem(cacheTimeKey)
-    const now = Date.now()
-
-    if (cachedData && cachedTime && now - cachedTime < cacheDuration) {
-      renderTalksList(JSON.parse(cachedData))
-    } else {
-      fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ page: 1, pageSize: 15 })
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`HTTP Error: ${res.status} ${res.statusText}`)
-          }
-          return res.json()
-        })
-        .then((data) => {
-          if (data.code === 1 && data.data && Array.isArray(data.data.items)) {
-            localStorage.setItem(cacheKey, JSON.stringify(data.data.items))
-            localStorage.setItem(cacheTimeKey, now.toString())
-            renderTalksList(data.data.items)
-          }
-        })
-        .catch((err) => {
-          // 过滤掉包含内存地址的错误信息
-          const errorMsg = err.message || String(err)
-          if (!/0x[0-9a-f]+/i.test(errorMsg)) {
-            console.error('Error fetching talks:', errorMsg)
-          }
-        })
-    }
+  const Dataset = document.currentScript.dataset
+  const Config = {
+    instance: Dataset.instance, // required
+    userId: Dataset.userId, // required
+    staticStatusesDataPath: Dataset.staticStatusesDataPath,
+    token: Dataset.token,
+    tag: Dataset.tag,
+    shownMax: +Dataset.shownMax || 15
   }
 
-  const renderTalksList = (list) => {
-    list.map(formatTalk).forEach((item) => talkContainer.appendChild(generateTalkElement(item)))
-    talkContainer.__shuoshuoCleanup = setupWaterfallLayoutOnce(talkContainer, {
-      onReady: () => setTalkLoading(false)
+  function loadFile (path, token) {
+    return fetch(path, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
+      .catch(e => {
+        console.error('Load file ' + path + ' failed.')
+        throw e
+      })
+  }
+
+  const formatTime = (time) => {
+    const d = new Date(time)
+    const pad = (n) => n.toString().padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+  }
+
+  const getEmojiWrapper = (emojisData) => 
+    (match, p1) => {
+      if (!emojisData) return match
+      const data = emojisData.find(e => e.shortcode === p1)
+      return data ? `<img class="emoji" src="${data.static_url}"/>` : match
+    }
+
+  const formatContent = (content, emojis) => {
+    let formatted = content.replace(/:(\w+):/g, getEmojiWrapper(emojis))
+    formatted = formatted.replace(/\n/g, '<br>')
+    return `<div class="talk_content_text">${formatted}</div>`
   }
 
   const formatTalk = (item) => {
-    const date = formatTime(item.created_at)
-    let content = item.content || ''
-    content = content
-      .replace(
-        /\[(.*?)\]\((.*?)\)/g,
-        `<a href="$2" target="_blank" rel="nofollow noopener">@$1</a>`
-      )
-      .replace(/- \[ \]/g, '⚪')
-      .replace(/- \[x\]/g, '⚫')
-      .replace(/\n/g, '<br>')
-    content = `<div class="talk_content_text">${content}</div>`
-
-    // 图片
-    if (Array.isArray(item.images) && item.images.length > 0) {
+    const d = item.reblog || item
+    const content = formatContent(d.content, d.emojis)
+    
+    // 图片处理
+    let imagesContent = ''
+    if (d.media_attachments && d.media_attachments.some(e => e.type === 'image')) {
       const imgDiv = document.createElement('div')
       imgDiv.className = 'prose'
-      item.images.forEach((img) => {
+      d.media_attachments.filter(e => e.type === 'image').forEach((img) => {
         const imgTag = document.createElement('img')
-        imgTag.src = img.image_url + '?fmt=webp&q=75'
+        imgTag.src = img.url
         imgTag.className = 'zoomable'
+        imgTag.loading = 'lazy'
         imgDiv.appendChild(imgTag)
       })
-      content += imgDiv.outerHTML
+      imagesContent = imgDiv.outerHTML
     }
-
-    // 外链 / GitHub 项目
-    if (['WEBSITE', 'GITHUBPROJ'].includes(item.extension_type)) {
-      let siteUrl = '',
-        title = ''
-      let extensionBack = 'https://p.liiiu.cn/i/2024/07/27/66a4632bbf06e.webp'
-
-      // 解析 extension 字段
-      try {
-        const extObj =
-          typeof item.extension === 'string' ? JSON.parse(item.extension) : item.extension
-        siteUrl = extObj.site || extObj.url || item.extension
-        title = extObj.title || siteUrl
-      } catch {
-        siteUrl = item.extension
-        title = siteUrl
-      }
-
-      // 特殊处理 GitHub 项目
-      if (item.extension_type === 'GITHUBPROJ') {
-        extensionBack = 'https://p.liiiu.cn/i/2024/07/27/66a461a3098aa.webp'
-
-        // 提取 GitHub 项目名
-        const match = siteUrl.match(/^https?:\/\/github\.com\/[^/]+\/([^/?#]+)/i)
-        if (match) {
-          title = match[1] // 获取仓库名
-        } else {
-          // fallback：从最后一个路径段提取
-          try {
-            const parts = new URL(siteUrl).pathname.split('/').filter(Boolean)
-            title = parts.pop() || siteUrl
-          } catch {
-            // 如果 URL 无效则保留原始
-          }
-        }
-      }
-
-      // 输出 HTML 结构
-      content += `
-                <div class="shuoshuo-external-link">
-                    <a class="external-link" href="${siteUrl}" target="_blank" rel="nofollow noopener">
-                        <div class="external-link-left" style="background-image:url(${extensionBack})"></div>
-                        <div class="external-link-right">
-                            <div class="external-link-title">${title}</div>
-                            <div>点击跳转<i class="fa-solid fa-angle-right"></i></div>
-                        </div>
-                    </a>
-                </div>`
-    }
-
-    // 音乐
-    if (item.extension_type === 'MUSIC' && item.extension) {
-      const link = item.extension
-      let server = ''
-      if (link.includes('music.163.com')) server = 'netease'
-      else if (link.includes('y.qq.com')) server = 'tencent'
-      const idMatch = link.match(/id=(\d+)/)
-      const id = idMatch ? idMatch[1] : ''
-      if (server && id) {
-        content += `<meting-js server="${server}" type="song" id="${id}" api="https://met.liiiu.cn/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r"></meting-js>`
-      }
-    }
-
-    // 视频
-    if (item.extension_type === 'VIDEO' && item.extension) {
-      const video = item.extension
-      if (video.startsWith('BV')) {
-        const bilibiliUrl = `https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${video}&as_wide=1&high_quality=1&danmaku=0`
-        content += `
-                    <div style="position: relative; padding: 30% 45%; margin-top: 10px;">
-                        <iframe style="position:absolute;width:100%;height:100%;left:0;top:0;border-radius:12px;" 
-                                src="${bilibiliUrl}" 
-                                frameborder="no" 
-                                allowfullscreen="true" 
-                                loading="lazy"></iframe>
-                    </div>`
-      } else {
-        const youtubeUrl = `https://www.youtube.com/embed/${video}`
-        content += `
-                    <div style="position: relative; padding: 30% 45%; margin-top: 10px;">
-                        <iframe style="position:absolute;width:100%;height:100%;left:0;top:0;border-radius:12px;" 
-                                src="${youtubeUrl}" 
-                                title="YouTube video player" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                allowfullscreen></iframe>
-                    </div>`
-      }
-    }
-
+    
     return {
-      content,
-      user: item.username || '钟神秀',
+      content: content + imagesContent,
+      user: '钟神秀',
       avatar: 'https://home.zsxcoder.top/api/avatar.png',
-      date,
+      date: formatTime(d.created_at),
       location: '',
-      tags:
-        Array.isArray(item.tags) && item.tags.length ? item.tags.map((t) => t.name) : ['无标签'],
-      text: content.replace(/\[(.*?)\]\((.*?)\)/g, '[链接]')
+      tags: ['日常'],
+      text: content.replace(/<[^>]+>/g, '')
     }
   }
 
@@ -400,17 +297,13 @@ function renderTalks() {
     const tag = document.createElement('span')
     tag.className = 'talk_tag'
     tag.textContent = `🏷️${item.tags}`
-    //const loc = document.createElement('span');
-    //loc.className = 'location_tag';
-    //loc.textContent = `🌍${item.location}`;
     tags.appendChild(tag)
-    //tags.appendChild(loc);
 
     const commentLink = document.createElement('a')
     commentLink.href = 'javascript:;'
     commentLink.onclick = () => goComment(item.text)
     commentLink.className = 'quote-btn'
-    commentLink.title = '引用此说说'
+    commentLink.title = '引用此动态'
     const icon = document.createElement('span')
     icon.className = 'icon'
     icon.innerHTML = '<i class="fa-solid fa-quote-left fa-fw"></i>'
@@ -427,36 +320,63 @@ function renderTalks() {
   }
 
   const goComment = (e) => {
-    const match = e.match(/<div class="talk_content_text">([\s\S]*?)<\/div>/)
-    const textContent = match ? match[1] : ''
     const textarea = document.querySelector('.wl-editor')
-    textarea.value = `> ${textContent}\n\n`
-    textarea.focus()
-    // 使用类似友链页面的提示机制
-    document.dispatchEvent(
-      new CustomEvent('toast', {
-        detail: {
-          message: '已为您引用该说说，不删除空格效果更佳 ✨'
-        }
-      })
-    )
+    if (textarea) {
+      textarea.value = `> ${e}\n\n`
+      textarea.focus()
+      // 使用类似友链页面的提示机制
+      document.dispatchEvent(
+        new CustomEvent('toast', {
+          detail: {
+            message: '已为您引用该动态，不删除空格效果更佳 ✨'
+          }
+        })
+      )
+    }
   }
 
-  const formatTime = (time) => {
-    const d = new Date(time)
-    const pad = (n) => n.toString().padStart(2, '0')
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+  const fetchAndRenderTalks = () => {
+    const path = Config.staticStatusesDataPath ||
+      `https://${Config.instance}/api/v1/accounts/${Config.userId}/statuses?tagged=${Config.tag || ''}&exclude_replies=true`
+
+    loadFile(path, Config.token)
+      .then(data => {
+        if (data.status >= 400) {
+          throw new Error(`HTTP Error: ${data.status} ${data.statusText}`)
+        }
+        return data.json()
+      })
+      .then(data => {
+        // 确保返回的数据是数组
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data format: expected array')
+        }
+        const list = data.slice(0, Config.shownMax || data.length)
+        list.map(formatTalk).forEach((item) => talkContainer.appendChild(generateTalkElement(item)))
+        talkContainer.__shuoshuoCleanup = setupWaterfallLayoutOnce(talkContainer, {
+          onReady: () => {
+            setTalkLoading(false)
+            // 重新初始化 MediumZoom 以支持动态加载的图片
+            if (window.mediumZoom) {
+              // 使用与组件相同的配置选项初始化
+              window.mediumZoom('.prose .zoomable', {
+                background: 'rgba(24, 24, 27, 0.9)'
+              })
+            }
+          }
+        })
+      })
+      .catch((err) => {
+        // 过滤掉包含内存地址的错误信息
+        const errorMsg = err.message || String(err)
+        if (!/0x[0-9a-f]+/i.test(errorMsg)) {
+          console.error('Error fetching Mastodon data:', errorMsg)
+        }
+        setTalkLoading(false)
+      })
   }
 
   fetchAndRenderTalks()
 }
 
 renderTalks()
-
-// function whenDOMReady() {
-//     const talkContainer = document.querySelector('#talk');
-//     talkContainer.innerHTML = '';
-//     fetchAndRenderTalks();
-// }
-// whenDOMReady();
-// document.addEventListener("pjax:complete", whenDOMReady);

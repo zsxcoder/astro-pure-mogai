@@ -57,7 +57,8 @@ export const theme: ThemeUserConfig = {
       { title: '文章', link: '/blog' },
       { title: '项目', link: '/projects' },
       { title: '友链', link: '/friends' },
-      { title: '留言', link: '/board' },
+          { title: '留言', link: '/board' },
+      { title: '嘟文', link: '/mastodon' },
       { title: '关于', link: '/about' }
     ]
   },
