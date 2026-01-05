@@ -1,0 +1,131 @@
+---
+import Icon from '../custom/Icon.astro';
+import { Icons } from '../../libs/icons';
+
+interface Props {
+  type?: 'tip' | 'info' | 'question' | 'warning' | 'error';
+  card?: boolean;
+  flat?: boolean;
+  icon?: string;
+  color?: string;
+  title?: string;
+  text?: string;
+}
+
+const props = Astro.props;
+const { type = 'tip', card, flat, icon, color, title, text } = props;
+
+const typeMap = {
+  tip: {
+    icon: 'bulb',
+    color: '#3A7',
+    title: '提醒',
+  },
+  info: {
+    icon: 'info',
+    color: 'var(--c-text-1)',
+    title: '信息',
+  },
+  question: {
+    icon: 'question',
+    color: '#3AF',
+    title: '问题',
+  },
+  warning: {
+    icon: 'alert',
+    color: '#F80',
+    title: '警告',
+  },
+  error: {
+    icon: 'octangon',
+    color: '#F33',
+    title: '错误',
+  },
+};
+
+const computedIcon = icon || typeMap[type].icon;
+const computedColor = color || typeMap[type].color;
+const computedTitle = title || typeMap[type].title;
+const computedCard = flat ? false : card !== false;
+
+// 检查是否为ph:前缀图标
+const isPhIcon = computedIcon.startsWith('ph:');
+// 提取图标名称，如ph:star-bold -> star-bold
+const iconName = computedIcon.replace('ph:', '');
+---
+
+<div class={`alert ${computedCard ? 'card' : ''}`} style={`--c-primary: ${computedColor}`}>
+  <div class="alert-title">
+    {isPhIcon ? (
+      // 使用内联SVG直接渲染ph图标，避免React依赖问题
+      <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        {iconName === 'star-bold' && (
+          <path d="M236.94 97.11A12 12 0 0 0 228.05 88l-58.46-4.25L140.34 19.82a12 12 0 0 0-20.68 0L86.41 83.75L28 88a12 12 0 0 0-8.89 18.85l45.94 44.86L56.35 232a12 12 0 0 0 19.85 12.37L128 213.16l51.8 40.83a12 12 0 0 0 19.85-12.37l-10.72-51.28L236.94 116A12 12 0 0 0 236.94 97.11ZM128 187.26l-40.3 31.71 8.29-40.35a12 12 0 0 0-3.59-12.65L40.73 100l47.61-3.48a12 12 0 0 0 11.34-8.36l22.88-54.24l22.88 54.24a12 12 0 0 0 11.34 8.36l47.61 3.48l-41.53 43.48a12 12 0 0 0-3.59 12.65l8.29 40.35Z" />
+        )}
+        {iconName === 'heart-bold' && (
+          <path d="M208.57 43.51A59.79 59.79 0 0 0 128 24a59.79 59.79 0 0 0-80.57 19.51c-23.38 23.37-23.85 61.15-1.14 84.57l88.84 96a12 12 0 0 0 17.46 0l88.84-96c22.71-23.42 22.24-61.2 1.14-84.57ZM139.91 215.88l-81.91-89.18c-18.6-20.14-18.1-51.66 1.28-71.07a47.8 47.8 0 0 1 65.67-3.18L128 62.21l16.95-13.6a47.8 47.8 0 0 1 65.67 3.18c19.38 19.41 19.88 50.93 1.28 71.07Z" />
+        )}
+        {iconName === 'notepad-bold' && (
+          <path d="M216 32H40a24 24 0 0 0-24 24v144a24 24 0 0 0 24 24h176a24 24 0 0 0 24-24V56a24 24 0 0 0-24-24Zm-16 160H56a8 8 0 0 1-8-8V64a8 8 0 0 1 8-8h144a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8Zm-40-104a8 8 0 0 1 8 8v40a8 8 0 0 1-16 0v-40a8 8 0 0 1 8-8Zm40 0a8 8 0 0 1 8 8v40a8 8 0 0 1-16 0v-40a8 8 0 0 1 8-8Z" />
+        )}
+        {iconName === 'info-bold' && (
+          <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88Zm12-52a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm-12-76a16 16 0 0 1 16 16v32a16 16 0 0 1-32 0V104a16 16 0 0 1 16-16Z" />
+        )}
+        {iconName === 'question-bold' && (
+          <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88Zm8-120a8 8 0 0 1-16 0V88a8 8 0 0 1 16 0Zm-8 88a28 28 0 1 1 28-28a28 28 0 0 1-28 28Z" />
+        )}
+        {iconName === 'warning-bold' && (
+          <path d="M136 184h-16a8 8 0 0 1 0-16h16a8 8 0 0 1 0 16Zm-8-56a12 12 0 1 0 12 12a12 12 0 0 0-12-12ZM152.55 37.17 139.34 24a8 8 0 0 0-12.68 0L103.45 37.17a15.85 15.85 0 0 0-4.7 8.29L80 168a16 16 0 0 0 16 18h64a16 16 0 0 0 16-18l-18.74-122.54a15.85 15.85 0 0 0-4.71-8.29ZM128 184a16 16 0 0 1-16-16V76.18l12.68-18l12.69 18Z" />
+        )}
+        {iconName === 'x-circle-bold' && (
+          <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88Zm52.66-120.66a8 8 0 0 1-11.32 11.32L128 117.31l-31.34 31.35a8 8 0 0 1-11.32-11.32L116.69 106l-31.35-31.34a8 8 0 0 1 11.32-11.32L128 94.69l31.34-31.35a8 8 0 0 1 11.32 11.32L139.31 106Z" />
+        )}
+      </svg>
+    ) : (
+      <Icon name={computedIcon as keyof typeof Icons} />
+    )}
+    <slot name="title">
+      {computedTitle}
+    </slot>
+  </div>
+  <slot>
+    {text && <p>{text}</p>}
+  </slot>
+</div>
+
+<style scoped>
+.alert {
+  margin: 1em 0;
+  padding: 0.2em 0.8em;
+  border-radius: 0.5em;
+  background-color: var(--c-bg-2);
+  font-size: 0.9em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  @supports (color: color-mix(in srgb, transparent, transparent)) {
+    --c-primary-soft: color-mix(in srgb, var(--c-primary) 15%, transparent);
+    --c-bg-2: color-mix(in srgb, var(--c-primary) 8%, hsl(var(--card)));
+  }
+
+  &.card {
+    background-color: hsl(var(--card));
+    background-image:
+      radial-gradient(circle at 4em -25em, var(--c-primary), transparent 30em),
+      linear-gradient(var(--c-primary) -2000%, transparent);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .alert-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0.5em 0;
+    font-weight: bold;
+    color: var(--c-primary);
+
+    p {
+      margin: 0;
+    }
+  }
+}
+</style>

@@ -1,0 +1,85 @@
+---
+import { getIconFromDomain } from '../../utils/domain-icon';
+import Icon from '../../../packages/pure/components/user/Icon.astro';
+
+interface Props {
+  href: string;
+  icon?: string;
+  color?: string;
+  size?: string;
+  class?: string;
+}
+
+const { href, icon: propIcon, color, size, class: className } = Astro.props;
+const icon = propIcon || getIconFromDomain(href);
+
+// 检查是否为外部链接
+const isExternal = href.startsWith('http') || href.startsWith('https');
+
+// 获取域名用于提示
+function getDomain(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname;
+  } catch {
+    return url;
+  }
+}
+
+const domain = isExternal ? getDomain(href) : href;
+---
+
+<a 
+  href={href} 
+  class={`link-with-icon ${className || ''}`}
+  target={isExternal ? '_blank' : '_self'}
+  rel={isExternal ? 'noopener noreferrer' : ''}
+  title={domain}
+  style={color ? { color } : {}}
+>
+  {icon && (
+    <Icon 
+      name={icon as any} 
+      class="domain-icon"
+      size={size || "0.7em"}
+      color={color}
+    />
+  )}
+  <slot />
+</a>
+
+<style scoped>
+.link-with-icon {
+  margin: 0 -0.2em;
+  padding: 0 0.2em;
+  background: linear-gradient(var(--c-primary-soft, #e0f2fe), var(--c-primary-soft, #e0f2fe)) no-repeat center bottom / 100% 0.1em;
+  color: var(--c-primary, #0ea5e9);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.link-with-icon:hover {
+  border-radius: 0.3em;
+  background-size: 100% 100%;
+}
+
+.domain-icon {
+  margin-inline-end: 0.15em;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* 覆盖Icon组件的默认svg样式 */
+.domain-icon svg {
+  width: 1em !important;
+  height: 1em !important;
+  font-size: var(--sl-icon-size, 0.7em) !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+}
+</style>

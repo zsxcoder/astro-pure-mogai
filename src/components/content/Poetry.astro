@@ -1,0 +1,49 @@
+---
+interface Props {
+  title?: string;
+  author?: string;
+  footer?: string;
+}
+
+const { title, author, footer } = Astro.props;
+---
+
+<section class="poetry">
+  {title && <h2 class="poetry-title text-center">{title}</h2>}
+  {author && <div class="text-center">{author}</div>}
+  <div class="poetry-content">
+    <slot />
+  </div>
+  {footer && <div class="text-center">{footer}</div>}
+</section>
+
+<style scoped>
+.poetry {
+  width: fit-content;
+  margin: 1em auto;
+  white-space: pre-wrap;
+}
+
+.poetry-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0 0 0.1em 0;
+}
+
+.poetry > div:nth-of-type(1) {
+  margin: 0 0 0.1em 0;
+}
+
+.poetry-content {
+  margin: 0 0 0.4em 0;
+}
+
+.poetry-content > p {
+  width: fit-content;
+  margin: 0.2em auto;
+}
+
+.poetry > div:nth-of-type(2) {
+  margin: 0.1em 0 0 0;
+}
+</style>

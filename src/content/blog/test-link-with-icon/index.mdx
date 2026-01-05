@@ -17,9 +17,11 @@ summary: >-
   文章主要介绍了LinkWithIcon、Badge和Poetry三个组件的测试。LinkWithIcon组件可以自定义图标，并支持GitHub、Twitter等平台的链接。Badge组件可以添加超链接功能，并支持自定义颜色和大小。Poetry组件则用于展示诗歌，包括床前明月光等经典诗句。
 ---
 
-import LinkWithIcon from '../../../components/custom/LinkWithIcon.astro'
-import Badge from '../../../components/custom/Badge.astro'
-import Poetry from '../../../components/custom/Poetry.astro'
+import LinkWithIcon from '../../../components/content/LinkWithIcon.astro'
+import Badge from '../../../components/content/Badge.astro'
+import Poetry from '../../../components/content/Poetry.astro'
+import Alert from '../../../components/content/Alert.astro'
+import Chat from '../../../components/content/Chat.astro'
 
 # LinkWithIcon 组件测试
 
@@ -133,3 +135,357 @@ import Poetry from '../../../components/custom/Poetry.astro'
 主人何为言少钱，径须沽取对君酌。
 五花马，千金裘，呼儿将出换美酒，与尔同销万古愁。
 </Poetry>
+
+## Alert 提示组件测试
+
+### 基本用法
+
+<Alert>这是一个默认类型的提示框</Alert>
+
+### 不同类型的提示框
+
+<Alert type="tip">这是一个提示类型的提示框</Alert>
+
+<Alert type="info">这是一个信息类型的提示框</Alert>
+
+<Alert type="question">这是一个问题类型的提示框</Alert>
+
+<Alert type="warning">这是一个警告类型的提示框</Alert>
+
+<Alert type="error">这是一个错误类型的提示框</Alert>
+
+### 带自定义标题的提示框
+
+<Alert type="tip" title="自定义标题">这是一个带自定义标题的提示框</Alert>
+
+<Alert type="warning" title="注意事项">这是一个带自定义标题的警告提示框</Alert>
+
+### 带卡片样式的提示框
+
+<Alert type="tip" card>这是一个带卡片样式的提示框</Alert>
+
+<Alert type="info" card title="信息卡片">这是一个带卡片样式和自定义标题的信息提示框</Alert>
+
+### 带扁平样式的提示框
+
+<Alert type="tip" flat>这是一个带扁平样式的提示框</Alert>
+
+<Alert type="error" flat title="错误信息">这是一个带扁平样式和自定义标题的错误提示框</Alert>
+
+### 带自定义内容的提示框
+
+<Alert type="info" title="多行内容">
+  <p>这是第一行内容</p>
+  <p>这是第二行内容</p>
+  <ul>
+    <li>列表项一</li>
+    <li>列表项二</li>
+    <li>列表项三</li>
+  </ul>
+</Alert>
+
+### 带自定义图标和颜色的提示框
+
+<Alert type="tip" icon="ph:star-bold" color="#FF6B6B">这是一个带自定义图标和颜色的提示框</Alert>
+
+<Alert type="info" icon="ph:heart-bold" color="#4ECDC4" title="自定义样式">这是一个带自定义图标、颜色和标题的提示框</Alert>
+
+## Chat 聊天组件测试
+
+### 基本用法
+
+<Chat
+  messages={[
+    {
+      id: '1',
+      side: 'left',
+      content: '你好！',
+      author: '张三',
+    },
+    {
+      id: '2',
+      side: 'right',
+      content: '你好，张三！',
+    },
+    {
+      id: '3',
+      side: 'left',
+      content: '今天天气怎么样？',
+      author: '张三',
+    },
+    {
+      id: '4',
+      side: 'right',
+      content: '今天天气很好，阳光明媚！',
+    },
+  ]}
+/>
+
+### Markdown 渲染
+
+<Chat
+  messages={[
+    {
+      id: '5',
+      side: 'left',
+      content: '你会使用 Markdown 吗？',
+      author: '李四',
+    },
+    {
+      id: '6',
+      side: 'right',
+      content: '# 当然会！\n\n这是一个 **标题**，这是 **粗体** 文本，这是 *斜体* 文本。\n\n- 列表项 1\n- 列表项 2\n- 列表项 3\n\n```console.log("Hello, World!");```',
+    },
+  ]}
+/>
+
+### HTML 渲染
+
+<Chat
+  messages={[
+    {
+      id: '7',
+      side: 'left',
+      content: '你能渲染 HTML 吗？',
+      author: '王五',
+    },
+    {
+      id: '8',
+      side: 'right',
+      content: '<div style="background-color: hsl(var(--muted) / 0.8); padding: 10px; border-radius: 5px; color: hsl(var(--foreground) / var(--un-text-opacity, 1));"><h3>HTML 渲染测试</h3><p>这是一个 <span style="color: hsl(var(--primary) / var(--un-text-opacity, 1)); font-weight: bold;">红色粗体</span> 文本。</p><img src="https://picsum.photos/200" alt="测试图片" style="border-radius: 5px; max-width: 100%;" /></div>',
+    },
+  ]}
+/>
+
+### 撤回和删除消息
+
+<Chat
+  messages={[
+    {
+      id: '9',
+      side: 'left',
+      content: '你好，最近在忙什么？',
+      author: '赵六',
+    },
+    {
+      id: '10',
+      side: 'right',
+      type: 'delete',
+    },
+    {
+      id: '11',
+      side: 'left',
+      type: 'recall',
+      content: '对方撤回了一条消息',
+    },
+    {
+      id: '12',
+      side: 'right',
+      content: '刚才不小心发错了，重新说一下：最近在学习 Astro 框架。',
+    },
+    {
+      id: '13',
+      side: 'left',
+      type: 'recall',
+    },
+    {
+      id: '14',
+      side: 'right',
+      type: 'delete',
+      content: '我删除了这条信息',
+    },
+  ]}
+/>
+
+### 完整聊天示例
+
+<Chat
+  messages={[
+    {
+      id: '15',
+      side: 'left',
+      content: '晚上好！',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+    },
+    {
+      id: '16',
+      side: 'right',
+      content: '晚上好，小明！',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+    },
+    {
+      id: '17',
+      side: 'left',
+      content: '你今天学习了什么？',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+    },
+    {
+      id: '18',
+      side: 'right',
+      content: '我今天学习了 Astro 组件开发，还创建了一个 Chat 组件。\n\n它支持：\n1. 左右消息布局\n2. Markdown 渲染\n3. HTML 渲染\n4. 撤回消息提示\n5. 删除消息提示\n6. 支持头像图片\n7. 支持显示名称',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+    },
+    {
+      id: '19',
+      side: 'left',
+      type: 'recall',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+    },
+    {
+      id: '20',
+      side: 'left',
+      content: '听起来很厉害！能给我看看效果吗？',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+    },
+    {
+      id: '21',
+      side: 'right',
+      type: 'delete',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+    },
+    {
+      id: '22',
+      side: 'right',
+      content: '当然可以！你现在看到的就是 Chat 组件的效果。',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+    },
+    {
+      id: '23',
+      side: 'left',
+      content: '太棒了！我也想学习 Astro 框架。',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+    },
+    {
+      id: '24',
+      side: 'right',
+      content: '加油！ Astro 是一个很棒的框架，值得学习。\n\n> 学习如逆水行舟，不进则退。',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+    },
+  ]}
+/>
+
+### 头像和名称示例
+
+<Chat
+  messages={[
+    {
+      id: '25',
+      side: 'left',
+      content: '你好，我是张三！',
+      author: '张三',
+      avatar: 'https://picsum.photos/200/200?random=3',
+      date: '2026-01-05 10:00',
+    },
+    {
+      id: '26',
+      side: 'left',
+      content: '我是李四，很高兴认识你！',
+      author: '李四',
+      avatar: 'https://picsum.photos/200/200?random=4',
+      date: '2026-01-05 10:01',
+    },
+    {
+      id: '27',
+      side: 'right',
+      content: '大家好！我是王五，这是我的头像。',
+      author: '王五',
+      avatar: 'https://picsum.photos/200/200?random=5',
+      date: '2026-01-05 10:02',
+    },
+    {
+      id: '28',
+      side: 'right',
+      content: '我也可以不显示头像，只显示名称。',
+      author: '王五',
+      date: '2026-01-05 10:03',
+    },
+    {
+      id: '29',
+      side: 'left',
+      content: '我可以只显示头像，不显示名称。',
+      avatar: 'https://picsum.photos/200/200?random=6',
+      date: '2026-01-05 10:04',
+    },
+  ]}
+/>
+
+### 日期显示示例
+
+<Chat
+  messages={[
+    {
+      id: '30',
+      side: 'left',
+      content: '早上好！',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+      date: '2026-01-04 09:00',
+    },
+    {
+      id: '31',
+      side: 'right',
+      content: '早上好，小明！',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+      date: '2026-01-04 09:01',
+    },
+    {
+      id: '32',
+      side: 'left',
+      content: '今天有什么计划吗？',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+      date: '2026-01-04 09:02',
+    },
+    {
+      id: '33',
+      side: 'right',
+      content: '今天我要学习Astro框架。',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+      date: '2026-01-04 09:03',
+    },
+    {
+      id: '34',
+      side: 'left',
+      content: '晚上好！今天学习得怎么样？',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+      date: '2026-01-04 19:00',
+    },
+    {
+      id: '35',
+      side: 'right',
+      content: '学习得很顺利！我创建了一个Chat组件。',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+      date: '2026-01-04 19:01',
+    },
+    {
+      id: '36',
+      side: 'left',
+      content: '哇，太棒了！',
+      author: '小明',
+      avatar: 'https://picsum.photos/200/200?random=1',
+      date: '2026-01-05 10:00',
+    },
+    {
+      id: '37',
+      side: 'right',
+      content: '谢谢！这个组件支持日期显示功能。',
+      author: '我',
+      avatar: 'https://picsum.photos/200/200?random=2',
+      date: '2026-01-05 10:01',
+    },
+  ]}
+/>

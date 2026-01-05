@@ -1,0 +1,393 @@
+---
+import { marked } from 'marked';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css'; // 引入 GitHub 主题样式
+
+interface Props {
+  messages: Array<{
+    id: string;
+    side: 'left' | 'right';
+    content: string;
+    type?: 'message' | 'recall' | 'delete';
+    author?: string;
+    avatar?: string;
+    date?: string;
+  }>;
+}
+
+const { messages } = Astro.props;
+
+// 配置 marked，使用 highlight.js 进行代码高亮
+marked.setOptions({
+  highlight: function(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(code, { language: lang }).value;
+      } catch (__) {
+        // 如果高亮失败，返回原始代码
+        return code;
+      }
+    }
+    // 如果没有指定语言，尝试自动检测
+    return hljs.highlightAuto(code).value;
+  }
+});
+
+// 渲染 Markdown 为 HTML
+const renderMarkdown = (content: string) => {
+  return marked(content);
+};
+---
+
+<style>
+  .chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: all 0.3s ease;
+    background-color: hsl(var(--card) / 0.8);
+    border: 1px solid hsl(var(--border) / var(--un-border-opacity, 1));
+  }
+
+  /* 深色模式适配 - 使用主题的dark类 */
+  html.dark .chat-container {
+    background-color: hsl(var(--card) / 0.8);
+  }
+
+  .chat-message {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .chat-message.left {
+    justify-content: flex-start;
+  }
+
+  .chat-message.right {
+    justify-content: flex-end;
+  }
+
+  /* 撤回和删除消息居中显示，无头像 */
+  .chat-message.recall,
+  .chat-message.delete {
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 移除撤回和删除消息的头像 */
+  .chat-message.recall .chat-avatar,
+  .chat-message.delete .chat-avatar {
+    display: none;
+  }
+
+  /* 调整撤回和删除消息的内容居中 */
+  .chat-message.recall .chat-content,
+  .chat-message.delete .chat-content {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: hsl(var(--border) / var(--un-bg-opacity, 1));
+    margin: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .chat-content {
+    max-width: 70%;
+  }
+
+  .chat-author {
+    font-size: 12px;
+    color: hsl(var(--muted-foreground) / var(--un-text-opacity, 1));
+    margin-bottom: 5px;
+  }
+
+  /* 右边消息的作者名称靠右对齐 */
+  .chat-message.right .chat-author {
+    text-align: right;
+  }
+
+  /* 日期显示样式 */
+  .chat-date {
+    font-size: 10px;
+    color: hsl(var(--muted-foreground) / 0.7);
+    text-align: center;
+    margin: 15px 0;
+  }
+
+  /* 消息内的时间戳样式 */
+  .chat-message-time {
+    font-size: 10px;
+    color: hsl(var(--muted-foreground) / 0.7);
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  .chat-bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    position: relative;
+    word-wrap: break-word;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 消息框基础样式 */
+  .chat-message .chat-bubble {
+    background-color: hsl(var(--card) / var(--un-bg-opacity, 1));
+    color: hsl(var(--foreground) / var(--un-text-opacity, 1));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 左侧消息特殊样式 */
+  .chat-message.left .chat-bubble {
+    border-bottom-left-radius: 6px;
+  }
+
+  /* 右侧消息特殊样式 */
+  .chat-message.right .chat-bubble {
+    border-bottom-right-radius: 6px;
+  }
+
+  /* 撤回和删除消息样式 */
+  .chat-message.recall .chat-bubble,
+  .chat-message.delete .chat-bubble {
+    background-color: hsl(var(--muted) / var(--un-bg-opacity, 1));
+    color: hsl(var(--muted-foreground) / var(--un-text-opacity, 1));
+    font-style: italic;
+    font-size: 14px;
+    box-shadow: none;
+  }
+
+  .chat-message-content {
+    line-height: 1.4;
+    color: inherit;
+  }
+
+  /* Markdown styles */
+  .chat-message-content h1 {
+    font-size: 24px;
+    margin: 10px 0;
+    color: inherit;
+  }
+
+  .chat-message-content h2 {
+    font-size: 20px;
+    margin: 8px 0;
+    color: inherit;
+  }
+
+  .chat-message-content h3 {
+    font-size: 18px;
+    margin: 6px 0;
+    color: inherit;
+  }
+
+  .chat-message-content p {
+    margin: 8px 0;
+    color: inherit;
+  }
+
+  .chat-message-content ul,
+  .chat-message-content ol {
+    margin: 8px 0;
+    padding-left: 20px;
+    color: inherit;
+  }
+
+  .chat-message-content li {
+    margin: 4px 0;
+    color: inherit;
+  }
+
+  /* 行内代码样式 */
+  .chat-message-content :not(pre) > code {
+    background-color: rgba(175, 184, 193, 0.2); /* GitHub 行内代码背景 */
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: #d73a49; /* GitHub 行内代码颜色 */
+    white-space: nowrap;
+  }
+
+  /* 深色模式下的行内代码样式 */
+  html.dark .chat-message-content :not(pre) > code {
+    background-color: rgba(175, 184, 193, 0.15);
+    color: #f97583;
+  }
+
+  /* 代码块样式 - 优化博客风格 */
+  .chat-container div.chat-message-content pre {
+    margin: 12px 0;
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background-color: #f6f8fa; /* GitHub 代码块背景色 */
+    color: #24292e; /* GitHub 代码块文字色 */
+    border: 1px solid #e1e4e8;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .chat-container div.chat-message-content pre > code {
+    display: block;
+    padding: 16px;
+    line-height: 1.6;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    background-color: transparent;
+    color: inherit;
+    border: none;
+    margin: 0;
+    width: auto;
+    min-width: 100%;
+    overflow: visible;
+    word-break: normal;
+    word-wrap: normal;
+    tab-size: 2;
+  }
+
+  /* 行号样式 */
+  .chat-container div.chat-message-content pre code.hljs { 
+    display: block;
+    overflow-x: auto;
+    padding: 16px;
+    background: transparent;
+  }
+
+  /* 明暗模式适配 */
+  html.dark .chat-container div.chat-message-content pre {
+    background-color: #1f2328; /* 深色模式代码块背景 */
+    color: #e6edf3; /* 深色模式代码块文字色 */
+    border-color: #30363d;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  html.dark .chat-container div.chat-message-content pre > code {
+    color: inherit;
+  }
+
+  /* 确保带有语言类名的代码块也能正确适配 */
+  .chat-container div.chat-message-content pre > code[class*="language-"],
+  .chat-container div.chat-message-content pre > code[class*="lang-"] {
+    background-color: transparent;
+    color: inherit;
+  }
+
+  html.dark .chat-container div.chat-message-content pre > code[class*="language-"],
+  html.dark .chat-container div.chat-message-content pre > code[class*="lang-"] {
+    color: inherit;
+  }
+
+  .chat-message-content a {
+    color: hsl(var(--primary) / var(--un-text-opacity, 1));
+    text-decoration: none;
+  }
+
+  .chat-message-content a:hover {
+    text-decoration: underline;
+  }
+
+  .chat-message-content strong {
+    font-weight: bold;
+    color: inherit;
+  }
+
+  .chat-message-content em {
+    font-style: italic;
+    color: inherit;
+  }
+
+  .chat-message-content img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 8px 0;
+  }
+
+  .chat-message-content blockquote {
+    border-left: 4px solid hsl(var(--primary) / var(--un-border-opacity, 1));
+    padding-left: 12px;
+    color: hsl(var(--muted-foreground) / var(--un-text-opacity, 1));
+    margin: 8px 0;
+  }
+
+  .chat-message-content hr {
+    border: none;
+    border-top: 1px solid hsl(var(--border) / var(--un-border-opacity, 1));
+    margin: 16px 0;
+  }
+</style>
+
+<div class="chat-container">
+  {messages.map((message, index) => {
+    // 检查是否需要显示日期分隔线
+    const shouldShowDate = index === 0 || 
+      message.date !== messages[index - 1].date;
+    
+    return (
+      <>
+        {/* 日期分隔线 */}
+        {shouldShowDate && message.date && (
+          <div class="chat-date">{message.date}</div>
+        )}
+        
+        <div 
+          class={`chat-message ${message.side} ${message.type}`}
+        >
+          {message.type !== 'recall' && message.type !== 'delete' && message.side === 'left' && (
+            <div class="chat-avatar">
+              {message.avatar ? (
+                <img src={message.avatar} alt={message.author} />
+              ) : (
+                <div style="width: 100%; height: 100%; border-radius: 50%; background-color: #1890ff; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;">
+                  {message.author?.charAt(0) || 'U'}
+                </div>
+              )}
+            </div>
+          )}
+          
+          <div class="chat-content">
+            {message.author && message.type !== 'recall' && message.type !== 'delete' && (
+              <div class="chat-author">{message.author}</div>
+            )}
+            
+            <div class="chat-bubble">
+              {message.type === 'recall' ? (
+                <div class="chat-message-content">{message.content || '对方撤回了一条消息'}</div>
+              ) : message.type === 'delete' ? (
+                <div class="chat-message-content">{message.content || '我删除了这条信息'}</div>
+              ) : (
+                <div class="chat-message-content" set:html={renderMarkdown(message.content)}></div>
+              )}
+              
+              {/* 消息时间戳 */}
+              {message.date && (
+                <div class="chat-message-time">{message.date.split(' ')[1]}</div>
+              )}
+            </div>
+          </div>
+          
+          {message.type !== 'recall' && message.type !== 'delete' && message.side === 'right' && (
+            <div class="chat-avatar">
+              {message.avatar ? (
+                <img src={message.avatar} alt={message.author || "我"} />
+              ) : (
+                <div style="width: 100%; height: 100%; border-radius: 50%; background-color: #52c41a; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;">
+                  {message.author?.charAt(0) || '我'}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </>
+    );
+  })}
+</div>
