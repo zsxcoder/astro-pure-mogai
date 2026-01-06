@@ -1,0 +1,91 @@
+---
+import { MediumZoom } from 'astro-pure/advanced'
+import { Icon } from 'astro-pure/user'
+import BoardLayout from '@/layouts/BoardLayout.astro'
+import TalkLoading from '@/components/board/TalkLoading.astro'
+import TextBackground from '@/components/custom/TextBackground.astro'
+
+import memos from '../../plugins/memos.js?url'
+---
+
+<BoardLayout title='说说' comment>
+  <div style='text-align:center; line-height:1.8; padding:20px 0; position:relative;'>
+    <!-- 说说的背景文字 -->
+    <TextBackground variant='words' />
+
+    <h2 style='font-size:26px; margin-bottom:12px;'>欢迎来到说说</h2>
+    <p style='font-size:16px; color:#444;'>这里是我的个人说说空间 🎤</p>
+    <p style='font-size:16px; color:#444;'>记录生活的点滴 ✔️</p>
+    <p style='font-size:16px; color:#444;'>分享美好时光 💪</p>
+  </div>
+
+  <div class='mt-4 border-t pt-4'>
+    <TalkLoading />
+    <div id='talk' class='talk-pending'></div>
+  </div>
+  <div class='limit-notice'>
+    仅展示最近15条说说
+    <a href='https://pyq.mcyzsx.top/feed' target='_blank' class='rss-link'>
+      <Icon name='rss' class='rss-icon' />
+    </a>
+  </div>
+
+  <style>
+    #talk.talk-pending {
+      visibility: hidden;
+      min-height: 180px;
+    }
+    .rss-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .rss-link {
+      display: inline-flex;
+      align-items: center;
+    }
+  </style>
+
+  <script is:inline>
+    // 提供一个增强的 markdown 解析实现
+    window.marked = {
+      setOptions: function() {},
+      parse: function(text) {
+        // 处理代码块 - 支持带有空格的代码块
+        text = text.replace(/```\s*(\w*)\s*\n([\s\S]*?)\n\s*```/g, function(match, lang, code) {
+          // 简单的代码高亮模拟
+          return `<pre><code class="language-${lang || 'plaintext'}">${code}</code></pre>`;
+        });
+        
+        // 处理其他 markdown 元素
+        return text
+          .replace(/(?<!\!)\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="nofollow noopener">@$1</a>')
+          .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="zoomable">')
+          .replace(/- \[ \]/g, '⚪')
+          .replace(/- \[x\]/g, '⚫')
+          .replace(/\n/g, '<br>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/`(.*?)`/g, '<code>$1</code>')
+          .replace(/^- (.*?)$/gm, '<li>$1</li>')
+          .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>')
+          .replace(/^1\. (.*?)$/gm, '<li>$1</li>')
+          .replace(/(<li>.*?<\/li>)/gs, '<ol>$1</ol>');
+      }
+    };
+    
+    // 提供 highlight.js 模拟
+    window.hljs = {
+      highlight: function(code, options) {
+        return { value: code };
+      },
+      getLanguage: function() {
+        return true;
+      }
+    };
+  </script>
+  <script src={memos} no-pjax is:inline></script>
+
+  <MediumZoom />
+</BoardLayout>

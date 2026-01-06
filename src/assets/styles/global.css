@@ -314,3 +314,22 @@ span.katex-display {
 .status-tag-red {
   background-color: #B90000; /* 红色 */
 }
+
+/* 代码块文字颜色 */
+pre code {
+  color: white !important;
+}
+
+.talk_content_text pre code {
+  color: white !important;
+  background-color: #1e1e1e !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  display: block !important;
+  overflow-x: auto !important;
+}
+
+/* 深色模式下的代码块 */
+.dark pre code {
+  color: white !important;
+}
