@@ -57,18 +57,18 @@ const FRIEND_LINK_CONTACT = [
 
       <h2 id='small-circle'>朋友圈</h2>
   <div id='friend-circle-lite-root' class='not-prose'>Loading...</div>
-  <script is:inline>
-    window.addEventListener('DOMContentLoaded', () => {
-      import('@/plugins/friendCircle').then(({ FriendCircle }) => {
-        const fc = new FriendCircle()
-        fc.init({
-          private_api_url: 'https://fc.mcyzsx.top/',
-          page_turning_number: 10,
-          error_img: 'https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c'
-        })
-        fc.load()
-      })
+  <script>
+    import '@/assets/styles/fc.css'
+
+    import { FriendCircle } from '@/plugins/friendCircle'
+
+    const fc = new FriendCircle()
+    fc.init({
+      private_api_url: 'https://fc.mcyzsx.top/',
+      page_turning_number: 10,
+      error_img: 'https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c'
     })
+    fc.load()
   </script>
 
     <!-- Apply Section -->
