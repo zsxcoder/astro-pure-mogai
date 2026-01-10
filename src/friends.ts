@@ -77,6 +77,30 @@ export const FRIEND_LINKS: FriendLink[] = [
         addDate: "2025-12-04"
     },
     {
+        name: "张洪Heo",
+        description: "分享设计与科技生活",
+        url: "https://blog.zhheo.com/",
+        avatar: "https://img.zhheo.com/i/67d8fa75943e4.webp",
+        addDate: "2026-01-10",
+        recommended: true
+    },
+    {
+        name: "CWorld Site",
+        description: "求知若愚，虚怀若谷",
+        url: "https://cworld.site/",
+        avatar: "https://cravatar.cn/avatar/1ffe42aa45a6b1444a786b1f32dfa8aa?s=200",
+        addDate: "2026-01-10",
+        recommended: true
+    },
+    {
+        name: "梨尽兴",
+        description: "A place for peace",
+        url: "https://blog.ljx.icu",
+        avatar: "https://blog.ljx.icu/favicon.png",
+        addDate: "2026-01-10",
+        recommended: true
+    }, 
+    {
         name: "失联",
         description: "失联",
         url: "https://shilian.example.com/",
