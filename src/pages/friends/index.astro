@@ -9,6 +9,7 @@ import { FRIEND_LINKS } from '../../friends';
 import config from '../../site.config';
 import type { Config } from 'astro-pure/types';
 import LinkWithIcon from '../../components/content/LinkWithIcon.astro';
+import '@/assets/styles/fc.css';
 
 const headings = [
   { depth: 2, slug: 'friend-levels', text: '友链等级' },
@@ -56,18 +57,18 @@ const FRIEND_LINK_CONTACT = [
 
       <h2 id='small-circle'>朋友圈</h2>
   <div id='friend-circle-lite-root' class='not-prose'>Loading...</div>
-  <script>
-    import('@/assets/styles/fc.css')
-
-    import { FriendCircle } from '@/plugins/friendCircle'
-
-    const fc = new FriendCircle()
-    fc.init({
-      private_api_url: 'https://fc.mcyzsx.top/',
-      page_turning_number: 10,
-      error_img: 'https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c'
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      import('@/plugins/friendCircle').then(({ FriendCircle }) => {
+        const fc = new FriendCircle()
+        fc.init({
+          private_api_url: 'https://fc.mcyzsx.top/',
+          page_turning_number: 10,
+          error_img: 'https://cravatar.cn/avatar/57d8260dfb55501c37dde588e7c3852c'
+        })
+        fc.load()
+      })
     })
-    fc.load()
   </script>
 
     <!-- Apply Section -->
