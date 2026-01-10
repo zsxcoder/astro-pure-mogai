@@ -13,6 +13,27 @@ const DisconnectedFriendCard: React.FC<DisconnectedFriendCardProps> = ({ link })
     const [shouldLoad, setShouldLoad] = useState(false);
     const imgRef = useRef<HTMLDivElement>(null);
 
+    // 获取安全链接
+    const getSafeLink = (url: string): string => {
+        const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top']
+
+        if (!url || (!url.startsWith('http') && !url.startsWith('//'))) return url
+
+        try {
+            const urlObj = new URL(url)
+            if (
+                exclude.some(
+                    (domain) => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain)
+                )
+            ) {
+                return url
+            }
+            return `/safego?url=${encodeURIComponent(url)}`
+        } catch {
+            return url
+        }
+    }
+
     useEffect(() => {
         if (!imgRef.current || shouldLoad) return;
 
@@ -32,7 +53,7 @@ const DisconnectedFriendCard: React.FC<DisconnectedFriendCardProps> = ({ link })
 
     return (
         <a
-            href={link.url}
+            href={getSafeLink(link.url)}
             target="_blank"
             rel="noopener noreferrer"
             className={`group relative flex flex-col gap-3 p-5 rounded-xl border transition-all duration-300 

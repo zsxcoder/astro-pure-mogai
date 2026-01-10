@@ -10,6 +10,27 @@ interface Props {
 
 const { img, text, link, round: propRound, square: propSquare, external } = Astro.props;
 
+// 辅助函数：获取安全链接
+function getSafeLink(url: string): string {
+  const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top']
+
+  if (!url || (!url.startsWith('http') && !url.startsWith('https'))) return url
+
+  try {
+    const urlObj = new URL(url)
+    if (
+      exclude.some(
+        (domain) => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain)
+      )
+    ) {
+      return url
+    }
+    return `/safego?url=${encodeURIComponent(url)}`
+  } catch {
+    return url
+  }
+}
+
 // 辅助函数：获取GitHub用户名
 function getGhUsername(link?: string): string | null {
   if (!link) return null;
@@ -73,12 +94,15 @@ const tip = link ? (isExtLink(link) ? getDomain(link) : safelyDecodeUriComponent
 
 // 计算是否显示外部链接图标
 const showExternalIcon = link && isExtLink(link);
+
+// 计算安全链接
+const safeLink = link ? getSafeLink(link) : undefined;
 ---
 
 <!-- 统一的徽章容器，根据是否有链接选择渲染标签 -->
 {link ? (
   <a 
-    href={link} 
+    href={safeLink} 
     class={`badge ${isRound ? 'round' : ''} ${showExternalIcon ? 'external' : ''}`}
     target={isExtLink(link) ? '_blank' : '_self'}
     rel={isExtLink(link) ? 'noopener noreferrer' : ''}

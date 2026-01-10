@@ -13,6 +13,27 @@ interface Props {
 const { href, icon: propIcon, color, size, class: className } = Astro.props;
 const icon = propIcon || getIconFromDomain(href);
 
+// 获取安全链接
+function getSafeLink(url: string): string {
+  const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top']
+
+  if (!url || (!url.startsWith('http') && !url.startsWith('https'))) return url
+
+  try {
+    const urlObj = new URL(url)
+    if (
+      exclude.some(
+        (domain) => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain)
+      )
+    ) {
+      return url
+    }
+    return `/safego?url=${encodeURIComponent(url)}`
+  } catch {
+    return url
+  }
+}
+
 // 检查是否为外部链接
 const isExternal = href.startsWith('http') || href.startsWith('https');
 
@@ -26,11 +47,12 @@ function getDomain(url: string): string {
   }
 }
 
+const safeHref = getSafeLink(href);
 const domain = isExternal ? getDomain(href) : href;
 ---
 
 <a 
-  href={href} 
+  href={safeHref} 
   class={`link-with-icon ${className || ''}`}
   target={isExternal ? '_blank' : '_self'}
   rel={isExternal ? 'noopener noreferrer' : ''}

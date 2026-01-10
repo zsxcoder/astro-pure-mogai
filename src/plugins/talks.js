@@ -251,7 +251,20 @@ function renderTalks() {
       content = content
         .replace(
           /\[(.*?)\]\((.*?)\)/g,
-          `<a href="$2" target="_blank" rel="nofollow noopener">@$1</a>`
+          function(match, text, url) {
+            // 检查是否是外链
+            const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top'];
+            try {
+              const urlObj = new URL(url);
+              if (exclude.some(domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain))) {
+                return `<a href="${url}" target="_blank" rel="nofollow noopener">@${text}</a>`;
+              } else {
+                return `<a href="/safego?url=${encodeURIComponent(url)}" target="_blank" rel="nofollow noopener">@${text}</a>`;
+              }
+            } catch {
+              return `<a href="${url}" target="_blank" rel="nofollow noopener">@${text}</a>`;
+            }
+          }
         )
         .replace(/!\[(.*?)\]\((.*?)\)/g, '<img class="zoomable" src="$2" alt="$1">')
         .replace(/- \[ \]/g, '⚪')
@@ -312,10 +325,22 @@ function renderTalks() {
         }
       }
 
+      // 检查是否是外链
+      const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top'];
+      let safeUrl = siteUrl;
+      try {
+        const urlObj = new URL(siteUrl);
+        if (!exclude.some(domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain))) {
+          safeUrl = `/safego?url=${encodeURIComponent(siteUrl)}`;
+        }
+      } catch {
+        // 无效 URL，保持原样
+      }
+      
       // 输出 HTML 结构
       content += `
                 <div class="shuoshuo-external-link">
-                    <a class="external-link" href="${siteUrl}" target="_blank" rel="nofollow noopener">
+                    <a class="external-link" href="${safeUrl}" target="_blank" rel="nofollow noopener">
                         <div class="external-link-left" style="background-image:url(${extensionBack})"></div>
                         <div class="external-link-right">
                             <div class="external-link-title">${title}</div>
