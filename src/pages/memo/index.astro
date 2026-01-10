@@ -1,0 +1,169 @@
+---
+import { MediumZoom } from 'astro-pure/advanced'
+import { Icon } from 'astro-pure/user'
+import BoardLayout from '@/layouts/BoardLayout.astro'
+import TalkLoading from '@/components/board/TalkLoading.astro'
+import TextBackground from '@/components/custom/TextBackground.astro'
+
+import talks from '../../plugins/talks.js?url'
+---
+
+<BoardLayout title='Memo' comment>
+  <div style='text-align:center; line-height:1.8; padding:20px 0; position:relative;'>
+    <!-- 说说的背景文字 -->
+    <TextBackground variant='words' />
+
+    <h2 style='font-size:26px; margin-bottom:12px;'>欢迎来到 Memo</h2>
+    <p style='font-size:16px; color:#444;'>这里是我的个人 Memo 空间 🎤</p>
+    <p style='font-size:16px; color:#444;'>记录生活的点滴 ✔️</p>
+    <p style='font-size:16px; color:#444;'>分享美好时光 💪</p>
+  </div>
+
+  <div class='mt-4 border-t pt-4'>
+    <TalkLoading />
+    <div id='talk' class='talk-pending'></div>
+  </div>
+  <div class='limit-notice'>
+    仅展示最近的 Memo
+    <a href='https://rin.mcyzsx.top/moments' target='_blank' class='rss-link'>
+      <Icon name='rss' class='rss-icon' />
+    </a>
+  </div>
+
+  <style>
+    #talk.talk-pending {
+      visibility: hidden;
+      min-height: 180px;
+    }
+    .rss-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .rss-link {
+      display: inline-flex;
+      align-items: center;
+    }
+    /* 确保选择器能正确匹配到列表元素 */
+    #talk ul,
+    #talk ol {
+      margin: 15px 0;
+      padding-left: 30px;
+      line-height: 1.6;
+      list-style: none !important;
+    }
+    #talk li {
+      margin: 8px 0;
+      color: #333;
+      position: relative;
+    }
+    /* 无序列表样式 */
+    #talk ul li::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 0.7em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #6c63ff;
+    }
+    /* 有序列表样式 */
+    #talk ol {
+      counter-reset: item;
+    }
+    #talk ol li::before {
+      content: counter(item) ".";
+      counter-increment: item;
+      color: #6c63ff;
+      font-weight: 600;
+      position: absolute;
+      left: -25px;
+    }
+
+    /* 评论按钮样式 */
+    #talk .talk_bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(194, 166, 97, 0.85);
+      width: 100%;
+    }
+    /* 标签样式 */
+    #talk .talk_bottom .talk_tag {
+      color: #666;
+      font-size: 14px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .quote-btn {
+      color: #666;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    .quote-btn:hover {
+      color: #6c63ff;
+      background-color: rgba(108, 99, 255, 0.1);
+    }
+    /* SVG 图标样式 */
+    .icon svg {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      fill: currentColor;
+      transition: fill 0.3s ease;
+    }
+    .quote-btn:hover .icon svg {
+      fill: #6c63ff;
+    }
+  </style>
+
+  <script is:inline>
+    // 提供一个增强的 markdown 解析实现
+    window.marked = {
+      setOptions: function() {},
+      parse: function(text) {
+        // 处理代码块 - 支持带有空格的代码块
+        text = text.replace(/```\s*(\w*)\s*\n([\s\S]*?)\n\s*```/g, function(match, lang, code) {
+          // 简单的代码高亮模拟
+          return `<pre><code class="language-${lang || 'plaintext'}">${code}</code></pre>`;
+        });
+        
+        // 处理其他 markdown 元素
+        return text
+          .replace(/(?<!\!)\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="nofollow noopener">@$1</a>')
+          .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="zoomable">')
+          .replace(/- \[ \]/g, '⚪')
+          .replace(/- \[x\]/g, '⚫')
+          .replace(/\n/g, '<br>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/`(.*?)`/g, '<code>$1</code>')
+          .replace(/^- (.*?)$/gm, '<li>$1</li>')
+          .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>')
+          .replace(/^1\. (.*?)$/gm, '<li>$1</li>')
+          .replace(/(<li>.*?<\/li>)/gs, '<ol>$1</ol>');
+      }
+    };
+    
+    // 提供 highlight.js 模拟
+    window.hljs = {
+      highlight: function(code, options) {
+        return { value: code };
+      },
+      getLanguage: function() {
+        return true;
+      }
+    };
+  </script>
+  <script src={talks} no-pjax is:inline></script>
+
+  <MediumZoom />
+</BoardLayout>
