@@ -87,7 +87,7 @@ export const FRIEND_LINKS: FriendLink[] = [
     {
         name: "CWorld Site",
         description: "求知若愚，虚怀若谷",
-        url: "https://cworld.site/",
+        url: "https://cworld0.com/",
         avatar: "https://cravatar.cn/avatar/1ffe42aa45a6b1444a786b1f32dfa8aa?s=200",
         addDate: "2026-01-10",
         recommended: true
