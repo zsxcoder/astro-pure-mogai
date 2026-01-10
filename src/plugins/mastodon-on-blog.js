@@ -230,8 +230,12 @@ function renderTalks() {
 
   const formatContent = (content, emojis) => {
     let formatted = content.replace(/:(\w+):/g, getEmojiWrapper(emojis))
+    // 先移除所有的 invisible span 标签
+    formatted = formatted.replace(/<span class="invisible">([^<]+)<\/span>/g, '$1');
     // 处理外链，确保经过 safego 中转页
     formatted = formatted.replace(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g, function(match, href, text) {
+      // 修剪文本内容前后的空白字符
+      text = text.trim();
       // 检查是否是外链
       const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top'];
       try {
