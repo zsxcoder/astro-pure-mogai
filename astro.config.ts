@@ -9,6 +9,7 @@ import react from '@astrojs/react'
 // Local integrations
 import rehypeAutolinkHeadings from './src/plugins/rehype-auto-link-headings.ts'
 import rehypeSafeGo from './src/plugins/rehype-safe-go.ts'
+import rehypeSafegoLinks from './src/plugins/rehype-safego-links.ts'
 // Shiki
 import {
   addCollapse,
@@ -62,6 +63,7 @@ export default defineConfig({
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
+      rehypeSafegoLinks,
       [rehypeSafeGo, { exclude: ['b.zsxcoder.top', 'localhost', '127.0.0.1'] }],
       [
         rehypeAutolinkHeadings,

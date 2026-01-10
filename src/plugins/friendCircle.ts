@@ -69,7 +69,7 @@ export class FriendCircle {
 
   private getSafeLink(link: string | URL): string {
     const urlStr = link instanceof URL ? link.toString() : link
-    const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1']
+    const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top']
 
     if (!urlStr || (!urlStr.startsWith('http') && !urlStr.startsWith('//'))) return urlStr
 

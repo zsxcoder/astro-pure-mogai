@@ -230,6 +230,21 @@ function renderTalks() {
 
   const formatContent = (content, emojis) => {
     let formatted = content.replace(/:(\w+):/g, getEmojiWrapper(emojis))
+    // 处理外链，确保经过 safego 中转页
+    formatted = formatted.replace(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g, function(match, href, text) {
+      // 检查是否是外链
+      const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top'];
+      try {
+        const urlObj = new URL(href);
+        if (exclude.some(domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain))) {
+          return `<a href="${href}" target="_blank" rel="nofollow noopener">${text}</a>`;
+        } else {
+          return `<a href="/safego?url=${encodeURIComponent(href)}" target="_blank" rel="nofollow noopener">${text}</a>`;
+        }
+      } catch {
+        return `<a href="${href}" target="_blank" rel="nofollow noopener">${text}</a>`;
+      }
+    });
     formatted = formatted.replace(/\n/g, '<br>')
     return `<div class="talk_content_text">${formatted}</div>`
   }
