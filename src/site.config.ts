@@ -78,8 +78,8 @@ export const theme: ThemeUserConfig = {
       { title: '友链', link: '/friends' },
     //   { title: '留言', link: '/board' },
       { title: '说说', link: '/memo' },
-          //   { title: '嘟文', link: '/mastodon' },
-    { title: '贴文', link: '/essays' },
+            { title: '嘟文', link: '/mastodon' },
+    // { title: '贴文', link: '/essays' },
       { title: '关于', link: '/about' }
     ]
   },
