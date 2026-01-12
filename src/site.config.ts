@@ -1,5 +1,24 @@
 import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } from 'astro-pure/types'
 
+// Extend IntegrationUserConfig to include giscus property
+interface ExtendedIntegrationUserConfig extends IntegrationUserConfig {
+  giscus?: {
+    enable: boolean
+    repo?: string
+    repoId?: string
+    category?: string
+    categoryId?: string
+    mapping?: string
+    strict?: string
+    reactionsEnabled?: string
+    emitMetadata?: string
+    inputPosition?: string
+    theme?: string
+    lang?: string
+    loading?: string
+  }
+}
+
 export const vercount: { enable: boolean; script: string } = {
   enable: true,
   script: 'https://cn.vercount.one/js'
@@ -118,7 +137,7 @@ export const theme: ThemeUserConfig = {
   }
 }
 
-export const integ: IntegrationUserConfig = {
+export const integ: ExtendedIntegrationUserConfig = {
   // [Links]
   // https://astro-pure.js.org/docs/integrations/links
   links: {
@@ -184,7 +203,7 @@ export const integ: IntegrationUserConfig = {
   },
   // Comment system
   waline: {
-    enable: true,
+    enable: false,
     // Server service link
     server: 'https://waline.ljx.icu/',
     // Show meta info for comments
@@ -202,6 +221,10 @@ export const integ: IntegrationUserConfig = {
       }
       // imageUploader: false
     }
+  },
+  // Giscus comment system
+  giscus: {
+    enable: true
   }
 }
 
@@ -267,5 +290,10 @@ export const POST_CARD = {
   maxVisibleTags: 3
 }
 
-const config = { ...theme, integ } as Config
+// Extend Config to include giscus property in integ
+interface ExtendedConfig extends Config {
+  integ: ExtendedIntegrationUserConfig
+}
+
+const config = { ...theme, integ } as ExtendedConfig
 export default config

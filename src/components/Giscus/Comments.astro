@@ -1,0 +1,98 @@
+---
+import config from '@/site-config'
+import { cn } from 'astro-pure/utils'
+
+const { class: className } = Astro.props
+---
+
+{
+  config.integ.giscus?.enable && (
+    <div class={cn('not-prose', className)}>
+      <div class="giscus">
+        <script
+          src="https://giscus.app/client.js"
+          data-repo="zsxcoder/giscus-comments"
+          data-repo-id="R_kgDOQoZP0g"
+          data-category="astro-pure-mogai"
+          data-category-id="DIC_kwDOQoZP0s4C02r8"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="zh-CN"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async
+        >
+        </script>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  // Function to update Giscus theme based on current document theme
+  function updateGiscusTheme() {
+    const isDark = document.documentElement.classList.contains('dark')
+    const theme = isDark ? 'dark' : 'light'
+    
+    // Find Giscus iframe
+    const iframe = document.querySelector('.giscus iframe') as HTMLIFrameElement | null
+    if (iframe) {
+      // Send message to Giscus iframe to update theme
+      iframe.contentWindow?.postMessage({
+        giscus: {
+          setConfig: {
+            theme
+          }
+        }
+      }, 'https://giscus.app')
+    }
+  }
+
+  // Update theme initially
+  updateGiscusTheme()
+
+  // Observe document.documentElement for class changes (theme toggle)
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        updateGiscusTheme()
+      }
+    })
+  })
+
+  // Start observing
+  observer.observe(document.documentElement, { attributes: true })
+
+  // Clean up observer when component is removed
+  document.addEventListener('astro:page-unload', () => {
+    observer.disconnect()
+  })
+</script>
+
+<style>
+  /* 基本布局样式 */
+  .giscus {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 确保 iframe 适应容器宽度 */
+  .giscus iframe {
+    width: 100%;
+    border: none;
+  }
+
+  /* 加载动画效果 */
+  .giscus iframe[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .giscus iframe[loading="lazy"]:loaded {
+    opacity: 1;
+  }
+</style>

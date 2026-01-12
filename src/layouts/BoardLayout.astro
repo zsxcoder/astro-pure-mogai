@@ -3,7 +3,8 @@ import type { SiteMeta } from 'astro-pure/types'
 import { Button } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
 import PageLayout from '@/layouts/BaseLayout.astro'
-import { Comment, PageInfo } from '@/components/waline'
+import { PageInfo } from '@/components/waline'
+import GiscusComment from '@/components/Giscus/Comments.astro'
 import { integ } from '@/site-config'
 
 interface Props {
@@ -74,7 +75,7 @@ const fullMeta: SiteMeta = {
         {
           enableComment && (
             <div class='max-w-4xl mx-auto'>
-              <Comment class='mt-6' />
+              <GiscusComment class='mt-6' />
             </div>
           )
         }
