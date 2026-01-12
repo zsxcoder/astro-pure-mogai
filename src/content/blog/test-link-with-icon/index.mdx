@@ -23,6 +23,9 @@ import Poetry from '../../../components/content/Poetry.astro'
 import Alert from '../../../components/content/Alert.astro'
 import Chat from '../../../components/content/Chat.astro'
 import Folding from '../../../components/content/Folding.astro'
+import Pic from '../../../components/content/Pic.astro'
+import MediumZoom from '../../../components/content/MediumZoom.astro'
+import Quote from '../../../components/content/Quote.astro'
 
 # LinkWithIcon 组件测试
 
@@ -592,3 +595,49 @@ import Folding from '../../../components/content/Folding.astro'
     折叠面板可以包含各种复杂的组件内容，使用起来非常灵活。
   </Alert>
 </Folding>
+
+## Pic 图片组件测试
+
+### 基本用法
+
+<MediumZoom selector=".image img.zoomable" />
+
+<Pic src="https://picsum.photos/480/240" caption="这是一张测试图片" />
+
+### 带自定义尺寸
+
+<Pic src="https://picsum.photos/800/400" width="800" height="400" caption="带自定义宽度和高度的图片" />
+
+<Pic src="https://picsum.photos/600/300" width="600" caption="只指定宽度的图片" />
+
+### 关闭缩放功能
+
+<Pic src="https://picsum.photos/480/240" caption="关闭缩放功能的图片" zoom={false} />
+
+### 带镜像服务
+
+<Pic src="https://picsum.photos/480/240" mirror="true" caption="使用镜像服务的图片" />
+
+## Quote 引用组件测试
+
+### 基本用法
+
+<Quote>
+有时候，有些话，有点意思。
+</Quote>
+
+### 带图标用法
+
+<Quote icon="files">
+令图标有所指，引用亦有中心。
+</Quote>
+
+### 带图标插槽用法
+
+<Quote>
+  <div slot="icon">
+    ヾ(•ω•`)o
+  </div>
+  图标插槽也可以是 Emoji 或颜文字，或者英文装饰。
+</Quote>
+
