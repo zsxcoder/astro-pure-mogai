@@ -9,39 +9,25 @@ const { class: className } = Astro.props
   config.integ.giscus?.enable && (
     <div class={cn('not-prose', className)}>
       <div class="giscus">
-        <script
-          src="https://giscus.app/client.js"
-          data-repo="zsxcoder/giscus-comments"
-          data-repo-id="R_kgDOQoZP0g"
-          data-category="astro-pure-mogai"
-          data-category-id="DIC_kwDOQoZP0s4C02r8"
-          data-mapping="pathname"
-          data-strict="0"
-          data-reactions-enabled="1"
-          data-emit-metadata="0"
-          data-input-position="top"
-          data-theme="preferred_color_scheme"
-          data-lang="zh-CN"
-          data-loading="lazy"
-          crossorigin="anonymous"
-          async
-        >
-        </script>
+        <!-- 脚本将通过 JavaScript 动态插入 -->
       </div>
     </div>
   )
 }
 
 <script>
-  // Function to update Giscus theme based on current document theme
+  // 函数：获取当前主题
+  function getCurrentTheme() {
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  }
+
+  // 函数：更新 Giscus 主题
   function updateGiscusTheme() {
-    const isDark = document.documentElement.classList.contains('dark')
-    const theme = isDark ? 'dark' : 'light'
+    const theme = getCurrentTheme()
     
-    // Find Giscus iframe
-    const iframe = document.querySelector('.giscus iframe') as HTMLIFrameElement | null
+    // 1. 更新 iframe 的主题
+    const iframe = document.querySelector('.giscus iframe')
     if (iframe) {
-      // Send message to Giscus iframe to update theme
       iframe.contentWindow?.postMessage({
         giscus: {
           setConfig: {
@@ -52,10 +38,44 @@ const { class: className } = Astro.props
     }
   }
 
-  // Update theme initially
-  updateGiscusTheme()
+  // 动态创建并插入 giscus 脚本
+  function initGiscus() {
+    const theme = getCurrentTheme()
+    
+    // 创建脚本元素
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.crossOrigin = 'anonymous'
+    script.async = true
+    
+    // 设置必要的属性
+    script.setAttribute('data-repo', 'zsxcoder/giscus-comments')
+    script.setAttribute('data-repo-id', 'R_kgDOQoZP0g')
+    script.setAttribute('data-category', 'astro-pure-mogai')
+    script.setAttribute('data-category-id', 'DIC_kwDOQoZP0s4C02r8')
+    script.setAttribute('data-mapping', 'pathname')
+    script.setAttribute('data-strict', '0')
+    script.setAttribute('data-reactions-enabled', '1')
+    script.setAttribute('data-emit-metadata', '0')
+    script.setAttribute('data-input-position', 'top')
+    script.setAttribute('data-theme', theme) // 这里设置初始主题
+    script.setAttribute('data-lang', 'zh-CN')
+    script.setAttribute('data-loading', 'lazy')
+    
+    // 找到容器并插入脚本
+    const container = document.querySelector('.giscus')
+    if (container) {
+      // 清空容器
+      container.innerHTML = ''
+      // 插入脚本
+      container.appendChild(script)
+    }
+  }
 
-  // Observe document.documentElement for class changes (theme toggle)
+  // 初始化 Giscus
+  initGiscus()
+
+  // 观察主题变化
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -64,12 +84,30 @@ const { class: className } = Astro.props
     })
   })
 
-  // Start observing
+  // 开始观察
   observer.observe(document.documentElement, { attributes: true })
 
-  // Clean up observer when component is removed
+  // 监听 iframe 加载事件
+  function setupIframeListener() {
+    const iframe = document.querySelector('.giscus iframe')
+    if (iframe) {
+      iframe.addEventListener('load', updateGiscusTheme)
+    } else {
+      // 如果 iframe 不存在，稍后再尝试
+      setTimeout(setupIframeListener, 100)
+    }
+  }
+
+  // 设置 iframe 监听器
+  setupIframeListener()
+
+  // 清理
   document.addEventListener('astro:page-unload', () => {
     observer.disconnect()
+    const iframe = document.querySelector('.giscus iframe')
+    if (iframe) {
+      iframe.removeEventListener('load', updateGiscusTheme)
+    }
   })
 </script>
 

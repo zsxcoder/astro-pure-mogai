@@ -361,8 +361,6 @@ function renderTalks() {
       avatar: 'https://home.zsxcoder.top/api/avatar.png',
       date,
       location: '',
-      tags:
-        Array.isArray(item.tags) && item.tags.length ? item.tags.map((t) => t.name) : ['无标签'],
       text: content.replace(/\[(.*?)\]\((.*?)\)/g, '[链接]')
     }
   }
@@ -396,15 +394,6 @@ function renderTalks() {
 
     const talkBottom = document.createElement('div')
     talkBottom.className = 'talk_bottom'
-    const tags = document.createElement('div')
-    const tag = document.createElement('span')
-    tag.className = 'talk_tag'
-    tag.textContent = `🏷️${item.tags}`
-    //const loc = document.createElement('span');
-    //loc.className = 'location_tag';
-    //loc.textContent = `🌍${item.location}`;
-    tags.appendChild(tag)
-    //tags.appendChild(loc);
 
     const commentLink = document.createElement('a')
     commentLink.href = 'javascript:;'
@@ -416,7 +405,6 @@ function renderTalks() {
     icon.innerHTML = '<i class="fa-solid fa-quote-left fa-fw"></i>'
     commentLink.appendChild(icon)
 
-    talkBottom.appendChild(tags)
     talkBottom.appendChild(commentLink)
 
     talkItem.appendChild(talkMeta)
@@ -429,17 +417,61 @@ function renderTalks() {
   const goComment = (e) => {
     const match = e.match(/<div class="talk_content_text">([\s\S]*?)<\/div>/)
     const textContent = match ? match[1] : ''
-    const textarea = document.querySelector('.wl-editor')
-    textarea.value = `> ${textContent}\n\n`
-    textarea.focus()
-    // 使用类似友链页面的提示机制
-    document.dispatchEvent(
-      new CustomEvent('toast', {
-        detail: {
-          message: '已为您引用该说说，不删除空格效果更佳 ✨'
+    const quoteText = `> ${textContent}\n\n`
+    
+    // 复制引用文本到剪贴板
+    navigator.clipboard.writeText(quoteText)
+      .then(() => {
+        // 跳转到页面底部的 Giscus 评论区
+        const giscusElement = document.querySelector('.giscus')
+        if (giscusElement) {
+          giscusElement.scrollIntoView({ behavior: 'smooth' })
+          
+          // 等待一下，确保滚动完成
+          setTimeout(() => {
+            // 尝试聚焦到 Giscus 评论输入框
+            const iframes = document.querySelectorAll('.giscus iframe')
+            iframes.forEach(iframe => {
+              try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+                const textarea = iframeDoc.querySelector('textarea')
+                if (textarea) {
+                  textarea.focus()
+                }
+              } catch (error) {
+                // 跨域访问可能会失败，忽略错误
+              }
+            })
+          }, 500)
         }
+        
+        // 显示提示消息
+        document.dispatchEvent(
+          new CustomEvent('toast', {
+            detail: {
+              message: '已复制引用文本并跳转到评论区，请粘贴使用 ✨'
+            }
+          })
+        )
       })
-    )
+      .catch(err => {
+        console.error('无法复制文本: ', err)
+        
+        // 即使复制失败，也跳转到评论区
+        const giscusElement = document.querySelector('.giscus')
+        if (giscusElement) {
+          giscusElement.scrollIntoView({ behavior: 'smooth' })
+        }
+        
+        // 显示提示消息
+        document.dispatchEvent(
+          new CustomEvent('toast', {
+            detail: {
+              message: '已跳转到评论区，请手动复制引用文本 ✨'
+            }
+          })
+        )
+      })
   }
 
   const formatTime = (time) => {

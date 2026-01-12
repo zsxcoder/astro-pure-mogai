@@ -458,16 +458,61 @@ function renderTalks() {
   }
 
   const goComment = (e) => {
-    const textarea = document.querySelector('.wl-editor')
-    textarea.value = `> ${e}\n\n`
-    textarea.focus()
-    document.dispatchEvent(
-      new CustomEvent('toast', {
-        detail: {
-          message: '已为您引用该说说，不删除空格效果更佳 ✨'
+    const quoteText = `> ${e}\n\n`
+    
+    // 复制引用文本到剪贴板
+    navigator.clipboard.writeText(quoteText)
+      .then(() => {
+        // 跳转到页面底部的 Giscus 评论区
+        const giscusElement = document.querySelector('.giscus')
+        if (giscusElement) {
+          giscusElement.scrollIntoView({ behavior: 'smooth' })
+          
+          // 等待一下，确保滚动完成
+          setTimeout(() => {
+            // 尝试聚焦到 Giscus 评论输入框
+            const iframes = document.querySelectorAll('.giscus iframe')
+            iframes.forEach(iframe => {
+              try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+                const textarea = iframeDoc.querySelector('textarea')
+                if (textarea) {
+                  textarea.focus()
+                }
+              } catch (error) {
+                // 跨域访问可能会失败，忽略错误
+              }
+            })
+          }, 500)
         }
+        
+        // 显示提示消息
+        document.dispatchEvent(
+          new CustomEvent('toast', {
+            detail: {
+              message: '已复制引用文本并跳转到评论区，请粘贴使用 ✨'
+            }
+          })
+        )
       })
-    )
+      .catch(err => {
+        console.error('无法复制文本: ', err)
+        
+        // 即使复制失败，也跳转到评论区
+        const giscusElement = document.querySelector('.giscus')
+        if (giscusElement) {
+          giscusElement.scrollIntoView({ behavior: 'smooth' })
+        }
+        
+        // 显示提示消息
+        document.dispatchEvent(
+          new CustomEvent('toast', {
+            detail: {
+              message: '已跳转到评论区，请手动复制引用文本 ✨'
+            }
+          })
+        )
+      })
   }
 
   const formatTime = (time) => {
