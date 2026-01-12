@@ -1,74 +1,95 @@
 ---
 import { MediumZoom } from 'astro-pure/advanced'
-import { Icon } from 'astro-pure/user'
 import BoardLayout from '@/layouts/BoardLayout.astro'
 import TextBackground from '@/components/custom/TextBackground.astro'
 ---
 
-<BoardLayout title='Essays' comment>
+<BoardLayout title='Misskey' comment>
   <div style='text-align:center; line-height:1.8; padding:20px 0; position:relative;'>
     <!-- 背景文字 -->
     <TextBackground variant='words' />
 
     <h2 style='font-size:26px; margin-bottom:12px;'>Essays</h2>
-    <p style='font-size:16px; color:hsl(var(--foreground));'>我的Misskey动态</p>
+    <p style='font-size:16px; color:hsl(var(--foreground));'>我的Misskey帖子</p>
   </div>
 
   <div class='mt-4 border-t pt-4'>
-    <div class='flex justify-center'>
-      <iframe src="https://hub.imikufans.com/embed/user-timeline/ahe8iuwty5zv05sz?header=false&maxHeight=700" data-misskey-embed-id="v1_ahelkm8ghe" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" style="border: none; width: 100%; max-width: 500px; height: 300px;"></iframe>
+    <div id="misskey-embed-container" class='misskey-embed-container'>
+      <!-- iframe 将通过 JavaScript 动态创建 -->
     </div>
   </div>
 
-  <script defer src="https://hub.imikufans.com/embed.js"></script>
+  <style>
+    .misskey-embed-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    
+    @media (max-width: 640px) {
+      .misskey-embed-container iframe {
+        max-width: 100%;
+      }
+    }
+  </style>
 
-  <script is:inline>
-    // 发送主题信息到Misskey嵌入
-    function sendThemeToMisskeyEmbed() {
-      const iframe = document.querySelector('iframe[data-misskey-embed-id]');
-      if (!iframe) return;
+  <script defer src="https://hub.imikufans.com/embed.js" is:inline></script>
+
+  <script>
+    // 函数：获取当前主题
+    function getCurrentTheme() {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+    }
+
+    // 函数：创建或更新 Misskey 嵌入
+    function createMisskeyEmbed() {
+      const theme = getCurrentTheme()
+      const container = document.getElementById('misskey-embed-container') as HTMLElement | null
       
-      const isDark = document.documentElement.classList.contains('dark');
-      const theme = isDark ? 'dark' : 'light';
-      
-      iframe.contentWindow?.postMessage({
-        type: 'misskey:embedParent:themeChange',
-        payload: {
-          theme: theme
+      if (container) {
+        // 清空容器
+        container.innerHTML = ''
+        
+        // 创建新的 iframe 元素
+        const iframe = document.createElement('iframe')
+        iframe.src = `https://hub.imikufans.com/embed/user-timeline/ahe8iuwty5zv05sz?header=false&maxHeight=700&border=false`
+        iframe.setAttribute('data-misskey-embed-id', 'v1_aheqyqlvbz')
+        iframe.loading = 'lazy'
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin'
+        iframe.style.border = 'none'
+        iframe.style.width = '100%'
+        iframe.style.maxWidth = '500px'
+        iframe.style.height = '300px'
+        iframe.style.colorScheme = theme === 'dark' ? 'dark' : 'light'
+        
+        // 添加到容器
+        container.appendChild(iframe)
+      }
+    }
+
+    // 观察主题变化
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          // 主题变化时重新创建嵌入
+          createMisskeyEmbed()
         }
-      }, '*');
-    }
+      })
+    })
 
-    // 监听主题变化
-    function setupThemeListener() {
-      // 初始发送主题
-      sendThemeToMisskeyEmbed();
-      
-      // 监听localStorage变化
-      window.addEventListener('storage', function(e) {
-        if (e.key === 'theme') {
-          sendThemeToMisskeyEmbed();
-        }
-      });
-      
-      // 监听文档类变化
-      const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          if (mutation.attributeName === 'class') {
-            sendThemeToMisskeyEmbed();
-          }
-        });
-      });
-      
-      observer.observe(document.documentElement, { attributes: true });
-    }
+    // 开始观察
+    observer.observe(document.documentElement, { attributes: true })
 
-    // 页面加载完成后设置监听器
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', setupThemeListener);
-    } else {
-      setupThemeListener();
-    }
+    // 页面加载完成后，创建初始嵌入
+    window.addEventListener('DOMContentLoaded', () => {
+      // 延迟一点时间确保 DOM 已准备好
+      setTimeout(createMisskeyEmbed, 100)
+    })
+
+    // 清理
+    document.addEventListener('astro:page-unload', () => {
+      observer.disconnect()
+    })
   </script>
 
   <MediumZoom />
