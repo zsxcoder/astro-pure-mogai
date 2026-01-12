@@ -105,7 +105,6 @@ const toc = generateToc(headings)
       
       const windowHeight = window.innerHeight
       const contentEl = document.querySelector('#content') as HTMLElement
-      const contentRect = contentEl?.getBoundingClientRect() || { top: 0, height: 0 }
 
       this.headings.forEach((el, index) => {
         const elRect = el.getBoundingClientRect()

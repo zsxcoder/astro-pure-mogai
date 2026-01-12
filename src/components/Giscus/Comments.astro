@@ -26,7 +26,7 @@ const { class: className } = Astro.props
     const theme = getCurrentTheme()
     
     // 1. 更新 iframe 的主题
-    const iframe = document.querySelector('.giscus iframe')
+    const iframe = document.querySelector('.giscus iframe') as HTMLIFrameElement | null
     if (iframe) {
       iframe.contentWindow?.postMessage({
         giscus: {
