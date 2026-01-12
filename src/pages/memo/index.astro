@@ -159,5 +159,42 @@ import talks from '../../plugins/talks.js?url'
   </script>
   <script src={talks} no-pjax is:inline></script>
 
-  <MediumZoom />
+  <MediumZoom selector=".zoomable" />
+
+  <script>
+    // 自定义的图片点击处理
+    function setupImageClickHandlers() {
+      const images = document.querySelectorAll('.zoomable');
+      images.forEach(img => {
+        if (!img.hasAttribute('data-zoom-handler')) {
+          img.setAttribute('data-zoom-handler', 'true');
+          // 确保图片可以被点击
+          const imgElement = img as HTMLImageElement;
+          imgElement.style.cursor = 'zoom-in';
+          imgElement.style.pointerEvents = 'auto';
+        }
+      });
+    }
+
+    // 等待页面加载完成
+    window.addEventListener('load', () => {
+      // 等待 talks 加载完成后设置图片点击处理
+      setTimeout(setupImageClickHandlers, 1000);
+    });
+
+    // 监听动态内容变化，为新添加的图片设置点击处理
+    const observer = new MutationObserver(() => {
+      // 延迟一点时间确保图片已加载
+      setTimeout(setupImageClickHandlers, 500);
+    });
+
+    // 观察 talk 容器的变化
+    const talkContainer = document.getElementById('talk');
+    if (talkContainer) {
+      observer.observe(talkContainer, {
+        childList: true,
+        subtree: true
+      });
+    }
+  </script>
 </BoardLayout>
