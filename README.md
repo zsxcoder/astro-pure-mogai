@@ -46,3 +46,5 @@ Except for the way the sidebar is provided, here are some ways that you can find
 <div align="right">
   <img src=".github/.assets/svg/signature.svg" width="150" alt="signature">
 </div>
+
+AI 使用: `npx tsx scripts/generate-summary.ts`

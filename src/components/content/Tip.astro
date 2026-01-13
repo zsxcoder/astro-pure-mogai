@@ -1,0 +1,131 @@
+---
+interface Props {
+  text?: string;
+  tip?: string;
+  icon?: string | boolean;
+  copy?: boolean;
+}
+
+const { text, tip, icon = undefined, copy = false } = Astro.props;
+---
+
+<span 
+  class="tip"
+  tabindex="0"
+  data-tip={tip || (copy ? '点击复制' : '')}
+  data-copy={copy}
+>
+  <slot>{text}</slot>
+  {typeof icon === 'string' && (
+    <span class="tip-icon">{icon}</span>
+  )}
+  {icon === undefined && copy && (
+    <span class="tip-icon">📋</span>
+  )}
+</span>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tipElements = document.querySelectorAll('.tip');
+    
+    tipElements.forEach(element => {
+      const isCopyable = element.dataset.copy === 'true';
+      const tipText = element.dataset.tip;
+      
+      if (isCopyable) {
+        element.addEventListener('click', () => {
+          const textToCopy = element.textContent.trim();
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            // 显示复制成功的反馈
+            const iconElement = element.querySelector('.tip-icon');
+            if (iconElement) {
+              iconElement.textContent = '✓';
+              setTimeout(() => {
+                iconElement.textContent = '📋';
+              }, 2000);
+            }
+          });
+        });
+        
+        element.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            const textToCopy = element.textContent.trim();
+            navigator.clipboard.writeText(textToCopy).then(() => {
+              // 显示复制成功的反馈
+              const iconElement = element.querySelector('.tip-icon');
+              if (iconElement) {
+                iconElement.textContent = '✓';
+                setTimeout(() => {
+                  iconElement.textContent = '📋';
+                }, 2000);
+              }
+            });
+          }
+        });
+      }
+      
+      // 简单的提示功能
+      if (tipText) {
+        element.addEventListener('mouseenter', () => {
+          const tooltip = document.createElement('div');
+          tooltip.className = 'tip-tooltip';
+          tooltip.textContent = tipText;
+          tooltip.style.position = 'fixed';
+          tooltip.style.backgroundColor = 'hsl(var(--card))';
+          tooltip.style.color = 'hsl(var(--foreground))';
+          tooltip.style.padding = '0.5em 1em';
+          tooltip.style.borderRadius = '0.5em';
+          tooltip.style.fontSize = '0.8em';
+          tooltip.style.zIndex = '9999';
+          tooltip.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          tooltip.style.pointerEvents = 'none';
+          tooltip.style.whiteSpace = 'nowrap';
+          
+          // 计算位置
+          const rect = element.getBoundingClientRect();
+          tooltip.style.left = `${rect.left + rect.width / 2}px`;
+          tooltip.style.top = `${rect.top - 40}px`;
+          tooltip.style.transform = 'translateX(-50%)';
+          
+          document.body.appendChild(tooltip);
+          element._tooltip = tooltip;
+        });
+        
+        element.addEventListener('mouseleave', () => {
+          if (element._tooltip) {
+            element._tooltip.remove();
+            delete element._tooltip;
+          }
+        });
+      }
+    });
+  });
+</script>
+
+<style>
+  .tip {
+    position: relative;
+    text-decoration: underline dashed hsl(var(--muted-foreground));
+    cursor: pointer;
+    text-underline-offset: 4px;
+  }
+  
+  .tip-icon {
+    display: inline-block;
+    font-size: 1em;
+    vertical-align: top;
+    margin-left: 0.2em;
+  }
+  
+  .tip-tooltip {
+    position: absolute;
+    background-color: hsl(var(--card));
+    color: hsl(var(--foreground));
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    font-size: 0.8em;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+  }
+</style>

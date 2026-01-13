@@ -1,0 +1,55 @@
+---
+---
+
+<dl class="timeline">
+  <slot />
+</dl>
+
+<style>
+  .timeline {
+    position: relative;
+    padding-left: 1.5em;
+    font-size: 0.9em;
+  }
+  
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 0.5em;
+    bottom: 0;
+    left: 0.5em;
+    width: 0.3em;
+    background-color: hsl(var(--muted));
+  }
+  
+  .timeline-caption {
+    opacity: 0.8;
+    font-size: 0.9em;
+    position: relative;
+  }
+  
+  .timeline-caption::before {
+    content: "";
+    position: absolute;
+    left: -1.2em;
+    width: 0.8em;
+    height: 0.8em;
+    margin-top: 0.5em;
+    border-radius: 1em;
+    background-color: hsl(var(--muted-foreground));
+  }
+  
+  .timeline-body {
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 1em;
+    padding: 0 1em;
+  }
+  
+  .timeline-body.card {
+    background-color: hsl(var(--card));
+    border-radius: 0.5em;
+    box-shadow: 0 1px 0.5em rgba(0, 0, 0, 0.1);
+    padding: 1em;
+  }
+</style>

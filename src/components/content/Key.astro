@@ -1,0 +1,222 @@
+---
+interface Props {
+  text?: string;
+  /** https://developer.mozilla.org/zh-CN/docs/Web/API/KeyboardEvent/key */
+  code?: string;
+  /** 仅 macOS 默认显示图标 */
+  icon?: boolean;
+  ctrl?: boolean;
+  shift?: boolean;
+  alt?: boolean;
+  meta?: boolean;
+  win?: boolean;
+  /** 智能适配：Windows用Ctrl，macOS用Cmd */
+  cmd?: boolean;
+  prevent?: boolean;
+}
+
+const { 
+  text, 
+  code, 
+  icon = undefined, 
+  ctrl = false, 
+  shift = false, 
+  alt = false, 
+  meta = false, 
+  win = false, 
+  cmd = false, 
+  prevent = false 
+} = Astro.props;
+
+// 检测是否为 macOS
+const isMac = /mac ?os/i.test(navigator?.userAgent || '');
+const useSymbol = isMac ? icon !== false : icon;
+const keyJoiner = useSymbol ? '' : '+';
+
+// 显示映射
+const displayMap = {
+  ' ': 'Space',
+  'ArrowDown': '↓',
+  'ArrowLeft': '←',
+  'ArrowRight': '→',
+  'ArrowUp': '↑',
+  'Control': 'Ctrl',
+  'Delete': 'Del',
+  'Escape': 'Esc',
+  'Meta': isMac ? 'Cmd' : 'Win',
+};
+
+// 符号映射
+const symbolMap = {
+  ' ': '␣',
+  'Alt': '⌥',
+  'Backspace': '⌫',
+  'Control': '⌃',
+  'Delete': '⌦',
+  'Enter': '↵',
+  'Escape': '⎋',
+  'Meta': isMac ? '⌘' : '田',
+  'Shift': '⇧',
+  'Tab': '⇥',
+  'Win': '田',
+};
+
+// 规范化代码显示
+function normalizeCodeDisplay(code?: string) {
+  if (!code) return '';
+  if (useSymbol && code in symbolMap) return symbolMap[code as keyof typeof symbolMap];
+  if (code in displayMap) return displayMap[code as keyof typeof displayMap];
+  return code;
+}
+
+// 生成代码显示
+function generateCodeDisplay() {
+  if (text) return text;
+
+  const keyConfigs = [
+    { condition: cmd, code: isMac ? 'Meta' : 'Control' },
+    { condition: ctrl && !cmd, code: 'Control' },
+    { condition: shift, code: 'Shift' },
+    { condition: alt, code: 'Alt' },
+    { condition: meta && !cmd, code: 'Meta' },
+    { condition: win && !meta, code: 'Win' },
+    { condition: code, code },
+  ];
+
+  return keyConfigs
+    .filter(config => config.condition)
+    .map(config => normalizeCodeDisplay(config.code))
+    .join(keyJoiner);
+}
+
+const codeDisplay = generateCodeDisplay();
+---
+
+<kbd 
+  class="keyboard-key"
+  data-props={JSON.stringify({
+    code,
+    ctrl,
+    shift,
+    alt,
+    meta,
+    win,
+    cmd,
+    prevent
+  })}
+>
+  <slot>{codeDisplay}</slot>
+</kbd>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const keyElements = document.querySelectorAll('.keyboard-key');
+    
+    keyElements.forEach(element => {
+      const props = JSON.parse(element.dataset.props || '{}');
+      let active = false;
+      
+      // 当前全局修饰键状态
+      const modifierState = {
+        ctrl: false,
+        shift: false,
+        alt: false,
+        meta: false,
+      };
+      
+      // 检测是否为 macOS
+      const isMac = /mac ?os/i.test(navigator?.userAgent || '');
+      
+      function updateModifierState(e, isDown) {
+        if (e.key === 'Control') modifierState.ctrl = isDown;
+        if (e.key === 'Shift') modifierState.shift = isDown;
+        if (e.key === 'Alt') modifierState.alt = isDown;
+        if (e.key === 'Meta') modifierState.meta = isDown;
+      }
+      
+      /**
+       * 检查当前修饰键状态是否匹配 props
+       */
+      function modifiersMatch() {
+        const cmdMatch = props.cmd
+          ? (isMac ? modifierState.meta : modifierState.ctrl)
+          : true;
+        
+        return cmdMatch
+          && (!props.ctrl || (!props.cmd && modifierState.ctrl))
+          && (!props.shift || modifierState.shift)
+          && (!props.alt || modifierState.alt)
+          && (!props.meta || (!props.cmd && modifierState.meta));
+      }
+      
+      function matchKeyEvent(e, expectedCode) {
+        if (expectedCode && e.key?.toLowerCase() !== expectedCode.toLowerCase())
+          return false;
+        return modifiersMatch();
+      }
+      
+      // 键盘按下事件
+      document.addEventListener('keydown', (e) => {
+        updateModifierState(e, true);
+        if (matchKeyEvent(e, props.code)) {
+          active = true;
+          element.classList.add('active');
+          props.prevent && e.preventDefault();
+        }
+      });
+      
+      // 键盘松开事件
+      document.addEventListener('keyup', (e) => {
+        updateModifierState(e, false);
+        if (matchKeyEvent(e, props.code) || !modifiersMatch()) {
+          active = false;
+          element.classList.remove('active');
+        }
+      });
+      
+      // 失去焦点事件
+      window.addEventListener('blur', () => {
+        modifierState.ctrl = false;
+        modifierState.shift = false;
+        modifierState.alt = false;
+        modifierState.meta = false;
+        active = false;
+        element.classList.remove('active');
+      });
+      
+      // 点击事件
+      element.addEventListener('click', () => {
+        element.classList.add('active');
+        setTimeout(() => {
+          element.classList.remove('active');
+        }, 100);
+      });
+    });
+  });
+</script>
+
+<style>
+  .keyboard-key {
+    display: inline-block;
+    margin: 0.1em;
+    padding: 0 0.2em 0.1em;
+    border-radius: 0.2em;
+    box-shadow: inset 0 -0.15em 0 hsl(var(--muted));
+    background-color: hsl(var(--muted));
+    font-family: var(--font-monospace, 'Monaco', 'Menlo', 'Ubuntu Mono', monospace);
+    font-size: 0.9em;
+    letter-spacing: -0.05em;
+    line-height: 1.4;
+    color: hsl(var(--muted-foreground));
+    transition: all 0.1s;
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  .keyboard-key:active, .keyboard-key.active {
+    box-shadow: inset 0 -0.1em 0 hsl(var(--primary));
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+    transform: translateY(0.05em);
+  }
+</style>

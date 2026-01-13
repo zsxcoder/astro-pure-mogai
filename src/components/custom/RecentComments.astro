@@ -1,6 +1,5 @@
 ---
 import { Icon } from 'astro-pure/user'
-import config from '@/site-config'
 
 const limit = 5
 const refreshMs = 60_000
@@ -22,13 +21,10 @@ const refreshMs = 60_000
   type='module'
   data-astro-rerun
   define:vars={{
-    walineServer: config.integ.waline.server,
     defaultLimit: limit,
     defaultRefreshMs: refreshMs
   }}
 >
-  const normalizeServer = (server) => String(server || '').replace(/\/$/, '')
-
   const formatCommentTime = (timestamp) => {
     const date = new Date(timestamp)
     const diff = Date.now() - date.getTime()
@@ -110,7 +106,7 @@ const refreshMs = 60_000
       const text = document.createElement('a')
       text.className = 'comment-text'
       text.textContent = truncateText(stripHtml(comment.comment), 100)
-      text.href = normalizeUrl(comment.url) + (comment.objectId ? `#${comment.objectId}` : '')
+      text.href = normalizeUrl(comment.url)
 
       content.append(meta, text)
       item.append(avatarWrap, content)
@@ -130,16 +126,82 @@ const refreshMs = 60_000
     })
   }
 
-  const fetchRecentComments = async (server, signal) => {
-    const base = normalizeServer(server)
-    if (!base) return []
+  const fetchRecentComments = async (limit, signal) => {
+    try {
+      // 使用新的 worker 端点
+      const apiUrl = 'https://giscus.mcyzsx.top/api/giscus'
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          owner: 'zsxcoder',
+          repo: 'astro-pure-mogai'
+        }),
+        signal
+      })
+      
+      if (!response.ok) {
+        throw new Error(`获取评论失败: ${response.status}`)
+      }
 
-    const res = await fetch(`${base}/api/comment?type=recent`, { signal })
-    if (!res.ok) return []
-
-    const json = await res.json()
-    const data = Array.isArray(json?.data) ? json.data : []
-    return data
+      const result = await response.json()
+      
+      // 检查响应结构
+      if (!result || !result.data || !result.data.repository || !result.data.repository.discussions || !result.data.repository.discussions.nodes) {
+        console.warn('响应数据结构不完整，返回空评论列表')
+        return []
+      }
+      
+      // 获取所有讨论
+      const discussions = result.data.repository.discussions.nodes
+      
+      // 收集所有评论
+      let allComments = []
+      
+      discussions.forEach(discussion => {
+        // 跳过没有评论的讨论
+        if (!discussion.comments || !discussion.comments.nodes || !discussion.comments.nodes.length) return
+        
+        // 从讨论标题中提取页面 URL
+        let url = '/'
+        try {
+          const title = discussion.title.trim()
+          if (title) {
+            url = title.startsWith('/') ? title : `/${title}`
+          }
+        } catch (error) {
+          console.error('解析评论 URL 出错:', error)
+        }
+        
+        // 处理每条评论
+        discussion.comments.nodes.forEach(comment => {
+          // 处理匿名用户
+          const authorName = comment.author?.login || '匿名用户'
+          const avatarUrl = comment.author?.avatarUrl || 'https://github.com/ghost.png'
+          
+          allComments.push({
+            nick: authorName,
+            comment: comment.body || '',
+            url: url,
+            avatar: avatarUrl,
+            time: comment.createdAt ? new Date(comment.createdAt).getTime() : Date.now(),
+            like: 0 // 暂不支持点赞数
+          })
+        })
+      })
+      
+      // 按时间排序（最新的在前）
+      allComments.sort((a, b) => b.time - a.time)
+      
+      // 返回指定数量的评论
+      return allComments.slice(0, limit)
+    } catch (error) {
+      console.error('获取最新评论出错:', error)
+      return []
+    }
   }
 
   const initRecentComments = (root) => {
@@ -151,7 +213,7 @@ const refreshMs = 60_000
 
     const tick = async () => {
       try {
-        const list = await fetchRecentComments(walineServer, aborter.signal)
+        const list = await fetchRecentComments(limit, aborter.signal)
         const items = list.slice(0, limit)
         const key = items.length ? buildKey(items) : '__EMPTY__'
 
@@ -205,6 +267,123 @@ const refreshMs = 60_000
     disposers.clear()
   }
 
+  // 渲染函数
+  function renderGiscusComments(discussions) {
+    // 找到所有评论容器
+    const containers = document.querySelectorAll('[data-recent-comments] .comment-list');
+    
+    containers.forEach(container => {
+      // 清空容器
+      container.innerHTML = '';
+      
+      let hasComments = false;
+      
+      discussions.forEach(discussion => {
+        // 跳过空评论
+        if (!discussion.comments || !discussion.comments.nodes || !discussion.comments.nodes.length) return;
+        
+        discussion.comments.nodes.forEach(comment => {
+          hasComments = true;
+          
+          const div = document.createElement('div');
+          div.className = 'comment-item';
+          
+          // 从讨论标题中提取页面 URL
+          let url = '/'
+          try {
+            const title = discussion.title.trim()
+            if (title) {
+              url = title.startsWith('/') ? title : `/${title}`
+            }
+          } catch (error) {
+            console.error('解析评论 URL 出错:', error)
+          }
+          
+          // 处理匿名用户
+          const authorName = comment.author?.login || '匿名用户';
+          const avatarUrl = comment.author?.avatarUrl || 'https://github.com/ghost.png';
+          
+          // 创建评论元素
+          const avatarWrap = document.createElement('div');
+          avatarWrap.className = 'comment-avatar';
+          
+          const img = document.createElement('img');
+          img.src = avatarUrl;
+          img.alt = authorName;
+          img.loading = 'lazy';
+          avatarWrap.appendChild(img);
+          
+          const content = document.createElement('div');
+          content.className = 'comment-content';
+          
+          const meta = document.createElement('div');
+          meta.className = 'comment-meta';
+          
+          const author = document.createElement('span');
+          author.className = 'comment-author';
+          author.textContent = authorName;
+          
+          const time = document.createElement('span');
+          time.className = 'comment-time';
+          time.dataset.time = String(comment.createdAt ? new Date(comment.createdAt).getTime() : Date.now());
+          time.textContent = comment.createdAt ? formatCommentTime(new Date(comment.createdAt).getTime()) : '';
+          
+          meta.append(author, time);
+          
+          const text = document.createElement('a');
+          text.className = 'comment-text';
+          text.textContent = stripHtml(comment.body || '');
+          text.href = normalizeUrl(url);
+          
+          content.append(meta, text);
+          div.append(avatarWrap, content);
+          
+          container.appendChild(div);
+        });
+      });
+      
+      // 如果没有评论，显示空状态
+      if (!hasComments) {
+        const empty = document.createElement('div');
+        empty.className = 'comment-empty';
+        empty.textContent = '暂无评论数据';
+        container.appendChild(empty);
+      }
+    });
+  }
+
+  // 调用 API
+  async function loadComments() {
+    try {
+      const response = await fetch('https://giscus.mcyzsx.top/api/giscus', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ owner: 'zsxcoder', repo: 'astro-pure-mogai' })
+      });
+      
+      const result = await response.json();
+      
+      // 检查响应结构
+      if (!result || !result.data || !result.data.repository || !result.data.repository.discussions || !result.data.repository.discussions.nodes) {
+        console.warn('响应数据结构不完整，无法加载评论');
+        console.log(result);
+        return;
+      }
+      
+      const discussions = result.data.repository.discussions.nodes;
+      
+      renderGiscusComments(discussions);
+    } catch (error) {
+      console.error('加载失败:', error);
+      
+      // 显示错误信息
+      const containers = document.querySelectorAll('[data-recent-comments] .comment-list');
+      containers.forEach(container => {
+        container.innerHTML = '<div class="comment-empty error">加载评论失败</div>';
+      });
+    }
+  }
+
   const start = () => boot()
 
   if (document.readyState === 'loading') {
@@ -215,6 +394,9 @@ const refreshMs = 60_000
 
   document.addEventListener('astro:page-load', boot)
   document.addEventListener('astro:before-swap', disposeAll)
+  
+  // 暴露 loadComments 函数到全局，便于调试
+  window.loadComments = loadComments;
 </script>
 
 <style is:global>

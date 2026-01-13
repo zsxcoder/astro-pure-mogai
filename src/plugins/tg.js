@@ -1,9 +1,9 @@
-function renderTalks() {
+function renderTGMessages() {
   const talkContainer = document.querySelector('#talk')
   if (!talkContainer) return
-  if (typeof talkContainer.__shuoshuoCleanup === 'function') {
-    talkContainer.__shuoshuoCleanup()
-    talkContainer.__shuoshuoCleanup = null
+  if (typeof talkContainer.__tgCleanup === 'function') {
+    talkContainer.__tgCleanup()
+    talkContainer.__tgCleanup = null
   }
   talkContainer.innerHTML = ''
   const loadingEl = document.querySelector('#talk-loading')
@@ -20,7 +20,7 @@ function renderTalks() {
   }
   setTalkLoading(true)
   const generateIconSVG = () => {
-    return `<svg viewBox="0 0 512 512"xmlns="http://www.w3.org/2000/svg"class="is-badge icon"><path d="m512 268c0 17.9-4.3 34.5-12.9 49.7s-20.1 27.1-34.6 35.4c.4 2.7.6 6.9.6 12.6 0 27.1-9.1 50.1-27.1 69.1-18.1 19.1-39.9 28.6-65.4 28.6-11.4 0-22.3-2.1-32.6-6.3-8 16.4-19.5 29.6-34.6 39.7-15 10.2-31.5 15.2-49.4 15.2-18.3 0-34.9-4.9-49.7-14.9-14.9-9.9-26.3-23.2-34.3-40-10.3 4.2-21.1 6.3-32.6 6.3-25.5 0-47.4-9.5-65.7-28.6-18.3-19-27.4-42.1-27.4-69.1 0-3 .4-7.2 1.1-12.6-14.5-8.4-26-20.2-34.6-35.4-8.5-15.2-12.8-31.8-12.8-49.7 0-19 4.8-36.5 14.3-52.3s22.3-27.5 38.3-35.1c-4.2-11.4-6.3-22.9-6.3-34.3 0-27 9.1-50.1 27.4-69.1s40.2-28.6 65.7-28.6c11.4 0 22.3 2.1 32.6 6.3 8-16.4 19.5-29.6 34.6-39.7 15-10.1 31.5-15.2 49.4-15.2s34.4 5.1 49.4 15.1c15 10.1 26.6 23.3 34.6 39.7 10.3-4.2 21.1-6.3 32.6-6.3 25.5 0 47.3 9.5 65.4 28.6s27.1 42.1 27.1 69.1c0 12.6-1.9 24-5.7 34.3 16 7.6 28.8 19.3 38.3 35.1 9.5 15.9 14.3 33.4 14.3 52.4zm-266.9 77.1 105.7-158.3c2.7-4.2 3.5-8.8 2.6-13.7-1-4.9-3.5-8.8-7.7-11.4-4.2-2.7-8.8-3.6-13.7-2.9-5 .8-9 3.2-12 7.4l-93.1 140-42.9-42.8c-3.8-3.8-8.2-5.6-13.1-5.4-5 .2-9.3 2-13.1 5.4-3.4 3.4-5.1 7.7-5.1 12.9 0 5.1 1.7 9.4 5.1 12.9l58.9 58.9 2.9 2.3c3.4 2.3 6.9 3.4 10.3 3.4 6.7-.1 11.8-2.9 15.2-8.7z"fill="#1da1f2"></path></svg>`
+    return `<svg viewBox="0 0 512 512"xmlns="http://www.w3.org/2000/svg"class="is-badge icon"><path d="m512 268c0 17.9-4.3 34.5-12.9 49.7s-20.1 27.1-34.6 35.4c.4 2.7.6 6.9.6 12.6 0 27.1-9.1 50.1-27.1 69.1-18.1 19.1-39.9 28.6-65.4 28.6-11.4 0-22.3-2.1-32.6-6.3-8 16.4-19.5 29.6-34.6 39.7-15 10.2-31.5 15.2-49.4 15.2-18.3 0-34.9-4.9-49.7-14.9-14.9-9.9-26.3-23.2-34.3-40-10.3 4.2-21.1 6.3-32.6 6.3-25.5 0-47.4-9.5-65.7-28.6-18.3-19-27.4-42.1-27.4-69.1 0-3 .4-7.2 1.1-12.6-14.5-8.4-26-20.2-34.6-35.4-8.5-15.2-12.8-31.8-12.8-49.7 0-19 4.8-36.5 14.3-52.3s22.3-27.5 38.3-35.1c-4.2-11.4-6.3-22.9-6.3-34.3 0-27 9.1-50.1 27.4-69.1s40.2-28.6 65.7-28.6c11.4 0 22.3-2.1 32.6-6.3 8-16.4 19.5-29.6 34.6-39.7 15-10.1 31.5-15.2 49.4-15.2s34.4 5.1 49.4 15.1c15 10.1 26.6 23.3 34.6 39.7 10.3-4.2 21.1-6.3 32.6-6.3 25.5 0 47.3 9.5 65.4 28.6s27.1 42.1 27.1 69.1c0 12.6-1.9 24-5.7 34.3 16 7.6 28.8 19.3 38.3 35.1 9.5 15.9 14.3 33.4 14.3 52.4zm-266.9 77.1 105.7-158.3c2.7-4.2 3.5-8.8 2.6-13.7-1-4.9-3.5-8.8-7.7-11.4-4.2-2.7-8.8-3.6-13.7-2.9-5 .8-9 3.2-12 7.4l-93.1 140-42.9-42.8c-3.8-3.8-8.2-5.6-13.1-5.4-5 .2-9.3 2-13.1 5.4-3.4 3.4-5.1 7.7-5.1 12.9 0 5.1 1.7 9.4 5.1 12.9l58.9 58.9 2.9 2.3c3.4 2.3 6.9 3.4 10.3 3.4 6.7-.1 11.8-2.9 15.2-8.7z"fill="#1da1f2"></path></svg>`
   }
   const debounce = (fn, waitMs = 60) => {
     let timer = null
@@ -193,17 +193,17 @@ function renderTalks() {
     }
   }
 
-  const fetchAndRenderTalks = () => {
-    const url = 'https://server.mcyzsx.top/api/moments'
-    const cacheKey = 'talksCache'
-    const cacheTimeKey = 'talksCacheTime'
+  const fetchAndRenderTGMessages = () => {
+    const url = 'https://tg-api.mcyzsx.top/'
+    const cacheKey = 'tgMessagesCache'
+    const cacheTimeKey = 'tgMessagesCacheTime'
     const cacheDuration = 30 * 60 * 1000
     const cachedData = localStorage.getItem(cacheKey)
     const cachedTime = localStorage.getItem(cacheTimeKey)
     const now = Date.now()
 
     if (cachedData && cachedTime && now - cachedTime < cacheDuration) {
-      renderTalksList(JSON.parse(cachedData))
+      renderTGMessagesList(JSON.parse(cachedData))
     } else {
       fetch(url)
         .then((res) => {
@@ -213,196 +213,73 @@ function renderTalks() {
           return res.json()
         })
         .then((data) => {
-          if (data.code === 1 && data.data && Array.isArray(data.data.items)) {
-            localStorage.setItem(cacheKey, JSON.stringify(data.data.items))
+          if (data && Array.isArray(data.ChannelMessageData)) {
+            localStorage.setItem(cacheKey, JSON.stringify(data.ChannelMessageData))
             localStorage.setItem(cacheTimeKey, now.toString())
-            renderTalksList(data.data.items)
+            renderTGMessagesList(data.ChannelMessageData)
           }
         })
         .catch((err) => {
           const errorMsg = err.message || String(err)
           if (!/0x[0-9a-f]+/i.test(errorMsg)) {
-            console.error('Error fetching talks:', errorMsg)
+            console.error('Error fetching TG messages:', errorMsg)
           }
         })
     }
   }
 
-  const renderTalksList = (list) => {
-    list.map(formatTalk).forEach((item) => talkContainer.appendChild(generateTalkElement(item)))
-    talkContainer.__shuoshuoCleanup = setupWaterfallLayoutOnce(talkContainer, {
+  const renderTGMessagesList = (list) => {
+    list.map(formatTGMessage).forEach((item) => talkContainer.appendChild(generateTGMessageElement(item)))
+    talkContainer.__tgCleanup = setupWaterfallLayoutOnce(talkContainer, {
       onReady: () => setTalkLoading(false)
     })
   }
 
-  const formatTalk = (item) => {
-    const date = formatTime(item.created_at || item.date)
-    let content = item.content || ''
-    // 预处理内容，确保列表格式正确
-    content = content
-      // 移除行首多余空格，确保列表标记在行首
-      .replace(/^[ \t]+(-|\d+\.) /gm, '$1 ')
+  const formatTGMessage = (item) => {
+    const date = formatTime(item.time)
+    let content = item.text || ''
     
-    if (window.marked && typeof window.marked.parse === 'function') {
-      content = window.marked.parse(content)
-      // 确保所有图片都带有 zoomable 类
-      content = content.replace(/<img src="/g, '<img class="zoomable" src="')
-    } else {
-      content = content
-        .replace(
-          /\[(.*?)\]\((.*?)\)/g,
-          function(match, text, url) {
-            // 检查是否是外链
-            const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top'];
-            try {
-              const urlObj = new URL(url);
-              if (exclude.some(domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain))) {
-                return `<a href="${url}" target="_blank" rel="nofollow noopener">@${text}</a>`;
-              } else {
-                return `<a href="/safego?url=${encodeURIComponent(url)}" target="_blank" rel="nofollow noopener">@${text}</a>`;
-              }
-            } catch {
-              return `<a href="${url}" target="_blank" rel="nofollow noopener">@${text}</a>`;
-            }
-          }
-        )
-        .replace(/!\[(.*?)\]\((.*?)\)/g, '<img class="zoomable" src="$2" alt="$1">')
-        .replace(/- \[ \]/g, '⚪')
-        .replace(/- \[x\]/g, '⚫')
-        .replace(/^- (.*?)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>')
-        .replace(/^1\. (.*?)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*?<\/li>)/gs, '<ol>$1</ol>')
-        .replace(/\n/g, '<br>')
-    }
-
-    // 图片
-    if (Array.isArray(item.images) && item.images.length > 0) {
+    // 移除多余的空格和换行
+    content = content.replace(/\s+/g, ' ').trim()
+    
+    // 处理Markdown分隔线 ---
+    content = content.replace(/---/g, '<hr class="markdown-separator">')
+    
+    // 处理图片
+    if (Array.isArray(item.image) && item.image.length > 0) {
       const imgDiv = document.createElement('div')
       imgDiv.className = 'prose'
-      item.images.forEach((img) => {
+      item.image.forEach((img) => {
         const imgTag = document.createElement('img')
-        imgTag.src = img.image_url ? img.image_url + '?fmt=webp&q=75' : img
+        imgTag.src = img.trim()
         imgTag.className = 'zoomable'
         imgDiv.appendChild(imgTag)
       })
       content += imgDiv.outerHTML
     }
 
-    // 外链 / GitHub 项目
-    if (['WEBSITE', 'GITHUBPROJ'].includes(item.extension_type)) {
-      let siteUrl = '',
-        title = ''
-      let extensionBack = 'https://p.liiiu.cn/i/2024/07/27/66a4632bbf06e.webp'
-
-      // 解析 extension 字段
-      try {
-        const extObj =
-          typeof item.extension === 'string' ? JSON.parse(item.extension) : item.extension
-        siteUrl = extObj.site || extObj.url || item.extension
-        title = extObj.title || siteUrl
-      } catch {
-        siteUrl = item.extension
-        title = siteUrl
-      }
-
-      // 特殊处理 GitHub 项目
-      if (item.extension_type === 'GITHUBPROJ') {
-        extensionBack = 'https://p.liiiu.cn/i/2024/07/27/66a461a3098aa.webp'
-
-        // 提取 GitHub 项目名
-        const match = siteUrl.match(/^https?:\/\/github\.com\/[^/]+\/([^/?#]+)/i)
-        if (match) {
-          title = match[1] // 获取仓库名
-        } else {
-          // fallback：从最后一个路径段提取
-          try {
-            const parts = new URL(siteUrl).pathname.split('/').filter(Boolean)
-            title = parts.pop() || siteUrl
-          } catch {
-            // 如果 URL 无效则保留原始
-          }
-        }
-      }
-
-      // 检查是否是外链
-      const exclude = ['blog.ljx.icu', 'localhost', '127.0.0.1', 'b.zsxcoder.top', 'mcy.zsxcoder.top'];
-      let safeUrl = siteUrl;
-      try {
-        const urlObj = new URL(siteUrl);
-        if (!exclude.some(domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain))) {
-          safeUrl = `/safego?url=${encodeURIComponent(siteUrl)}`;
-        }
-      } catch {
-        // 无效 URL，保持原样
-      }
-      
-      // 输出 HTML 结构
-      content += `
-                <div class="shuoshuo-external-link">
-                    <a class="external-link" href="${safeUrl}" target="_blank" rel="nofollow noopener">
-                        <div class="external-link-left" style="background-image:url(${extensionBack})"></div>
-                        <div class="external-link-right">
-                            <div class="external-link-title">${title}</div>
-                            <div>点击跳转<i class="fa-solid fa-angle-right"></i></div>
-                        </div>
-                    </a>
-                </div>`
+    // 处理标签
+    if (Array.isArray(item.tags) && item.tags.length > 0) {
+      const tagsHtml = item.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')
+      content += `<div class="tags">${tagsHtml}</div>`
     }
 
-    // 音乐
-    if (item.extension_type === 'MUSIC' && item.extension) {
-      const link = item.extension
-      let server = ''
-      if (link.includes('music.163.com')) server = 'netease'
-      else if (link.includes('y.qq.com')) server = 'tencent'
-      const idMatch = link.match(/id=(\d+)/)
-      const id = idMatch ? idMatch[1] : ''
-      if (server && id) {
-        content += `<meting-js server="${server}" type="song" id="${id}" api="https://met.liiiu.cn/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r"></meting-js>`
-      }
-    }
-
-    // 视频
-    if (item.extension_type === 'VIDEO' && item.extension) {
-      const video = item.extension
-      if (video.startsWith('BV')) {
-        const bilibiliUrl = `https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${video}&as_wide=1&high_quality=1&danmaku=0`
-        content += `
-                    <div style="position: relative; padding: 30% 45%; margin-top: 10px;">
-                        <iframe style="position:absolute;width:100%;height:100%;left:0;top:0;border-radius:12px;" 
-                                src="${bilibiliUrl}" 
-                                frameborder="no" 
-                                allowfullscreen="true" 
-                                loading="lazy"></iframe>
-                    </div>`
-      } else {
-        const youtubeUrl = `https://www.youtube.com/embed/${video}`
-        content += `
-                    <div style="position: relative; padding: 30% 45%; margin-top: 10px;">
-                        <iframe style="position:absolute;width:100%;height:100%;left:0;top:0;border-radius:12px;" 
-                                src="${youtubeUrl}" 
-                                title="YouTube video player" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                allowfullscreen></iframe>
-                    </div>`
-      }
+    // 处理浏览量
+    if (item.views) {
+      content += `<div class="views">👁️ ${item.views}</div>`
     }
 
     return {
       content,
-      user: item.username || '钟神秀',
-      avatar: item.avatar || 'https://home.zsxcoder.top/api/avatar.png',
+      user: '钟神秀',
+      avatar: 'https://home.zsxcoder.top/api/avatar.png',
       date,
-      location: item.location || '',
-      tags:
-        Array.isArray(item.tags) && item.tags.length ? item.tags.map((t) => t.name || t) : ['动态'],
+      location: '',
       text: content.replace(/<[^>]+>/g, '')
     }
   }
 
-  const generateTalkElement = (item) => {
+  const generateTGMessageElement = (item) => {
     const talkItem = document.createElement('div')
     talkItem.className = 'talk_item'
 
@@ -431,23 +308,17 @@ function renderTalks() {
 
     const talkBottom = document.createElement('div')
     talkBottom.className = 'talk_bottom'
-    const tags = document.createElement('div')
-    const tag = document.createElement('span')
-    tag.className = 'talk_tag'
-    tag.textContent = `📙${item.tags}`
-    tags.appendChild(tag)
 
     const commentLink = document.createElement('a')
     commentLink.href = 'javascript:;'
     commentLink.onclick = () => goComment(item.text)
     commentLink.className = 'quote-btn'
-    commentLink.title = '引用此说说'
+    commentLink.title = '引用此消息'
     const icon = document.createElement('span')
     icon.className = 'icon'
         icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M44 6H4v30h9v5l10-5h21zM14 19.5v3m10-3v3m10-3v3"/></svg>'
     commentLink.appendChild(icon)
 
-    talkBottom.appendChild(tags)
     talkBottom.appendChild(commentLink)
 
     talkItem.appendChild(talkMeta)
@@ -458,19 +329,16 @@ function renderTalks() {
   }
 
   const goComment = (e) => {
-    const quoteText = `> ${e}\n\n`
+    const textContent = e.replace(/<[^>]+>/g, '')
+    const quoteText = `> ${textContent}\n\n`
     
-    // 复制引用文本到剪贴板
     navigator.clipboard.writeText(quoteText)
       .then(() => {
-        // 跳转到页面底部的 Giscus 评论区
         const giscusElement = document.querySelector('.giscus')
         if (giscusElement) {
           giscusElement.scrollIntoView({ behavior: 'smooth' })
           
-          // 等待一下，确保滚动完成
           setTimeout(() => {
-            // 尝试聚焦到 Giscus 评论输入框
             const iframes = document.querySelectorAll('.giscus iframe')
             iframes.forEach(iframe => {
               try {
@@ -480,13 +348,11 @@ function renderTalks() {
                   textarea.focus()
                 }
               } catch (error) {
-                // 跨域访问可能会失败，忽略错误
               }
             })
           }, 500)
         }
         
-        // 显示提示消息
         document.dispatchEvent(
           new CustomEvent('toast', {
             detail: {
@@ -498,13 +364,11 @@ function renderTalks() {
       .catch(err => {
         console.error('无法复制文本: ', err)
         
-        // 即使复制失败，也跳转到评论区
         const giscusElement = document.querySelector('.giscus')
         if (giscusElement) {
           giscusElement.scrollIntoView({ behavior: 'smooth' })
         }
         
-        // 显示提示消息
         document.dispatchEvent(
           new CustomEvent('toast', {
             detail: {
@@ -521,7 +385,7 @@ function renderTalks() {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
   }
 
-  fetchAndRenderTalks()
+  fetchAndRenderTGMessages()
 }
 
-renderTalks()
+renderTGMessages()

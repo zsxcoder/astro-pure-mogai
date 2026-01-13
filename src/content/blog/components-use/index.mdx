@@ -1,0 +1,253 @@
+---
+title: 自己添加的一些组件的测试2
+description: 用于测试一些组件的效果
+publishDate: '2026-01-13'
+tags:
+  - 主题魔改
+  - 组件
+comment: true
+language: 中文
+---
+
+## Tab 组件测试
+
+### 基本用法
+
+<Tab tabs={['Tab 1', 'Tab 2', 'Tab 3']}>
+  <div class="tab-content">
+    <h3>Tab 1 内容</h3>
+    <p>这是第一个标签页的内容，测试 Tab 组件的基本功能。</p>
+  </div>
+  <div class="tab-content">
+    <h3>Tab 2 内容</h3>
+    <p>这是第二个标签页的内容，展示不同的内容。</p>
+  </div>
+  <div class="tab-content">
+    <h3>Tab 3 内容</h3>
+    <p>这是第三个标签页的内容，测试多个标签的切换。</p>
+  </div>
+</Tab>
+
+### 居中布局
+
+<Tab tabs={['居中 Tab 1', '居中 Tab 2']} center>
+  <div class="tab-content">
+    <h3>居中 Tab 1 内容</h3>
+    <p>这是居中布局的第一个标签页内容。</p>
+  </div>
+  <div class="tab-content">
+    <h3>居中 Tab 2 内容</h3>
+    <p>这是居中布局的第二个标签页内容。</p>
+  </div>
+</Tab>
+
+### 指定默认激活标签
+
+<Tab tabs={['默认激活 1', '默认激活 2', '默认激活 3']} active={2}>
+  <div class="tab-content">
+    <h3>默认激活 1 内容</h3>
+    <p>这是第一个标签页的内容，但默认不会显示。</p>
+  </div>
+  <div class="tab-content">
+    <h3>默认激活 2 内容</h3>
+    <p>这是第二个标签页的内容，默认会显示。</p>
+  </div>
+  <div class="tab-content">
+    <h3>默认激活 3 内容</h3>
+    <p>这是第三个标签页的内容。</p>
+  </div>
+</Tab>
+
+
+## Timeline 组件测试
+
+### 基本用法
+
+<Timeline>
+  <dt class="timeline-caption">2024年1月</dt>
+  <dd class="timeline-body card">
+    <h4>事件 1</h4>
+    <p>这是2024年1月发生的事件。</p>
+  </dd>
+  <dt class="timeline-caption">2024年2月</dt>
+  <dd class="timeline-body card">
+    <h4>事件 2</h4>
+    <p>这是2024年2月发生的事件。</p>
+  </dd>
+  <dt class="timeline-caption">2024年3月</dt>
+  <dd class="timeline-body card">
+    <h4>事件 3</h4>
+    <p>这是2024年3月发生的事件。</p>
+  </dd>
+</Timeline>
+
+### 多层时间线
+
+<Timeline>
+  <dt class="timeline-caption">2023年</dt>
+  <dd class="timeline-body card">
+    <h4>2023年事件</h4>
+    <p>这是2023年的主要事件。</p>
+  </dd>
+  <dt class="timeline-caption">2024年第一季度</dt>
+  <dd class="timeline-body card">
+    <h4>Q1 事件</h4>
+    <p>这是2024年第一季度的事件。</p>
+  </dd>
+  <dt class="timeline-caption">2024年1月</dt>
+  <dd class="timeline-body card">
+    <h4>1月事件</h4>
+    <p>这是2024年1月的具体事件。</p>
+  </dd>
+  <dt class="timeline-caption">2024年2月</dt>
+  <dd class="timeline-body card">
+    <h4>2月事件</h4>
+    <p>这是2024年2月的具体事件。</p>
+  </dd>
+</Timeline>
+
+## Tip 组件测试
+
+### 基本提示
+
+<Tip tip="这是一个提示文本">
+  鼠标悬停查看提示
+</Tip>
+
+### 带复制功能
+
+<Tip tip="点击复制文本" copy>
+  这是可以复制的文本内容
+</Tip>
+
+### 带自定义图标
+
+<Tip tip="自定义图标示例" icon="ℹ️">
+  带信息图标的提示
+</Tip>
+
+### 使用 text 属性
+
+<Tip text="使用 text 属性的提示" tip="这是提示内容" />
+## Blur 组件测试
+
+### 基本用法
+
+<Blur>
+  鼠标悬停查看模糊内容
+</Blur>
+
+### 使用 text 属性
+
+<Blur text="使用 text 属性的模糊内容" />
+
+### 混合使用
+
+<p>这是一段普通文本，<Blur>这里是模糊的内容</Blur>，这是普通文本。</p>
+## Key 组件测试
+
+### 基本按键
+
+<Key code="A" />
+
+### 组合按键
+
+<Key ctrl shift code="A" />
+
+### 使用 cmd 属性
+
+<Key cmd code="C" />
+
+### 方向键
+
+<Key code="ArrowUp" />
+<Key code="ArrowDown" />
+<Key code="ArrowLeft" />
+<Key code="ArrowRight" />
+
+### 特殊按键
+
+<Key code="Space" />
+<Key code="Enter" />
+<Key code="Escape" />
+<Key code="Backspace" />
+
+### 使用 text 属性
+
+<Key text="Ctrl+Alt+Delete" />
+
+### 带图标
+
+<Key cmd code="C" icon />
+
+## LinkBanner 组件测试
+
+### 基本用法
+
+<LinkBanner 
+  title="示例网站" 
+  description="这是一个示例网站的描述" 
+  link="https://example.com" 
+/>
+
+### 带背景图片
+
+<LinkBanner 
+  title="带背景的网站" 
+  description="这是一个带背景图片的链接横幅" 
+  link="https://example.com" 
+  banner="https://neeko-copilot.bytedance.net/api/text2image?prompt=a%20beautiful%20website%20banner%20with%20modern%20design&size=1024x427" 
+/>
+
+### 无描述（显示域名）
+
+<LinkBanner 
+  title="无描述网站" 
+  link="https://example.com" 
+/>
+
+## LinkCard 组件测试
+
+### 基本用法
+
+<LinkCard 
+  title="示例网站" 
+  description="这是一个示例网站的描述" 
+  link="https://example.com" 
+/>
+
+### 带图标
+
+<LinkCard 
+  title="带图标网站" 
+  description="这是一个带图标的链接卡片" 
+  link="https://example.com" 
+  icon="https://neeko-copilot.bytedance.net/api/text2image?prompt=a%20simple%20website%20icon%20with%20modern%20design&size=128x128" 
+/>
+
+### 无描述（显示域名）
+
+<LinkCard 
+  title="无描述网站" 
+  link="https://example.com" 
+/>
+
+### 使用自定义图标插槽
+
+<LinkCard 
+  title="带自定义图标的网站" 
+  description="这是一个带自定义图标的链接卡片" 
+  link="https://example.com" 
+>
+  <div slot="icon" style="width: 48px; height: 48px; background-color: hsl(var(--primary)); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+    EC
+  </div>
+</LinkCard>
+
+import Tab from '@/components/content/Tab.astro';
+import Timeline from '@/components/content/Timeline.astro';
+import Tip from '@/components/content/Tip.astro';
+import Blur from '@/components/content/Blur.astro';
+import Key from '@/components/content/Key.astro';
+import LinkBanner from '@/components/content/LinkBanner.astro';
+import LinkCard from '@/components/content/LinkCard.astro';

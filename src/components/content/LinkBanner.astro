@@ -1,0 +1,107 @@
+---
+interface Props {
+  banner?: string;
+  mirror?: string;
+  title: string;
+  description?: string;
+  link: string;
+}
+
+const { banner, mirror, title, description, link } = Astro.props;
+
+// 获取链接的域名
+function getDomain(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname;
+  } catch {
+    return url;
+  }
+}
+
+// 拼接标题、描述和链接
+function joinWith(parts: (string | undefined)[]): string {
+  return parts.filter(Boolean).join(' | ');
+}
+
+const displayDescription = description || getDomain(link);
+const tooltip = joinWith([title, description, link]);
+---
+
+<a 
+  href={link} 
+  class="link-banner card"
+  title={tooltip}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  {banner && (
+    <img 
+      src={banner} 
+      alt={title}
+      class="link-banner-bg"
+    />
+  )}
+  <div class="link-banner-header" />
+  <div class="link-banner-info">
+    <div class="link-banner-title">
+      {title}
+    </div>
+    <div class="link-banner-desc">
+      {displayDescription}
+    </div>
+  </div>
+</a>
+
+<style>
+  .link-banner {
+    display: block;
+    position: relative;
+    border-radius: 0.5em;
+    overflow: hidden;
+    background-color: hsl(var(--card));
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+  
+  .link-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  article .link-banner {
+    max-width: 480px;
+    margin: 2rem auto;
+  }
+  
+  .link-banner-bg {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2.4;
+    margin-bottom: -5%;
+    mask-image: linear-gradient(#FFF 50%, transparent);
+    object-fit: cover;
+  }
+  
+  .link-banner-header {
+    height: 10px;
+  }
+  
+  .link-banner-info {
+    padding: 0.5em 1em;
+  }
+  
+  .link-banner-title {
+    font-size: 1.2em;
+    color: hsl(var(--foreground));
+    font-weight: 600;
+  }
+  
+  .link-banner-desc {
+    margin-top: 0.5em;
+    font-size: 0.8em;
+    color: hsl(var(--muted-foreground));
+  }
+</style>

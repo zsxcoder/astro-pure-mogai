@@ -1,12 +1,10 @@
 /**
  * 获取并处理最新评论数据
- * 通过Waline API获取最新评论并格式化显示
+ * 通过Worker端点获取Giscus评论并格式化显示
  */
 
-import config from '@/site-config'
-
 // 定义评论数据接口
-interface WalineComment {
+interface GiscusComment {
   nick: string // 评论者昵称
   comment: string // 评论内容
   url: string // 评论页面URL
@@ -16,9 +14,35 @@ interface WalineComment {
   addr?: string // 地址
 }
 
-// 定义API响应接口
-interface WalineResponse {
-  data: WalineComment[]
+// 定义Worker响应接口
+interface WorkerResponse {
+  data: {
+    repository: {
+      discussions: {
+        nodes: Array<{
+          title: string
+          body: string
+          author: {
+            login: string
+            avatarUrl: string
+          } | null
+          createdAt: string
+          id: string
+          comments: {
+            nodes: Array<{
+              body: string
+              author: {
+                login: string
+                avatarUrl: string
+              } | null
+              createdAt: string
+              id: string
+            }>
+          }
+        }>
+      }
+    }
+  }
 }
 
 /**
@@ -26,18 +50,77 @@ interface WalineResponse {
  * @param limit 获取评论数量限制
  * @returns 格式化后的评论数据
  */
-export async function fetchRecentComments(limit: number = 5): Promise<WalineComment[]> {
+export async function fetchRecentComments(limit: number = 5): Promise<GiscusComment[]> {
   try {
-    const server = (config.integ.waline.server || '').replace(/\/$/, '')
-    if (!server) return []
-
-    const response = await fetch(`${server}/api/comment?type=recent`)
+    // 使用新的 worker 端点
+    const apiUrl = 'https://giscus.mcyzsx.top/api/giscus'
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        owner: 'zsxcoder',
+        repo: 'astro-pure-mogai'
+      })
+    })
+    
     if (!response.ok) {
       throw new Error(`获取评论失败: ${response.status}`)
     }
 
-    const data: WalineResponse = await response.json()
-    return data.data.slice(0, limit)
+    const result: WorkerResponse = await response.json()
+    
+    // 检查响应结构
+    if (!result || !result.data || !result.data.repository || !result.data.repository.discussions || !result.data.repository.discussions.nodes) {
+      console.warn('响应数据结构不完整，返回空评论列表')
+      return []
+    }
+    
+    // 获取所有讨论
+    const discussions = result.data.repository.discussions.nodes
+    
+    // 收集所有评论
+    let allComments: GiscusComment[] = []
+    
+    discussions.forEach(discussion => {
+      // 跳过没有评论的讨论
+      if (!discussion.comments || !discussion.comments.nodes || !discussion.comments.nodes.length) return
+      
+      // 从讨论标题中提取页面 URL
+      let url = '/'
+      try {
+        const title = discussion.title.trim()
+        if (title) {
+          url = title.startsWith('/') ? title : `/${title}`
+        }
+      } catch (error) {
+        console.error('解析评论 URL 出错:', error)
+      }
+      
+      // 处理每条评论
+      discussion.comments.nodes.forEach(comment => {
+        // 处理匿名用户
+        const authorName = comment.author?.login || '匿名用户'
+        const avatarUrl = comment.author?.avatarUrl || 'https://github.com/ghost.png'
+        
+        allComments.push({
+          nick: authorName,
+          comment: stripHtml(comment.body || ''),
+          url: url,
+          avatar: avatarUrl,
+          time: comment.createdAt ? new Date(comment.createdAt).getTime() : Date.now(),
+          like: 0 // 暂不支持点赞数
+        })
+      })
+    })
+    
+    // 按时间排序（最新的在前）
+    allComments.sort((a, b) => b.time - a.time)
+    
+    // 返回指定数量的评论
+    return allComments.slice(0, limit)
   } catch (error) {
     console.error('获取最新评论出错:', error)
     return []

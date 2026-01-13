@@ -1,0 +1,129 @@
+---
+interface Props {
+  /** tab 下标从 1 开始 */
+  tabs: string[];
+  center?: boolean;
+  active?: string | number;
+}
+
+const { tabs, center = false, active = 1 } = Astro.props;
+const initialActiveTab = Number(active) || 1;
+---
+
+<div class={center ? "center" : ""}>
+  <div class="tabs">
+    {tabs.map((tab, tabIndex) => (
+      <button
+        key={tabIndex}
+        class={initialActiveTab === tabIndex + 1 ? "active" : ""}
+        data-tab-index={tabIndex + 1}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+  <div class="tab-contents">
+    <slot />
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabContainers = document.querySelectorAll('.tabs');
+    
+    tabContainers.forEach(container => {
+      const buttons = container.querySelectorAll('button[data-tab-index]');
+      const contents = container.nextElementSibling.querySelectorAll('.tab-content');
+      const initialActiveTab = parseInt(container.querySelector('button.active')?.dataset.tabIndex || '1');
+      
+      // Initially hide all contents except the active one
+      contents.forEach((content, index) => {
+        content.style.display = index + 1 === initialActiveTab ? 'block' : 'none';
+      });
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const tabIndex = parseInt(button.dataset.tabIndex);
+          
+          // Update button states
+          buttons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          // Update content visibility
+          contents.forEach((content, index) => {
+            content.style.display = index + 1 === tabIndex ? 'block' : 'none';
+          });
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .center {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+  
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+    font-size: 0.9em;
+    line-height: 1.4;
+  }
+  
+  button {
+    position: relative;
+    margin-bottom: 0.5em;
+    padding: 0.3em 0.5em;
+    border-radius: 0.4em;
+    color: hsl(var(--muted-foreground));
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+  
+  button::before, button::after {
+    display: block;
+    position: absolute;
+    bottom: -0.5em;
+    inset-inline: 0.8em;
+    height: 2px;
+    border-radius: 1em;
+    pointer-events: none;
+  }
+  
+  button::after {
+    content: "";
+    inset-inline: -0.8em;
+    background-color: hsl(var(--border));
+  }
+  
+  button.active {
+    box-shadow: 0 1px 0.5em rgba(0, 0, 0, 0.1);
+    background-color: hsl(var(--card));
+    color: hsl(var(--foreground));
+  }
+  
+  button.active::before {
+    content: "";
+    background-color: hsl(var(--primary));
+    z-index: 1;
+  }
+  
+  .tab-content {
+    margin: 1em 0;
+  }
+</style>

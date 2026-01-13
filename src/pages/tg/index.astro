@@ -1,0 +1,88 @@
+---
+import { MediumZoom } from 'astro-pure/advanced'
+import { Icon } from 'astro-pure/user'
+import BoardLayout from '@/layouts/BoardLayout.astro'
+import TalkLoading from '@/components/board/TalkLoading.astro'
+import TextBackground from '@/components/custom/TextBackground.astro'
+
+import tg from '../../plugins/tg.js?url'
+---
+
+<BoardLayout title='Telegram' comment>
+  <div style='text-align:center; line-height:1.8; padding:20px 0; position:relative;'>
+    <!-- Telegram 页面的背景文字 -->
+    <TextBackground variant='words' />
+
+    <h2 style='font-size:26px; margin-bottom:12px;'>欢迎来到 Telegram 频道</h2>
+    <p style='font-size:16px; color:hsl(var(--foreground));'>这里展示了我的 Telegram 频道最新消息 📱</p>
+    <p style='font-size:16px; color:hsl(var(--foreground));'>您可以在这里查看我的日常动态和分享 ✨</p>
+    <p style='font-size:16px; color:hsl(var(--foreground));'>欢迎关注我的频道，随时了解最新动态 💬</p>
+  </div>
+
+  <div class='mt-4 border-t pt-4'>
+    <TalkLoading />
+    <div id='talk' class='talk-pending'></div>
+  </div>
+  <div class='limit-notice'>
+    实时同步 Telegram 频道消息
+    <a href='https://t.me/zsxcoder_channel' target='_blank' class='rss-link'>
+      <Icon name='telegram' class='rss-icon' />
+    </a>
+  </div>
+
+  <style>
+    #talk.talk-pending {
+      visibility: hidden;
+      min-height: 180px;
+    }
+    .rss-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .rss-link {
+      display: inline-flex;
+      align-items: center;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      margin: 2px;
+      border-radius: 12px;
+      font-size: 12px;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    .views {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+    }
+    .dark .tag {
+      background-color: #333;
+      color: #f0f0f0;
+    }
+    .dark .views {
+      color: #999;
+    }
+    .markdown-separator {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 16px 0;
+    }
+    .dark .markdown-separator {
+      border-top-color: #333;
+    }
+    .quote-btn .icon {
+      color: inherit;
+    }
+    .quote-btn:hover .icon {
+      color: inherit;
+    }
+  </style>
+
+  <script src={tg} no-pjax is:inline></script>
+
+  <MediumZoom />
+</BoardLayout>
