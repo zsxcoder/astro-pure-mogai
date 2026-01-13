@@ -14,7 +14,6 @@ const initialActiveTab = Number(active) || 1;
   <div class="tabs">
     {tabs.map((tab, tabIndex) => (
       <button
-        key={tabIndex}
         class={initialActiveTab === tabIndex + 1 ? "active" : ""}
         data-tab-index={tabIndex + 1}
       >
@@ -31,27 +30,39 @@ const initialActiveTab = Number(active) || 1;
   document.addEventListener('DOMContentLoaded', () => {
     const tabContainers = document.querySelectorAll('.tabs');
     
-    tabContainers.forEach(container => {
-      const buttons = container.querySelectorAll('button[data-tab-index]');
-      const contents = container.nextElementSibling.querySelectorAll('.tab-content');
-      const initialActiveTab = parseInt(container.querySelector('button.active')?.dataset.tabIndex || '1');
+    tabContainers.forEach((container) => {
+      const btn = container as HTMLElement;
+      const buttons = btn.querySelectorAll('button[data-tab-index]');
+      const nextSibling = btn.nextElementSibling;
+      if (!nextSibling) return;
+      const contents = nextSibling.querySelectorAll('.tab-content');
+      
+      // Get initial active tab from data attribute
+      const activeButton = btn.querySelector('button.active') as HTMLElement;
+      const initialActiveTab = parseInt(activeButton?.dataset.tabIndex || '1');
       
       // Initially hide all contents except the active one
       contents.forEach((content, index) => {
-        content.style.display = index + 1 === initialActiveTab ? 'block' : 'none';
+        const cont = content as HTMLElement;
+        cont.style.display = index + 1 === initialActiveTab ? 'block' : 'none';
       });
       
-      buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          const tabIndex = parseInt(button.dataset.tabIndex);
+      buttons.forEach((button) => {
+        const btnEl = button as HTMLElement;
+        btnEl.addEventListener('click', () => {
+          const tabIndex = parseInt((btnEl.dataset as any).tabIndex || '1');
           
           // Update button states
-          buttons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
+          buttons.forEach(btn => {
+            const b = btn as HTMLElement;
+            b.classList.remove('active');
+          });
+          btnEl.classList.add('active');
           
           // Update content visibility
           contents.forEach((content, index) => {
-            content.style.display = index + 1 === tabIndex ? 'block' : 'none';
+            const cont = content as HTMLElement;
+            cont.style.display = index + 1 === tabIndex ? 'block' : 'none';
           });
         });
       });

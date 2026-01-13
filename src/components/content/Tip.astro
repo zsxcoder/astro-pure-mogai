@@ -28,13 +28,14 @@ const { text, tip, icon = undefined, copy = false } = Astro.props;
   document.addEventListener('DOMContentLoaded', () => {
     const tipElements = document.querySelectorAll('.tip');
     
-    tipElements.forEach(element => {
-      const isCopyable = element.dataset.copy === 'true';
-      const tipText = element.dataset.tip;
+    tipElements.forEach((element) => {
+      const el = element as HTMLElement & { _tooltip?: HTMLElement };
+      const isCopyable = (el.dataset as HTMLElement['dataset']).copy === 'true';
+      const tipText = (el.dataset as HTMLElement['dataset']).tip;
       
       if (isCopyable) {
-        element.addEventListener('click', () => {
-          const textToCopy = element.textContent.trim();
+        el.addEventListener('click', () => {
+          const textToCopy = element.textContent?.trim() || '';
           navigator.clipboard.writeText(textToCopy).then(() => {
             // 显示复制成功的反馈
             const iconElement = element.querySelector('.tip-icon');
@@ -47,9 +48,9 @@ const { text, tip, icon = undefined, copy = false } = Astro.props;
           });
         });
         
-        element.addEventListener('keypress', (e) => {
+        el.addEventListener('keypress', (e: KeyboardEvent) => {
           if (e.key === 'Enter') {
-            const textToCopy = element.textContent.trim();
+            const textToCopy = element.textContent?.trim() || '';
             navigator.clipboard.writeText(textToCopy).then(() => {
               // 显示复制成功的反馈
               const iconElement = element.querySelector('.tip-icon');
@@ -66,7 +67,7 @@ const { text, tip, icon = undefined, copy = false } = Astro.props;
       
       // 简单的提示功能
       if (tipText) {
-        element.addEventListener('mouseenter', () => {
+        el.addEventListener('mouseenter', () => {
           const tooltip = document.createElement('div');
           tooltip.className = 'tip-tooltip';
           tooltip.textContent = tipText;
@@ -82,19 +83,19 @@ const { text, tip, icon = undefined, copy = false } = Astro.props;
           tooltip.style.whiteSpace = 'nowrap';
           
           // 计算位置
-          const rect = element.getBoundingClientRect();
+          const rect = el.getBoundingClientRect();
           tooltip.style.left = `${rect.left + rect.width / 2}px`;
           tooltip.style.top = `${rect.top - 40}px`;
           tooltip.style.transform = 'translateX(-50%)';
           
           document.body.appendChild(tooltip);
-          element._tooltip = tooltip;
+          el._tooltip = tooltip;
         });
         
-        element.addEventListener('mouseleave', () => {
-          if (element._tooltip) {
-            element._tooltip.remove();
-            delete element._tooltip;
+        el.addEventListener('mouseleave', () => {
+          if (el._tooltip) {
+            el._tooltip.remove();
+            delete el._tooltip;
           }
         });
       }

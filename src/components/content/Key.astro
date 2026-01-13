@@ -112,9 +112,9 @@ const codeDisplay = generateCodeDisplay();
   document.addEventListener('DOMContentLoaded', () => {
     const keyElements = document.querySelectorAll('.keyboard-key');
     
-    keyElements.forEach(element => {
-      const props = JSON.parse(element.dataset.props || '{}');
-      let active = false;
+    keyElements.forEach((element) => {
+      const el = element as HTMLElement;
+      const props = JSON.parse((el.dataset as HTMLElement['dataset']).props || '{}');
       
       // 当前全局修饰键状态
       const modifierState = {
@@ -127,7 +127,7 @@ const codeDisplay = generateCodeDisplay();
       // 检测是否为 macOS
       const isMac = /mac ?os/i.test(navigator?.userAgent || '');
       
-      function updateModifierState(e, isDown) {
+      function updateModifierState(e: KeyboardEvent, isDown: boolean) {
         if (e.key === 'Control') modifierState.ctrl = isDown;
         if (e.key === 'Shift') modifierState.shift = isDown;
         if (e.key === 'Alt') modifierState.alt = isDown;
@@ -149,7 +149,7 @@ const codeDisplay = generateCodeDisplay();
           && (!props.meta || (!props.cmd && modifierState.meta));
       }
       
-      function matchKeyEvent(e, expectedCode) {
+      function matchKeyEvent(e: KeyboardEvent, expectedCode: string | undefined) {
         if (expectedCode && e.key?.toLowerCase() !== expectedCode.toLowerCase())
           return false;
         return modifiersMatch();
@@ -159,8 +159,7 @@ const codeDisplay = generateCodeDisplay();
       document.addEventListener('keydown', (e) => {
         updateModifierState(e, true);
         if (matchKeyEvent(e, props.code)) {
-          active = true;
-          element.classList.add('active');
+          el.classList.add('active');
           props.prevent && e.preventDefault();
         }
       });
@@ -169,8 +168,7 @@ const codeDisplay = generateCodeDisplay();
       document.addEventListener('keyup', (e) => {
         updateModifierState(e, false);
         if (matchKeyEvent(e, props.code) || !modifiersMatch()) {
-          active = false;
-          element.classList.remove('active');
+          el.classList.remove('active');
         }
       });
       
@@ -180,15 +178,14 @@ const codeDisplay = generateCodeDisplay();
         modifierState.shift = false;
         modifierState.alt = false;
         modifierState.meta = false;
-        active = false;
         element.classList.remove('active');
       });
       
       // 点击事件
-      element.addEventListener('click', () => {
-        element.classList.add('active');
+      el.addEventListener('click', () => {
+        el.classList.add('active');
         setTimeout(() => {
-          element.classList.remove('active');
+          el.classList.remove('active');
         }, 100);
       });
     });
